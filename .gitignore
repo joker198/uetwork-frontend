@@ -1,0 +1,11 @@
+logs/*
+!.gitkeep
+node_modules/
+app/bower_components/
+app/users_data/student
+app/users_data/partner
+app/users_data/tmp
+tmp
+.DS_Store
+.idea
+npm-debug.log

@@ -1,0 +1,377 @@
+<div class="page-title" ng-init="getAllStudentByInternshipTerm()">
+    <!-- <div ng-init="getAllStudentNoLecturersLastInternshipTerm()"></div> -->
+    <!-- <div class="title_left">
+        <h3>Danh sách sinh viên</h3>
+    </div> -->
+    <div class="title_right" ng-init="getNameAndIdOfLecturers()">
+        <!-- <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search for..." ng-model="search">
+                <span class="input-group-btn">
+                      <button class="btn btn-default" type="button">Go!</button>
+                    </span>
+            </div>
+        </div> -->
+    </div>
+</div>
+<div class="clearfix"></div>
+<div class="row" ng-init="">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <ul class="nav navbar-right panel_toolbox" ng-if="role == 'ADMIN'">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle cursor" data-toggle="dropdown" role="button" aria-expanded="false">Options <i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li>
+                                <a data-toggle="collapse" data-target="#add_lecturers_for_student" class="cursor"> Thêm giảng viên hướng dẫn cho sinh viên </a>
+                            </li>
+                            <li>
+                                <a data-toggle="collapse" data-target="#add_lecturers_for_student_excel" class="cursor"> Thêm giảng viên hướng dẫn cho sinh viên từ excel </a>
+                            </li>
+                            <li>
+                                <a data-toggle="collapse" data-target="#download_list_student" class="cursor"> Download danh sách sinh viên {{showButtonNotiLecturers}}, {{showNotiLecturers}}</a>
+                            </li>
+                            <li>
+                                <a ng-if="showNotiLecturers == true &&  showButtonNotiLecturers == true" data-toggle="modal" data-target="#confirmNotiLecturers" class="cursor"> Gửi thông tin Giảng viên tới sinh viên </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="input-group">
+                    <select class="form-control" style="border-radius:25px; border: 1px solid rgba(221,226,232,.49); box-shadow: inset 0 1px 0 rgba(0,0,0,.075);" ng-change="filterLec(t)" ng-model="t">
+                        <option value="">Tất cả sinh viên</option>
+                        <option value="true">Sinh viên đã có giảng viên</option>
+                        <option value="false">Sinh viên chưa có giảng viên</option>
+                    </select>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="alert alert-warning" ng-if="warning">
+                    <strong>{{warningMessage}}</strong>
+                </div>
+                <div class="alert alert-success" ng-if="success">
+                    <strong>{{successMessage}}</strong>
+                </div>
+                <div class="alert alert-danger" ng-if="danger">
+                    <strong>{{errorMessage}}</strong>
+                </div>
+                <form class="form-horizontal form-label-left collapse" id="download_list_student">
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li><a data-toggle="collapse" data-target="#download_list_student" class="cursor"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+                    </ul>
+                    <div class="form-group">
+                        <table ng-init="getAllStudentClass()">
+                            <tr>
+                                <td>
+                                    <select class="form-control" ng-model="downloadTypeLecturers" style="border-radius:25px; border: 1px solid rgba(221,226,232,.49); box-shadow: inset 0 1px 0 rgba(0,0,0,.075);" ng-change="changedownloadType(downloadTypeLecturers, 'no')">
+                                        <option value=""> Tất cả </option>
+                                        <option value="lecturers"> Đã có giảng viên </option>
+                                        <option value="noLecturers"> Chưa có giảng viên </option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-control" ng-model="downloadType" style="border-radius:25px; border: 1px solid rgba(221,226,232,.49); box-shadow: inset 0 1px 0 rgba(0,0,0,.075);" ng-change="changedownloadType('no', downloadType)">
+                                        <option value=""> Download tất cả </option>
+                                        <option value="class"> Download theo lớp </option>
+                                    </select>
+                                </td>
+                                <td ng-if="downloadType == 'class'">
+                                    <select class="form-control" ng-model="st.infoBySchool.studentClass" style="border-radius:25px; border: 1px solid rgba(221,226,232,.49); box-shadow: inset 0 1px 0 rgba(0,0,0,.075);">
+                                        <option value="">-- Chọn lớp khóa học --</option>
+                                        <option ng-repeat="class in allStudentClass" value="{{class.studentClass}}">
+                                            {{class.studentClass}}
+                                        </option>
+                                    </select>
+                                </td>
+                                <td class="text-center">
+                                    <button class="btn-success" ng-click="exportDataNoLecturers()">Download </button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="divider-dashed"></div>
+                </form>
+                <div id="add_lecturers_for_student_excel" class="collapse">
+                    <form class="form-horizontal form-label-left">
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li><a data-toggle="collapse" data-target="#add_lecturers_for_student_excel" id="close_create_post" hclass="cursor"><i class="fa fa-chevron-up"></i></a>
+                            </li>
+                        </ul>
+                        <table>
+                            <tr>
+                                <td>
+                                    <input class="btn btn-default" type="file" name="xlfile" id="xlf" ng-init="convertNolecturers()">
+                                </td>
+                                <td>
+                                    <button class="btn btn-success" ng-click="checkData()">Kiểm tra dữ liệu </button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-success" ng-click="upload()" ng-if="checkExcel == true">Upload </button>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                    <!-- <p ng-repeat="error in errors">{{error.error}}</p> -->
+                    <table class="table table-striped jambo_table bulk_action" ng-if="noLecturers != null">
+                        <thead>
+                            <tr class="headings">
+                                <th class="column-title">#</th>
+                                <th class="column-title">STT</th>
+                                <th class="column-title">Họ và Tên</th>
+                                <th class="column-title">Lớp</th>
+                                <th class="column-title">Email VNU</th>
+                                <th class="column-title">Giảng viên</th>
+                                <th class="column-title">Email VNU - Giảng viên</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="data in noLecturers" id="{{student.emailvnu}}" ng-init="data.editEmail = data.stt; data.editLecturers = data.stt" class="noLecturers_{{data.stt}}">
+                                <td class=" ">{{$index+1}}</td>
+                                <td class=" " ng-click="removeData($index)">{{data.stt}}</td>
+                                <td class=" ">{{data.fullName}}</td>
+                                <td class=" ">{{data.class}}</td>
+                                <td class=" " id="email_{{data.stt}}" ng-click="data.editEmail = data.editEmail + 1;">
+                                    <p ng-if="data.editEmail == data.stt">{{data.email}}</p>
+                                    <input ng-if="data.editEmail != data.stt" id="email_value_{{data.stt}}" ng-model="data.email" style="border-radius:3px; border: 1px solid; width: 100%;" ng-keydown="editEmail($event, data)" />
+                                </td>
+                                <td class=" ">{{data.lecturers}}</td>
+                                <td class=" " id="lecturers_email_{{data.stt}}" ng-click="data.editLecturers = data.editLecturers + 1;">
+                                    <p ng-if="data.editLecturers == data.stt">{{data.lecturersEmail}}</p>
+                                    <input ng-if="data.editLecturers != data.stt" id="email_value_{{data.stt}}" ng-model="data.lecturersEmail" style="border-radius:3px; border: 1px solid; width: 100%;" ng-keydown="editLecturers($event, data)" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="divider-dashed"></div>
+                </div>
+                <form class="form-horizontal form-label-left collapse" id="add_lecturers_for_student">
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li><a data-toggle="collapse" data-target="#add_lecturers_for_student" class="cursor"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+                    </ul>
+                    <div class="form-group">
+                        <label class="control-label col-md-1 col-sm-3 col-xs-12" for="first-name">Sinh viên:
+                        </label>
+                        <div class="col-md-11 col-sm-12 col-xs-12">
+                            <label class="btn btn-default" ng-repeat="student in listStudent" id="{{student.id}}" ng-mouseover="student.show = true" ng-mouseleave="student.show = false" ng-click="removeStudent($index, student.id)">
+                                {{student.studentName}}
+                                <span id="span_{{student.id}}" ng-show="student.show">x</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Giảng viên: </label>
+                        <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select class="form-control" ng-model="lecturers.lecturersId">
+                                <option value=""> -- Chọn giảng viên -- </option>
+                                <option ng-repeat="lecturers in nameAndIdOfLecturers" value="{{lecturers.lecturersId}}">
+                                    {{lecturers.lecturersName}}
+                                </option>
+                            </select>
+                        </div> -->
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            <angucomplete-alt id="findLecturers" placeholder="Tìm kiếm giảng viên" pause="100" selected-object="selectedLecturers" local-data="nameAndIdOfLecturers" search-fields="lecturersName" title-field="lecturersName" minlength="1" input-class="form-control" ng-show="selectedLec == undefined" />
+                            <label ng-if="selectedLec != undefined" class="btn btn-default" ng-mouseover="selectedLec.show = true" ng-mouseleave="selectedLec.show = false" ng-click="removeLecturersFind()">
+                                {{selectedLec.fullName}}
+                                <span id="span_{{student.id}}" ng-show="selectedLec.show">x</span>
+                            </label>
+                        </div>
+                        <div class="col-md-2 col-sm-2 col-xs-12">
+                            <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#find_lecturers">Tìm kiếm</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                            <button type="submit" class="btn btn-success" ng-click="addLecturersStudent()">Thêm</button>
+                        </div>
+                    </div>
+                    <div class="divider-dashed"></div>
+                </form>
+                <div class="clearfix"></div>
+                <div class="table-responsive">
+                    <span class="pull-right"> 
+                        <ul class="list-inline">
+                          <li class="list-inline-item" ng-click="getCountStudentNoFollow()">Hiển thị:</li>
+                          <li class="list-inline-item cursor" ng-click=" entry = 25; paginate();" ng-class="{underline : entry == 25, bold : entry == 25}">25</li>
+                          <li class="list-inline-item cursor" ng-click=" entry = 50; paginate();" ng-class="{underline : entry == 50, bold : entry == 50}">50</li>
+                          <li class="list-inline-item cursor" ng-click=" entry = 100; paginate();" ng-class="{underline : entry == 100, bold : entry == 100}">100</li>
+                          <li class="list-inline-item cursor" ng-click=" entry = totalItems; paginate();" ng-class="{underline : entry == totalItems, bold : entry == totalItems}">Tất cả</li>
+                          <li class="list-inline-item cursor">|</li>
+                          <li class="list-inline-item"  ng-if="currentPage != undefined && currentPage * entryLimit <= totalItems ">{{(currentPage * entryLimit) - entryLimit + 1}}-{{currentPage * entryLimit}} trong tổng số {{totalItems}}</li>
+                          <li class="list-inline-item"  ng-if="currentPage != undefined && currentPage * entryLimit > totalItems "">{{(currentPage * entryLimit) - entryLimit + 1}}-{{totalItems}} trong tổng số {{totalItems}}</li>
+                        </ul>
+                    </span>
+                    <div class="input-group pull-right">
+                        <input type="text" class="form-control" placeholder="Search for..." ng-model="search" style="border-radius:25px; border: 1px solid rgba(221,226,232,.49); box-shadow: inset 0 1px 0 rgba(0,0,0,.075); width: 72%;">
+                    </div>
+                    <!-- <div class="input-group pull-right">
+                        <div class="form-group">
+                            <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                                <button type="submit" class="btn btn-success" ng-click="addLecturersStudent()">Thêm</button>
+                            </div>
+                        </div>
+                    </div> -->
+                    <ul uib-pagination total-items="totalItems" ng-model="currentPage" max-size="noOfPages" items-per-page="entryLimit"></ul>
+                    <table class="table table-striped jambo_table bulk_action" id="tableExcel">
+                        <thead>
+                            <tr class="headings">
+                                <!-- <th> -->
+                                <!-- <input type="checkbox" id="check-all" class="flat"> -->
+                                <!-- </th> -->
+                                <th class="column-title">#</th>
+                                <th class="column-title">Họ và Tên</th>
+                                <th class="column-title">MSSV</th>
+                                <th class="column-title">Email VNU</th>
+                                <th class="column-title">Lớp</th>
+                                <th class="column-title">Giảng viên hướng dẫn</th>
+                                <th class="column-title">Đối tác</th>
+                                <!-- <th class="column-title">Trạng thái</th> -->
+                                <th class="column-title">Sửa</th>
+                                <th class="column-title">Xóa</th>
+                                <th class="column-title no-link last"><span class="nobr"></span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- <tr class="even pointer" ng-repeat="contract in filtered = allContract | filter : search | -->
+                            <!-- startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit"> -->
+                            <tr ng-repeat="student in filtered = allStudents | filter : search  | filter : {show:true}  |
+                                startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit | orderBy:'-id'" ng-init="student.edit = false">
+                                <td class=" ">{{(currentPage * entryLimit) - entryLimit + 1 + $index}}</td>
+                                <td class=" ">{{student.student.infoBySchool.studentName}}</td>
+                                <td class=" ">{{student.student.infoBySchool.studentCode}}</td>
+                                <td class=" ">{{student.student.infoBySchool.emailvnu}}</td>
+                                <td class=" ">{{student.student.infoBySchool.grade}}{{student.student.infoBySchool.studentClass}}</td>
+                                <td class=" " id="lecturers_{{student.id}}">
+                                    <p ng-show="student.edit == false">{{student.lecturers.fullName}}</p>
+                                    <angucomplete-alt id="findLecturers_{{student.id}}" placeholder="{{student.lecturers.fullName}}" pause="100" selected-object="student.selectedLecturers" local-data="nameAndIdOfLecturers" search-fields="lecturersName" title-field="lecturersName" minlength="1" input-class="form-control edit-input" ng-show="student.edit == true" />
+                                </td>
+                                <td class="internship_{{student.id}}">{{student.partnerName}}</td>
+                                <!-- <td ng-if="data.status == 'A' || data.status == true">
+                                    Active
+                                </td>
+                                <td ng-if="data.status == 'D' || data.status == false">
+                                    Deactive
+                                </td> -->
+                                <td class="cursor ">
+                                    <a ng-show="student.edit == false" ng-click="student.edit = true; editLecturerOfStudent(student)">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                    <button ng-show="student.edit == true" type="button" class="btn btn-default btn-xs" ng-click="student.edit = false; clearAngucompleteAltInput('findLecturers_' + student.id)">Hủy</button>
+                                    <button ng-show="student.edit == true" id="save_edit_contact_{{contact.id}}" type="button" class="btn btn-success btn-xs" ng-click="editLecturersStudent(student)">Xác nhận</button>
+                                </td>
+                                <td class=" " ng-click="confirmDelete(student.id, student.infoBySchool.studentName, student.internship.id)">
+                                    <a class="cursor" data-toggle="modal" data-target="#delete_student"><i class="fa fa-trash"></i></a>
+                                </td>
+                                <td class="a-center ">
+                                    <input type="checkbox" id="checkbox_{{student.id}}" class="flat" name="table_records" ng-click="student.checked = !student.checked; addStudent(student);" ng-checked="student.checked">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- end partner contact -->
+                <!-- delete student info -->
+                <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true" id="confirmNotiLecturers">
+                    <div class="modal-dialog modal-sm">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" id="close_modal_confirmNotiLecturers"><span aria-hidden="true">×</span>
+                                </button>
+                                <h4 class="modal-title">Bạn có chắc chắn muốn gửi thông tin Giảng viên cho sinh viên</h4>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                <button type="button" class="btn btn-primary" ng-click="submitLecturers()">Xác nhận</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true" id="delete_student">
+                    <div class="modal-dialog modal-sm">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" id="close_modal_delete_student"><span aria-hidden="true">×</span>
+                                </button>
+                                <h4 class="modal-title">Xóa thông tin giảng viên của {{confirmDeleteName}}</h4>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                <button type="button" class="btn btn-primary" ng-click="removeLecturers(confirmDeleteId)">Xóa Giảng viên</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end delete studentinfo -->
+                <!-- edit student -->
+                <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" id="find_lecturers">
+                    <div class="modal-dialog modal-lg" ng-init="getAllLecturers()">
+                        <div class="modal-content">
+                            <!-- <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" id="close_modal_edit"><span aria-hidden="true">×</span>
+                                </button>
+                                <h4 class="modal-title">Chỉnh thông tin sinh viên</h4>
+                            </div> -->
+                            <div class="modal-body">
+                                <div class="alert alert-danger" ng-if="danger_edit">
+                                    <strong>{{errorMessage}}</strong>
+                                </div>
+                                <div class="alert alert-success" ng-if="successdelete_edit">
+                                    <strong>{{successMessage}}</strong>
+                                </div>
+                                <div class="table-responsive">
+                                    <span class="pull-right"> 
+                    <div class="input-group pull-right">
+                        <input type="text" class="form-control" placeholder="Search for..." ng-model="searchLec" style="border-radius:25px; border: 1px solid rgba(221,226,232,.49); box-shadow: inset 0 1px 0 rgba(0,0,0,.075); width: 100%;">
+                    </div>
+                </span>
+                                    <ul uib-pagination total-items="totalItemslecturers" ng-model="currentPagelecturers" max-size="noOfPageslecturers" items-per-page="entryLimitlecturers"></ul>
+                                    <table class="table table-striped jambo_table bulk_action">
+                                        <thead>
+                                            <tr class="headings">
+                                                <th>STT</th>
+                                                <th>Tên</th>
+                                                <!-- <th class="column-title">Mô tả</th> -->
+                                                <th class="column-title">Email</th>
+                                                <th class="column-title">Email Vnu</th>
+                                                <th class="column-title">Bộ Môn giảng dạy</th>
+                                                <!-- <th>Khoa</th> -->
+                                                <th class="column-title">SĐT</th>
+                                                <th class="column-title"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="cursor" ng-repeat="lecturers in filteredlecturers = allLecturers | filter : searchLec |
+                                startFrom:(currentPagelecturers-1)*entryLimitlecturers | limitTo:entryLimitlecturers | orderBy:'subject'" ng-click="selectedLecturersModal(lecturers)">
+                                                <td>{{(currentPagelecturers * entryLimitlecturers) - entryLimitlecturers + 1 + $index}}</td>
+                                                <td id="fullName_{{lecturers.id}}">{{lecturers.fullName}}</td>
+                                                <td id="email_{{lecturers.id}}">{{lecturers.email}}</td>
+                                                <td id="emailVNU_{{lecturers.id}}">{{lecturers.emailVNU}}</td>
+                                                <td id="subject_{{lecturers.id}}">{{lecturers.subject}}</td>
+                                                <td id="phoneNumber_{{lecturers.id}}">{{lecturers.phoneNumber}}</td>
+                                                <td id="phoneNumber_{{lecturers.id}}">{{lecturers.phoneNumber}}</td>
+                                                <!-- <td>
+                                                    <input type="radio" class="flat" name="table_records" ng>
+                                                </td> -->
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <!-- <ul uib-pagination total-items="totalItems" ng-model="currentPage" max-size="noOfPages" items-per-page="entryLimit"></ul> -->
+                                </div>
+                                <h4 class="modal-title" ng-show="selectedLec != undefined">Đã lựa chọn: {{selectedLec.fullName}}</h4>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" ng-click="removeLecturersFind()" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Xác nhận</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end delete student -->
+            </div>
+        </div>
+    </div>
+</div>

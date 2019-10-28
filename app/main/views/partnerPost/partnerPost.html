@@ -1,0 +1,37 @@
+<div class="col-sm-8" ng-init="loadPost()">
+    <h2 ng-if="partnerPost == ''">No Posts</h2>
+    <div class="blog-post blog-single-post" ng-repeat="post in partnerPost">
+        <div class="loading-spiner-holder gif-loading blog-post blog-single-post" data-loading>
+            <div class="loading-spiner">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif" class="ajax-loader" />
+            </div>
+        </div>
+        <div class="single-post-title">
+            <h3><a href="/#/post/{{post.id}}">{{post.describePost}}</a></h3>
+            <ul>
+                <li class="dropdown active button-right" style="list-style-type: none;">
+                    <a class="dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
+                    <!-- <a class="dropdown-toggle" data-toggle="dropdown" ng-if="newNoti == false">New Notification <span class="caret"></span></a> -->
+                    <ul class="dropdown-menu" role="menu">
+                        <li class="cursor">
+                            <a ng-click="deleteAPost(post.id)" confirmation-needed="Really Delete?">
+                                Xóa Bài
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/#/partner/edit-post" ng-click="editPost(post)">
+                                Sửa Bài
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="single-post-info">
+            <!-- <i class="glyphicon glyphicon-time"></i>{{post.datePost}}<a href="#" title="Show Comments"><i class="glyphicon glyphicon-comment"></i>11</a> -->
+        </div>
+        <div class="single-post-info" ng-bind-html="post.content | limitTo:300">
+            <!--<p>{{post.content | limitTo:50}}</p>-->
+        </div>
+    </div>
+</div>

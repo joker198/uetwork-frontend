@@ -1,0 +1,58 @@
+<div class="section"  ng-init="getStudentInfo()">
+    <div class="container">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-sm-4 blog-sidebar">
+			    <h4></h4>
+			    <form>
+			        <div class="input-group">
+
+			        </div>
+			    </form>
+			    <h4>Profile</h4>
+			    <ul class="recent-posts">
+			        <li><a ui-sref=".info">Thông tin cá nhân</a></li>
+			        <li><a ui-sref=".infoBySchool">Thông tin tại trường</a></li>
+			        <li><a ui-sref=".work-experience">Kinh nghiệm làm việc</a></li>
+			        <!-- <li ng-if="studentInfo.internship != null"><a ui-sref=".internship">Internship</a></li> -->
+			        <li><a ui-sref=".change-password">Đổi mật khẩu</a></li>
+			    </ul>
+			    <!-- <h4 >Work</h4>
+			    <ul class="blog-categories">
+			        
+			    </ul> -->
+			    <!-- <h4>Activity</h4> -->
+			    <!-- <ul> -->
+			        <!-- <li><a href="#">Job Enroll</a></li> -->
+			        <!-- <li><a href="#">Job Interest</a></li> -->
+
+			    <!-- </ul> -->
+			</div>
+            <div ui-view></div>
+            <!-- End Sidebar -->
+        </div>
+    </div>
+</div>
+<div id="choose_img" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Thêm ảnh</h4>
+            </div>
+            <div class="modal-body" style="height: 73vh;">
+            	<div id="crop_img" ng-hide="pic == true" style="margin: 0 auto">
+		            <img-crop image="myImage" result-image-format="image/jpeg" result-image-quality="1.0" result-image="myCroppedImage" area-type="square" on-change="pic = false" change-on-fly="true" area-min-size="20">
+		            </img-crop>
+		            <button ng-click="changeAva()" ng-if="image != false">Submit</button>
+		        </div>
+            </div>
+            <div class="modal-footer">
+            	<input type="file" id="fileInput" accept="image/*" />
+                <button type="button" class="btn btn-default" id="close_select_partner" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" ng-click="selectPartner()">Choose</button>
+            </div>
+        </div>
+    </div>
+</div>

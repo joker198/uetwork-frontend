@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quản Lý Sinh Viên</title>
+    <!-- angucomplete-alt -->
+    <link rel="stylesheet" href="bower_components/angucomplete-alt/angucomplete-alt.css">
+    <!-- Bootstrap -->
+    <link href="bower_components/gentelella/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="bower_components/gentelella/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="bower_components/gentelella/vendors/nprogress/nprogress.css" rel="stylesheet">
+    <!-- Custom Theme Style -->
+    <link href="bower_components/gentelella/build/css/custom.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="bower_components/summernote/dist/summernote.css">
+    <!-- jQuery -->
+    <script src="bower_components/gentelella/vendors/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="bower_components/gentelella/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="bower_components/angular-bootstrap/ui-bootstrap-csp.css">
+    <!-- AngularJs -->
+    <script src="bower_components/angular/angular.min.js"></script>
+    <script src="bower_components/angular-route/angular-route.min.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+    <!-- <script src="app.js"></script> -->
+    <!-- <script src="main/controllers/main.ctrl.js"></script> -->
+    <!-- <script src="modules/admin/uglify/concat.min.js"></script> -->
+    <script src="modules/admin/appAdmin.js"></script>
+    <script src="modules/admin/controllers/admin.ctrl.js"></script>
+    <style>
+    .cursor {
+        cursor: pointer;
+    }
+    .underline{
+       text-decoration:underline;
+    }
+    .bold {
+        font-weight:bold;
+    }
+    .NEW {
+        background-color: #dddfe2;
+    }
+    .angucomplete-dropdown {
+        overflow-y: auto;
+        max-height: 200px;
+        width: 100%;
+    }
+    .edit-input {
+        border-radius:3px; border: 1px solid #ccc;
+        height: 30px;
+    }
+    </style>
+</head>
+<div ng-view ng-if="loggedIn != true"></div>
+
+<body class="nav-md" ng-app="myAdminApp" ng-controller="adminCtrl" ng-cloak>
+    <div class="container body" ng-show="loggedIn">
+        <div class="main_container">
+            <div class="col-md-3 left_col">
+                <div class="left_col scroll-view">
+                    <div class="navbar nav_title" style="border: 0;">
+                        <a class="site_title" href="#/"><span>Quản Lý Sinh Viên</span></a>
+                    </div>
+                    <div class="clearfix"></div>
+                    <!-- menu profile quick info -->
+                    <!-- /menu profile quick info -->
+                    <br />
+                    <!-- sidebar menu -->
+                    <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+                        <div class="menu_section">
+                            <!-- <h3>General</h3> -->
+                            <ul class="nav side-menu">
+                                <li><a><i class="fa fa-inbox"></i> Message <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <!-- <li ng-class="{active : currentPageName == '/inbox'}"><a href="#/inbox"><i class="fa fa-inbox"></i> Inbox </a></li> -->
+                                        <li ng-class="{active : currentPageName == '/sent'}"><a href="#/sent"><i class="fa fa-send-o"></i> Write Notification</a></li>
+                                    </ul>
+                                </li>
+                                <li ng-if="role == 'ADMIN'"><a><i class="fa fa-home"></i> Internship <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <!-- <li><a href="/#/nation_continent"><i class="fa fa-globe"></i> Quốc Gia Và Châu lục </a></li> -->
+                                        <!-- <li><a href="/#/partner"><i class="fa fa-group"></i> Đối Tác </a></li> -->
+                                        <!-- <li><a href="/#/vnu"><i class="fa fa-university"></i> Giảng viên </a></li> -->
+                                        <li  ng-class="{active : currentPageName == '/post/page=:page'}"><a href="#/post/page=1" ng-click="reloadState('/post/page=:page', $event)">Posts</a></li>
+                                        <li  ng-class="{active : currentPageName == '/internship-term'}"><a href="#/internship-term" ng-click="reloadState('/internship-term', $event)">Semester</a></li>
+                                        <!-- <li><a href="#/internship-term"><i class="fa fa-archive"></i> Danh sách SV thực tập </a></li> -->
+                                        <li  ng-class="{active : currentPageName == '/registration-list'}">
+                                            <a href="#/registration-list" ng-click="reloadState('/registration-list', $event)">
+                                                Registration list
+                                            </a>
+
+                                        </li>
+                                        <li  ng-class="{active : currentPageName == '/registration-partner'}">
+                                            <a href="#/registration-partner" ng-click="reloadState('/registration-partner', $event)">Registration partner</a>
+                                        </li>
+                                        <li  ng-class="{active : currentPageName == '/add-lecturers-student'}">
+                                            <a href="#/add-lecturers-student" ng-click="reloadState('/add-lecturers-student', $event)">Supervisor Assignment</a>
+                                        </li>
+                                        <li ng-class="{active : currentPageName == '/add-score'}">
+                                            <a href="#/add-score" ng-click="reloadState('/add-score', $event)">Add Score</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li><a><i class="fa fa-university"></i> Student <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li  ng-class="{active : currentPageName == '/student'}" ng-if="role == 'ADMIN'"><a href="#/student" ng-click="reloadState('/student', $event)">Student</a></li>
+                                        <li  ng-class="{active : currentPageName == '/internship'}" ng-if="role == 'LECTURERS'"><a href="#/internship" ng-click="reloadState('/internship', $event)">Student</a></li>
+                                    </ul>
+                                </li>
+                                <li ng-if="role == 'ADMIN'"><a><i class="fa fa-group"></i> Partner <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li  ng-class="{active : currentPageName == '/fit-partner'}"><a href="#/fit-partner" ng-click="reloadState('/fit-partner', $event)">FIT Partner</a></li>
+                                        <li  ng-class="{active : currentPageName == '/other-partner'}"><a href="#/other-partner" ng-click="reloadState('/other-partner', $event)">Other Partner</a></li>
+                                    </ul>
+                                </li>
+                                <li ng-if="role == 'ADMIN'"><a><i class="fa fa-university"></i> VNU <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li  ng-class="{active : currentPageName == '/lecturers'}"><a href="#/lecturers" ng-click="reloadState('/lecturers', $event)">Lecturers</a></li>
+                                        <li  ng-class="{active : currentPageName == '/class'}"><a href="#/class" ng-click="reloadState('/class', $event)">Class</a></li>
+                                    </ul>
+                                </li>
+                                <li ng-if="role == 'ADMIN'" ng-class="{active : currentPageName == '/user'}" ng-click="reloadState('/user', $event)"><a href="#/user/page=1"><i class="fa fa-user"></i> User</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- /sidebar menu -->
+                    <!-- /menu footer buttons -->
+                    <!-- /menu footer buttons -->
+                </div>
+            </div>
+            <!-- top navigation -->
+            <div class="top_nav">
+                <div class="nav_menu">
+                    <nav>
+                        <div class="nav toggle">
+                            <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+                        </div>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li class="">
+                                <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                    {{username}}
+                                    <span class="fa fa-angle-down"></span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-usermenu pull-right">
+                                    <li><a ng-click="" data-toggle="modal" data-target="#change_pass" class="cursor"><i class="fa fa-key pull-right"></i> Đổi mật khẩu</a></li>
+                                    <li><a ng-click="logout()" class="cursor"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
+                                </ul>
+                            </li>
+                            <!-- <li class="">
+                                <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                    <span class=" fa fa-angle-down"></span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-usermenu pull-right">
+                                    <li><a ng-click="logout()" class="cursor"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
+                                </ul>
+                            </li> -->
+                            <!-- <li role="presentation" class="dropdown">
+                                <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa fa-envelope-o"></i>
+                                    <span class="badge bg-green">6</span>
+                                </a>
+                                <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+                                    <li>
+                                        <a>
+                                            <span>
+                          <span>John Smith</span>
+                                            <span class="time">3 mins ago</span>
+                                            </span>
+                                            <span class="message">
+                          Film festivals used to be do-or-die moments for movie makers. They were where...
+                        </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a>
+                                            <span>
+                          <span>John Smith</span>
+                                            <span class="time">3 mins ago</span>
+                                            </span>
+                                            <span class="message">
+                          Film festivals used to be do-or-die moments for movie makers. They were where...
+                        </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <div class="text-center">
+                                            <a>
+                                                <strong>See All Alerts</strong>
+                                                <i class="fa fa-angle-right"></i>
+                                            </a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li> -->
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <!-- /top navigation -->
+            <!-- page content -->
+            <div class="right_col" role="main">
+                <div class="">
+                    <div ui-view=></div>
+                </div>
+                <!-- <div ui-view="notification"></div> -->
+            </div>
+            <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" id="change_pass">
+                <div class="modal-dialog modal-lg" style="width:40vw;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="close_modal_delete"><span aria-hidden="true">×</span>
+                            </button>
+                            <h4 class="modal-title">Thay đổi mật khẩu</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert alert-danger" ng-if="danger_edit">
+                                <strong>{{errorMessage}}</strong>
+                            </div>
+                            <div class="alert alert-success" ng-if="successdelete_edit">
+                                <strong>{{successMessage}}</strong>
+                            </div>
+                            <form class="form-horizontal form-label-left">
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Mật khẩu hiện tại:</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="password" name="country" class="form-control col-md-10" ng-model="password.oldPassword" required />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Mật khẩu:</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="password" name="country" class="form-control col-md-10" ng-model="password.newPassword" required />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Nhập lại mật khẩu:</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="password" name="country" class="form-control col-md-10" ng-model="password.reTypePass" required />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="alert alert-warning col-md-6 col-sm-6 col-xs-12 col-md-offset-3" ng-if="password.newPassword != password.reTypePass && password.reTypePass != null">
+                                        <strong>Mật khẩu mới không khớp</strong>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-if="password.newPassword == password.reTypePass && password.reTypePass != null && password.reTypePass != '' && password.newPassword != null && password.newPassword != ''">
+                                    <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                                        <button type="submit" class="btn btn-success" ng-click="changePass()">Thay đổi</button>
+                                    </div>
+                                </div>
+                                <div class="divider-dashed"></div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button ng-if="showShareContractTable" type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                            <button ng-if="showShareContractTable" type="button" class="btn btn-primary" ng-click="shareContract(selectedContract.originalObject.id, allUnit)">Lưu thay đổi</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /page content -->
+            <!-- footer content -->
+            <footer>
+                <div class="pull-right">
+                </div>
+                <div class="clearfix"></div>
+            </footer>
+            <!-- /footer content -->
+        </div>
+    </div>
+    <!-- bootstrap -->
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    notification
+    <script src="modules/admin/controllers/notification.ctrl.js"></script>
+    <script src="modules/admin/services/notification.service.js"></script>
+    admin
+    <script src="modules/admin/controllers/loginAdmin.ctrl.js"></script>
+    <script src="modules/admin/services/admin.service.js"></script>
+    <script src="modules/admin/services/loginAdmin.service.js"></script>
+    info student
+    <script src="modules/admin/controllers/student.ctrl.js"></script>
+    <script src="modules/admin/services/student.service.js"></script>
+    <script src="main/services/info.service.js"></script>
+    intern
+    <script src="modules/admin/controllers/intern.ctrl.js"></script>
+    <script src="modules/admin/services/intern.service.js"></script>
+    message
+    <script src="modules/admin/controllers/message.ctrl.js"></script>
+    <script src="modules/admin/services/message.service.js"></script>
+    partner
+    <script src="modules/admin/controllers/partner.ctrl.js"></script>
+    <script src="modules/admin/services/partner.service.js"></script>
+    lecturers
+    <script src="modules/admin/controllers/lecturers.ctrl.js"></script>
+    <script src="modules/admin/services/lecturers.service.js"></script>
+    httpRequestInterceptor
+    <script src="modules/admin/services/httpRequestInterceptor.js"></script>
+    <!-- FastClick -->
+    <script src="bower_components/gentelella/vendors/fastclick/lib/fastclick.js"></script>
+    <!-- NProgress -->
+    <script src="bower_components/gentelella/vendors/nprogress/nprogress.js"></script>
+    <!-- jQuery Smart Wizard -->
+    <script src="bower_components/gentelella/vendors/jQuery-Smart-Wizard/js/jquery.smartWizard.js"></script>
+    <!-- angular md5 -->
+    <script src="bower_components/angular-md5/angular-md5.min.js"></script>
+    <!-- Custom Theme Scripts -->
+    <script src="bower_components/gentelella/build/js/custom.min.js"></script>
+    <!-- ui bootstrap -->
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    <script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+    <!-- xlsx excel-->
+    <script src="bower_components/js-xlsx-style/dist/xlsx.full.min.js"></script>
+    <!-- summernote -->
+    <script src="bower_components/summernote/dist/summernote.min.js"></script>
+    <script src="bower_components/angular-summernote/dist/angular-summernote.min.js"></script>
+    <!-- file saver -->
+    <script src="bower_components/file-saver/FileSaver.js"></script>
+    <!-- <script src="bower_components/angular-sanitize/angular-sanitize.js"></script> -->
+    <script src="bower_components/angucomplete-alt/angucomplete-alt.js"></script>
+</body>
+
+</html>

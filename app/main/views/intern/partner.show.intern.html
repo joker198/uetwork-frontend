@@ -1,0 +1,33 @@
+<div class="col-md-8 col-sm-8 col-xs-12">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>All Internships</h2>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <table class="table table-striped" ng-if="allInternOfPartner != null">
+                <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Birthday</th>
+                    <th>Student Code</th>
+                    <th>Grade</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{intern.startDate | date: "dd-MM-yyyy"}}
+                <tr ng-repeat="intern in allInternOfPartner">
+                    <th scope="row">{{intern.studentInfo.fullName}}</th>
+                    <td>{{intern.studentInfo.birthday}}</td>
+                    <td>cai nay chua co</td>
+                    <td>vi co moi studentId ma cai nay o infobyschool</td>
+                    <td>{{intern.startDate | date: "dd-MM-yyyy"}}</td>
+                    <td>{{intern.endDate | date:'medium'}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

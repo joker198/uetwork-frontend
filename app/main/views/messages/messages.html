@@ -1,0 +1,39 @@
+<div class="section">
+    <div class="container">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-sm-4 blog-sidebar">
+                <h4></h4>
+                <form>
+                    <div class="input-group">
+                    </div>
+                </form>
+                <h4>Messages</h4>
+                <ul class="recent-posts">
+                    <li><a ui-sref=".inbox">Inbox <span ng-if="messagesCount != 0">({{messagesCount}})</span></a></li>
+                    <li ng-if="username == 'tu58' || username == 'nam_58' || username == 'khanhnh_58'"><a ui-sref=".write-message">Write Message</a></li>
+                </ul>
+                <!-- <h4>Activity</h4> -->
+                <!-- <ul> -->
+                <!-- <li><a href="#">Job Enroll</a></li> -->
+                <!-- <li><a href="#">Job Interest</a></li> -->
+                <!-- </ul> -->
+            </div>
+            <div ui-view></div>
+            <!-- End Sidebar -->
+        </div>
+    </div>
+</div>
+<!-- modal doc -->
+<div class="modal fade" tabindex="-1" role="dialog" id="view_file">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div style="text-align: center;" ng-if="modalFileLink != undefined && modalFileLink != null">
+                    <iframe src="{{modalFileLink}}" style="width:100%; height:85vh;" frameborder="0"></iframe>
+                </div>
+                <!-- {{modalFileLink}} -->
+            </div>
+        </div>
+    </div>
+</div>

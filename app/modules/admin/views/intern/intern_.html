@@ -1,0 +1,78 @@
+<div>
+    <p ng-click="showAllIntern_()">Show all intern</p>
+    <div  ng-if="showIntern">
+        <table border="1px">
+            <tr>
+                <td>Họ tên</td>
+                <td>Ngày sinh</td>
+                <td>Mã số sinh viên</td>
+                <td>Công ty</td>
+                <td>Giảng viên</td>
+                <td>Ngày bắt đầu</td>
+                <td>Ngày kết thúc</td>
+                <td><input type="checkbox" ng-click="selectAll()"></td>
+            </tr>
+            <tr ng-repeat="intern in isIntern">
+                <td>{{intern.studentInfo.fullName}}</td>
+                <td>{{intern.studentInfo.birthday}}</td>
+                <td>{{intern.infoBySchool.studentCode}}</td>
+                <td><p ng-if="intern.checked == false">{{intern.internship.company}}</p><input type="text" ng-if="intern.checked" ng-model="intern.internship.company"></td>
+                <td><p ng-if="intern.checked == false">{{intern.internship.supervisor}}</p><input type="text" ng-if="intern.checked" ng-model="intern.internship.supervisor"></td>
+                <td><p ng-if="intern.checked == false">{{intern.internship.startDate}}</p><input type="text" ng-if="intern.checked" ng-model="intern.internship.startDate"></td>
+                <td><p ng-if="intern.checked == false">{{intern.internship.endDate}}</p><input type="text" ng-if="intern.checked" ng-model="intern.internship.endDate"></td>
+                <td>
+                    <input type="checkbox" ng-click="chooseIntern(intern)" ng-checked="intern.checked">
+                </td>
+                <td ng-if="intern.checked && count == 1">
+                    <input type="button" ng-click="editIntern(intern.internship)" value="Lưu">
+                    <input type="button" ng-click="delOne(intern)" value="Xóa">
+                </td>
+            </tr>
+            <tr>
+                <td><input type="button" ng-click="saveAll()" ng-if="count > 1" value="Lưu"></td>
+                <td><input type="button" ng-click="delAll()" ng-if="count > 1" value="Xóa"></td>
+                <td>{{count}}</td>
+            </tr>
+        </table>
+    </div>
+    <hr>
+    <div>
+        <table>
+            <tr>
+                <td><input type="text" placeholder="Mã số sinh viên" ng-model="create.infoBySchool.studentCode" ng-change="showName()"  ng-blur="alert('1')"></td>
+                <td><input type="text" placeholder="Company" ng-model="create.partnerName" ng-change="showPartner()"></td>
+                <td><input type="text" placeholder="Start date" ng-model="create.startDate"></td>
+                <td><input type="text" placeholder="End date" ng-model="create.endDate"></td>
+                <td><input type="text" placeholder="Supervisor" ng-model="create.supervisor"></td>
+                <td><button ng-click="creatIntern()">Lưu</button> </td>
+            </tr>
+            <tr>
+                <td>
+                    <div ng-if="typing">
+                        <li ng-repeat="intern in notIntern | filter: create"
+                            ng-click="chooseStudent(intern)"
+                            ng-mouseleave="style={backgroundColor: 'white'}"
+                            ng-mouseover="style={backgroundColor: 'grey'}" ng-style="style">
+                            {{intern.studentInfo.fullName + '  ' +intern.studentInfo.birthday + '  '
+                            + intern.infoBySchool.studentCode}}
+                        </li>
+                    </div>
+                </td>
+                <td>
+                    <div ng-if="partner">
+                        <li ng-repeat="p in partner | filter: create.partnerName"
+                            ng-click="choosePartner(p)"
+                            ng-mouseleave="style={backgroundColor: 'white'}"
+                            ng-mouseover="style={backgroundColor: 'grey'}" ng-style="style">
+                            {{p.partnerName}}
+                        </li>
+                    </div>
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,119 @@
+<div class="section blog-posts-wrapper" ng-init="getFitPost(1)">
+    <div class="container">
+        <h2>
+            <a style="color: #53555c; text-decoration: none;">Internship with a FIT's partner</a>
+        </h2>
+        <div class="row">
+            <div class="col-md-4 col-sm-6" ng-repeat="post in allPosts" style="height: 180px;">
+                <div class="blog-post">
+                    <!-- <div class="post-info">
+                    </div> -->
+                    <!-- <a href="/#/post/{{post.id}}"><img ng-src="{{clientAdd}}{{post.image}}" class="post-image"></a> -->
+                    <div class="post-title">
+                        <h3><a href="/#/post/{{post.id}}">{{post.title}}</a></h3>
+                    </div>
+                    <!-- <div class="post-summary" ng-bind-html="post.content | limitTo:100">
+                    </div> -->
+                    <div class="post-more">
+                        <a href="/#/post/{{post.id}}">Read more</a>
+                        <div class="post-date">
+                            <div class="date">{{post.datePost | date:'medium'}}</div>
+                        </div>
+                    </div>
+                    <div class="post-info" ng-repeat="follow in internship.follows" ng-if="follow.postId == post.id && post.expiryTime > today">
+                        <div class="post-date">
+                            <div class="date">Followed</div>
+                        </div>
+                    </div>
+                    <div class="post-info" ng-if="post.expiryTime < today">
+                        <div class="post-date">
+                            <div class="date">Expired</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" data-loading>
+            <div class="pagination-wrapper">
+                <img ng-src="{{clientAdd}}/img/bx_loader.gif">
+            </div>
+        </div>
+        <div class="row" ng-if="currentPage != '/home'">
+            <div class="pagination-wrapper">
+                <ul class="pagination pagination-sm ">
+                    <li class="{{previousPage.class}}" ng-if="previousPage.class == 'disabled'"><a class="cursor">Previous</a></li>
+                    <li class="{{previousPage.class}}" ng-if="previousPage.class != 'disabled'"><a class="cursor" ng-click="getFitPost(previousPage.page)">Previous</a></li>
+                    <li class="{{page.class}}" ng-repeat="page in pages" ng-if="page.page != null">
+                        <a class="cursor" ng-click="getFitPost(page.page)" ng-if="page.class != 'active'">{{page.page}}</a>
+                        <a class="cursor" ng-if="page.class == 'active'">{{page.page}}</a>
+                    </li>
+                    <li class="{{nextPage.class}}" ng-if="nextPage.class == 'disabled'"><a class="cursor">Next</a></li>
+                    <li class="{{nextPage.class}}" ng-if="nextPage.class != 'disabled'"><a class="cursor" ng-click="getFitPost(nextPage.page)">Next</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="row" ng-init="getPartnerNameAndIdOfFitPartner(); checkFollow(0, 'registration_fit', 'Recruitment')">
+            <div class="col-md-8 col-sm-8" style="height: 180px;">
+                <div class="blog-post">
+                    <!-- <div class="post-title">
+                        <h3><a>Đăng kí cty thực tập ngoài danh sách của Khoa</a></h3>
+                    </div> -->
+                    <div class="post-summary">
+                        <form class="form-horizontal">
+                            <!-- <div class="row" data-loading>
+                                <div class="pagination-wrapper">
+                                    <img ng-src="{{clientAdd}}/img/loading-sm.gif">
+                                </div>
+                            </div> -->
+                            <div class="form-group" ng-show="subsRegistrationFit != 'true'">
+                                <!-- <label class="control-label col-sm-4">Duration Time: </label> -->
+                                <div class="col-sm-10">
+                                    <angucomplete-alt id="findFitPartner" placeholder="Tìm kiếm tên công ty" pause="100" selected-object="selectedFitPartner" local-data="nameAndIdFit" search-fields="1" title-field="1" minlength="1" input-class="form-control" />
+                                </div>
+                                <label class="btn col-sm-2" ng-click="registerFitPartner(); button ='left'">Chọn</label>
+                            </div>
+                            <div class="form-group" ng-show="subsRegistrationFit == 'true'">
+                                <!-- <label class="control-label col-sm-4">Duration Time: </label> -->
+                                <div class="form-group">
+                                    <label class="control-label col-sm-3">Công ty đã đăng kí: </label>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control inputNewPartner" ng-model="registrationFit.partnerName" readonly="readonly">
+                                    </div>
+                                    <label class="btn col-sm-2" ng-click="unfollow(0, 'registration', 'Recruitment'); button ='right'">Hủy đăng kí</label>
+                                </div>
+                                
+                            </div>
+                            <div class="form-group">
+                                <img data-loading ng-src="{{clientAdd}}/img/loading-sm.gif" ng-if="button == 'left'">
+                            </div>
+                        </form>
+                        <p>
+                            <i><span class="require">*</span> Nếu bạn <b>ĐANG</b> đi thực tập tại 1 công ty, hãy tìm xem công ty có phải đối tác của Khoa không và lựa chọn công ty.</i>
+                        </p>
+                        <p>
+                            <i><span class="require">*</span> Nếu không tìm thấy công ty, hãy tìm kiếm ở form cuối trang.</i>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-4" style="height: 180px;" ng-show="success || danger">
+                <div class="blog-post">
+                    <div class="post-summary">
+                        <div class="alert alert-success" role="alert" ng-if="success" >
+                            <button type="button" class="close" ng-click="successMessage =''; success = false;" aria-label="Close" onclick="$('.alert').fadeTo(500, 0).slideUp(500)">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <strong>{{successMessage}}</strong>
+                        </div>
+                        <div class="alert alert-danger" ng-if="danger">
+                            <button type="button" class="close" ng-click="errorMessage =''; danger = false;" aria-label="Close" onclick="$('.alert').fadeTo(500, 0).slideUp(500)">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <strong>{{errorMessage}}</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

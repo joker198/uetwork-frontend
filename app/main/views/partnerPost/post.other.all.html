@@ -1,0 +1,56 @@
+<div class="section blog-posts-wrapper" ng-init="getOtherPost(1)">
+    <div class="container">
+        <h2>
+            <a style="color: #53555c; text-decoration: none;">Thông tin thực tập</a>
+        </h2>
+        <div class="row">
+            <div class="col-md-4 col-sm-6" ng-repeat="post in allPosts" style="height: 180px;">
+                <div class="blog-post">
+                    <!-- <div class="post-info">
+                    </div> -->
+                    <!-- <a href="/#/post/{{post.id}}"><img ng-src="{{clientAdd}}{{post.image}}" class="post-image"></a> -->
+                    <div class="post-title">
+                        <h3><a href="/#/post/{{post.id}}">{{post.title}}</a></h3>
+                    </div>
+                    <!-- <div class="post-summary" ng-bind-html="post.content | limitTo:100">
+                    </div> -->
+                    <div class="post-more">
+                        <a href="/#/post/{{post.id}}">Read more</a>
+                        <div class="post-date">
+                            <div class="date">{{post.datePost | date:'medium'}}</div>
+                        </div>
+                    </div>
+                    <div class="post-info" ng-repeat="follow in post.follows" ng-if="follow.studentName == username && post.expiryTime > today">
+                        <div class="post-date">
+                            <div class="date">Followed</div>
+                        </div>
+                    </div>
+                    <div class="post-info" ng-if="post.expiryTime < today">
+                        <div class="post-date">
+                            <div class="date">Expired</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" data-loading>
+            <div class="pagination-wrapper">
+                <img ng-src="{{clientAdd}}/img/bx_loader.gif">
+            </div>
+        </div>
+        <div class="row" ng-if="currentPage != '/home'">
+            <div class="pagination-wrapper ">
+                <ul class="pagination pagination-sm ">
+                    <li class="{{previousPage.class}}" ng-if="previousPage.class == 'disabled'"><a class="cursor">Previous</a></li>
+                    <li class="{{previousPage.class}}" ng-if="previousPage.class != 'disabled'"><a class="cursor" ng-click="getOtherPost(previousPage.page)">Previous</a></li>
+                    <li class="{{page.class}}" ng-repeat="page in pages" ng-if="page.page != null">
+                        <a class="cursor" ng-click="getOtherPost(page.page)" ng-if="page.class != 'active'">{{page.page}}</a>
+                        <a class="cursor" ng-if="page.class == 'active'">{{page.page}}</a>
+                    </li>
+                    <li class="{{nextPage.class}}" ng-if="nextPage.class == 'disabled'"><a class="cursor">Next</a></li>
+                    <li class="{{nextPage.class}}" ng-if="nextPage.class != 'disabled'"><a class="cursor" ng-click="getOtherPost(nextPage.page)">Next</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,138 @@
+<div class="section" ng-init="loadPartner()">
+    <div class="container">
+        <div class="row">
+            <!-- Product Image & Available Colors -->
+            <div class="col-sm-4 blog-sidebar">
+                <br>
+                <div>
+                    <img ng-src="{{clientAdd}}{{partnerInfo.logo}}" style="float:right">
+                </div>
+            </div>
+            <!-- End Product Image & Available Colors -->
+            <!-- Product Summary & Options -->
+            <!-- End Product Summary & Options -->
+
+            <!-- Full Description & Specification -->
+            <div class="col-sm-8">
+                <div class="tabbable">
+                    <!-- Tabs -->
+                    <ul class="nav nav-tabs product-details-nav">
+                        <li class="active cursor"><a data-target="#tab1" data-toggle="tab">Partner Information</a></li>
+                        <li class="cursor"><a data-target="#tab3" data-toggle="tab" ng-click="showPartnerContact()">Partner Contacts</a></li>
+                        <li class="cursor"><a data-target="#tab4" data-toggle="tab" ng-click="showPartnerPost()">Partner Posts</a></li>
+                    </ul>
+                    <!-- Tab Content (Full Description) -->
+                    <div class="tab-content product-detail-info">
+                        <div class="tab-pane active" id="tab1">
+                            <table>
+                                <tr>
+                                    <td>Full Name</td>
+                                    <td>{{partnerInfo.partnerName}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Director</td>
+                                    <td>{{partnerInfo.director}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Email</td>
+                                    <td>{{partnerInfo.email}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Address</td>
+                                    <td>{{partnerInfo.address}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Field Work</td>
+                                    <td>{{partnerInfo.fieldWork}}</td>
+                                </tr>
+                                <!-- <tr ng-if="partnerInfo.averageRating"> -->
+                                    <!-- <td>Rating</td> -->
+                                    <!-- <td>{{partnerInfo.averageRating}}</td> -->
+                                <!-- </tr> -->
+                            </table>
+                        </div>
+                        <!-- Tab Content (Specification) -->
+
+
+                        <div class="tab-pane" id="tab3">
+                            <div class="tabbable">
+                                <!-- Tabs -->
+                                <ul class="nav nav-tabs product-details-nav">
+                                    <li ng-repeat="contact in contacts" ng-click="showTab()">
+                                        <a data-target="#tab{{contact.tab}}" data-toggle="tab" >{{contact.contactName}}</a>
+                                    </li>
+                                </ul>
+                                <!-- Tab Content (Full Description) -->
+                                <div class="tab-content product-detail-info">
+                                    <div class="tab-pane active" ng-repeat="contact in contacts" id="tab{{contact.tab}}" ng-if="show">
+                                        <table>
+                                            <tr>
+                                                <td>Name:</td>
+                                                <td>{{contact.contactName}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Address:</td>
+                                                <td>{{contact.address}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Email:</td>
+                                                <td>{{contact.email}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Skype</td>
+                                                <td>{{contact.skype}}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <!-- Tab Content (Specification) -->
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tab4">
+                            <div class="featured-news">
+                                <div class="row" ng-repeat="post in partnerPosts">
+                                    <div class="col-xs-4"><a><img ng-src="{{clientAdd}}{{post.image}}" alt="Post Title"></a></div>
+                                    <div class="col-xs-8">
+                                        <div class="caption cursor" data-toggle="collapse" data-target="#{{post.datePost}}" ng-click="post.expand = true">
+                                            <a>{{post.describePost}}</a>
+                                        </div>
+                                        <div class="date cursor" data-toggle="collapse" data-target="#{{post.datePost}}" ng-click="post.expand = true">
+                                            {{post.datePost | date:'medium'}}
+                                        </div>
+                                        <div class="intro cursor" ng-bind-html="post.content | limitTo:100"></div>
+                                        <div class="intro cursor" data-toggle="collapse" data-target="#{{post.datePost}}"
+                                            ng-init="post.expand = false" ng-click="post.expand = true">
+                                            ...read more
+                                        </div>
+                                    </div>  
+                                    <div class="col-sm-12" id="{{post.datePost}}" class="collapse" ng-if="post.expand" ng-init="checkFollow(post.id)">
+                                        <div class="blog-post blog-single-post">
+                                            <div class="single-post-title">
+                                                <h3>{{post.describePost}}</h3>
+                                            </div>
+                                            <div class="single-post-info">
+                                                <i class="glyphicon glyphicon-time"></i>{{post.datePost | date:'medium'}}
+                                            </div>
+                                            <button ng-click="follow(post.id, post.describePost)" ng-if="subs == false" class="btn btn-large pull-right">Follow</button>
+                                            <button ng-click="unfollow(post.id)" ng-if="subs == true" class="btn btn-large pull-right">Unfollow</button>
+                                            <div class="single-post-image">
+                                                <img ng-src="{{clientAdd}}{{post.image}}" alt="Post Title">
+                                            </div>
+                                            <div class="single-post-content" ng-bind-html="post.content">
+                                            </div>
+                                            <div class="cursor" data-toggle="collapse" data-target="#{{post.datePost}}">
+                                                Hide
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Full Description & Specification -->
+        </div>
+    </div>
+</div>

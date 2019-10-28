@@ -1,0 +1,110 @@
+<div id="choose_internship" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Bạn có chắc muốn chọn {{selectedPartnerName}} làm thực tập, bạn chỉ chọn được 1 lần!</h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="close_select_partner" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" ng-click="selectPartner()">Choose</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-sm-8">
+    <div class="blog-post blog-single-post" ng-init="checkMessage(selectedMessage)">
+        <div class="single-post-content">
+            <!-- <div class="post-coments" style="height: 500px; overflow: auto;"> -->
+            <div class="post-coments">
+                <ul class="post-comments">
+                    <li>
+                        <div class="comment-wrapper">
+                            <div class="comment-author"> {{selectedMessage.senderName}}</div>
+                            <p ng-bind-html="selectedMessage.content">
+                            </p>
+                            <ul ng-if="selectedMessage.attachFileAdd != null">
+                                <li>
+                                    <span class="atch-thumb cursor" data-toggle="modal" data-target="#view_file" ng-click="getLinkFile(selectedMessage.attachFileAdd)">
+                                        <img id="" ng-src="{{clientAdd}}/img/document-icon.png" alt="img" style="width: 8%; height: 8%;" />
+                                    </span>
+                                    <a class="cursor" data-toggle="modal" data-target="#view_file" ng-click="getLinkFile(selectedMessage.attachFileAdd)">View</a> -
+                                    <a href="{{getLinkDownLoad(selectedMessage.attachFileAdd)}}">Download</a>
+                                </li>
+                                <li><span><i class="fa fa-paperclip"></i> {{getFileName(selectedMessage.attachFileAdd)}} </span></li>
+                            </ul>
+                            <!-- </div> -->
+                            <!-- Comment Controls -->
+                            <div class="comment-actions">
+                                <span class="comment-date">{{selectedMessage.sendDate | date:'medium'}}</span>
+                                <a ng-if="selectedMessage.messageType == 'Normal' && username == 'tu58' || username == 'nam_58' || username == 'khanhnh_58'" class="btn btn-micro btn-grey comment-reply-btn cursor" data-toggle="collapse" data-target="#reply_message">
+                                    <i class="glyphicon glyphicon-share-alt"></i> Reply
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                    <li ng-if="selectedMessage.messages.length != 0" ng-repeat="message in selectedMessage.messages">
+                        <ul>
+                            <li>
+                                <div class="comment-wrapper">
+                                    <div class="comment-author">{{message.senderName}}</div>
+                                    <p ng-bind-html="message.content">
+                                    </p>
+                                    <div class="comment-actions">
+                                        <span class="comment-date">{{message.sendDate | date:'medium'}}</span>
+                                    </div>
+                                    <ul ng-if="message.attachFileAdd != null">
+                                        <li>
+                                            <span class="atch-thumb cursor" data-toggle="modal" data-target="#view_file" ng-click="getLinkFile(message.attachFileAdd)">
+                                                <img id="" ng-src="{{clientAdd}}/img/document-icon.png" alt="img" style="width: 8%; height: 8%;" />
+                                            </span>
+                                            <a class="cursor" data-toggle="modal" data-target="#view_file" ng-click="getLinkFile(message.attachFileAdd)">View</a> -
+                                            <a href="{{getLinkDownLoad(message.attachFileAdd)}}">Download</a>
+                                        </li>
+                                        <li><span><i class="fa fa-paperclip"></i> {{getFileName(message.attachFileAdd)}} </span></li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <a ng-if="selectedMessage.messageType == 'Normal' && username == 'tu58' || username == 'nam_58' || username == 'khanhnh_58'" class="btn btn-micro btn-grey comment-reply-btn cursor" data-toggle="collapse" data-target="#reply_message">
+                    <i class="glyphicon glyphicon-share-alt"></i> Reply
+                </a>
+                <!-- Pagination -->
+                <!-- <div class="pagination-wrapper ">
+                    <ul class="pagination pagination-sm">
+                        <li class="disabled"><a href="#">Previous</a></li>
+                        <li class="active"><a href="#">1</a></li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                        <li><a href="#">4</a></li>
+                        <li><a href="#">5</a></li>
+                        <li><a href="#">Next</a></li>
+                    </ul>
+                </div> -->
+                <!-- Comments Form -->
+                <div class="comment-form-wrapper collapse" id="reply_message">
+                    <form class="">
+                        <div class="form-group">
+                            <label for="comment-message"><i class="glyphicon glyphicon-comment"></i> <b>Your Message</b></label>
+                            <textarea class="form-control" rows="5" id="comment-message" ng-model="reply.content" autofocus></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="comment-email"><i class="glyphicon glyphicon-envelope"></i> <b>Attach File</b></label>
+                            <input class="form-control" id="baocao" type="file" placeholder="" accept=".doc, .docx">
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-large pull-right" ng-click="replyMessage()">Send</button>
+                        </div>
+                        <div class="clearfix"></div>
+                    </form>
+                </div>
+                <!-- End Comment Form -->
+            </div>
+            <!-- End Comments -->
+        </div>
+    </div>
+    <!-- End Blog Post -->
+</div>

@@ -1,0 +1,158 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" id="close_modal_edit"><span aria-hidden="true">×</span>
+        </button>
+        <h3 class="modal-title" id="myModalLabel">Thông tin sinh viên</h3>
+    </div>
+    <div class="modal-body">
+        <div class="alert alert-danger" ng-if="danger_edit">
+            <strong>{{errorMessage}}</strong>
+        </div>
+        <div class="alert alert-success" ng-if="successdelete_edit">
+            <strong>{{successMessage}}</strong>
+        </div>
+        <form id="demo-form2" data-parsley-valitext class="form-horizontal form-label-left">
+            <div class="form-group">
+                <label class="control-label col-md-4 col-sm-4 col-xs-12">Họ và Tên: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input class="form-control col-md-7 col-xs-12" type="text" readonly="readonly" n ng-model="studentInformationModal.student.fullName">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-4 col-sm-4 col-xs-12">Ngày sinh: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input class="form-control col-md-7 col-xs-12" type="text" readonly="readonly" n ng-model="studentInformationModal.student.birthday">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-4 col-sm-4 col-xs-12">Địa chỉ: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input class="form-control col-md-7 col-xs-12" type="text" readonly="readonly" n ng-model="studentInformationModal.student.address">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-4 col-sm-4 col-xs-12">Email: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input class="form-control col-md-7 col-xs-12" type="text" readonly="readonly" n ng-model="studentInformationModal.student.email">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-4 col-sm-4 col-xs-12">Email vnu: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input class="form-control col-md-7 col-xs-12" type="text" readonly="readonly" n ng-model="studentInformationModal.infoBySchool.emailvnu">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-4 col-sm-4 col-xs-12">Mã số sinh viên: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input class="form-control col-md-7 col-xs-12" type="text" readonly="readonly" n ng-model="studentInformationModal.infoBySchool.studentCode">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-4 col-sm-4 col-xs-12">Ngành học: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input class="form-control col-md-7 col-xs-12" type="text" readonly="readonly" n ng-model="studentInformationModal.infoBySchool.major">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-4 col-sm-4 col-xs-12" for="last-name">Lớp: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input type="text" readonly="readonly" class="form-control col-md-7 col-xs-12" ng-model="studentInformationModal.infoBySchool.studentClass">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-4 col-sm-4 col-xs-12" for="last-name">Khóa: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input type="text" readonly="readonly" class="form-control col-md-7 col-xs-12" ng-model="studentInformationModal.infoBySchool.grade">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-4 col-sm-4 col-xs-12" for="last-name">Điểm trung bình: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input type="text" readonly="readonly" class="form-control col-md-7 col-xs-12" ng-model="studentInformationModal.infoBySchool.gpa">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-4 col-sm-4 col-xs-12" for="last-name">Năm tốt nghiệp: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input type="text" readonly="readonly" class="form-control col-md-7 col-xs-12" ng-model="studentInformationModal.infoBySchool.graduationYear">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-4 col-sm-4 col-xs-12" for="last-name">Bằng cấp: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input type="text" readonly="readonly" class="form-control col-md-7 col-xs-12" ng-model="studentInformationModal.infoBySchool.diploma">
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-body">
+        <h3 class="modal-title">Thông tin thực tập</h3>
+        <form data-parsley-valitext class="form-horizontal form-label-left">
+            <div ng-repeat="internship in studentInformationModal.internshipList | orderBy:'-id'">
+                <hr>
+                <div class="form-group">
+                    <label class="control-label col-md-6 col-sm-6 col-xs-12">
+                        <h4>Đợt {{internship.internshipTerm.term}} năm {{internship.internshipTerm.year}}</h4>
+                    </label>
+                    <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <input class="form-control col-md-7 col-xs-12" type="text" readonly="readonly" n ng-model="studentInformationModal.student.fullName">
+                                            </div> -->
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-4 col-sm-4 col-xs-12">Giảng viên: </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input class="form-control col-md-7 col-xs-12" type="text" readonly="readonly" n ng-model="internship.lecturers.fullName">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-4 col-sm-4 col-xs-12">Loại thực tập: </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input class="form-control col-md-7 col-xs-12" type="text" readonly="readonly" n ng-model="internship.internshipType">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-4 col-sm-4 col-xs-12">Nơi thực tập: </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input class="form-control col-md-7 col-xs-12" type="text" readonly="readonly" n ng-model="internship.partnerName">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-4 col-sm-4 col-xs-12">Điểm: </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input class="form-control col-md-7 col-xs-12" type="text" readonly="readonly" n ng-model="internship.score">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2 col-sm-2 col-xs-12"></div>
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Công ty</th>
+                                    <th>Loại thực tập</th>
+                                    <th>Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="follow in internship.follows">
+                                    <!-- <th scope="row">{{data.id}}</th> -->
+                                    <td>
+                                        {{follow.partnerName}}
+                                    </td>
+                                    <td>
+                                        {{follow.postTitle}}
+                                    </td>
+                                    <td>
+                                        {{follow.status}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-2 col-sm-2 col-xs-12"></div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

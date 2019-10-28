@@ -1,0 +1,74 @@
+<div class="clearfix"></div>
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Default Example <small>Users</small></h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <!-- <p class="text-muted font-13 m-b-30"> -->
+                <input type="file" name="xlfile" id="xlf" ng-init="convert()">
+                <button ng-click="setExcelTable()">Show Student List </button>
+                <button ng-click="send()">Upload </button>
+                <!-- </p> -->
+                <table id="datatable" class="table table-striped " ng-if="excelTable != null">
+                    <thead>
+                        <tr>
+                            <!-- <th>id</th> -->
+                            <th>full name</th>
+                            <!-- <th>birthday</th> -->
+                            <th>student code</th>
+                            <th>major</th>
+                            <th>student class</th>
+                            <th>diploma</th>
+                            <th>grade</th>
+                            <th>gpa</th>
+                            <th>graduation year</th>
+                            <th>email vnu</th>
+                            <!-- <th>Status</th> -->
+                            <th>
+                                <input type="checkbox" ng-click="selectAll()">
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="data in excelTable">
+                            <td>{{data.studentName}}</td>
+                            <td>
+                                {{data.studentCode}}
+                            </td>
+                            <td>
+                                {{data.major}}
+                            </td>
+                            <td>
+                                {{data.studentClass}}
+                            </td>
+                            <td>
+                                {{data.diploma}}
+                            </td>
+                            <td>
+                                {{data.grade}}
+                            </td>
+                            <td>
+                                {{data.gpa}}
+                            </td>
+                            <td>
+                                {{data.graduationYear}}
+                            </td>
+                            <td>
+                                {{data.emailvnu}}
+                            </td>
+                            <td ng-if="data.status == 'A'">
+                                Active
+                            </td>
+                            <td ng-if="data.status == 'D'">
+                                Deactive
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

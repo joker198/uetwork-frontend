@@ -1,0 +1,582 @@
+<div class="page-title" ng-init="loadAllPost()">
+    <div class="title_left" ng-init="loadAllPostByInternshipTerm()">
+        <h3>Posts</h3>
+    </div>
+    <div class="title_right">
+        <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search for..." ng-model="search">
+                <span class="input-group-btn">
+                      <button class="btn btn-default" type="button">Go!</button>
+                    </span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <ul class="nav navbar-right panel_toolbox">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle cursor" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a data-toggle="collapse" data-target="#create_post" class="cursor" ng-click="getFitPartner(); ima = null; getOtherPartner()"> Thêm post </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="input-group">
+                    <!-- <input type="text" class="form-control" placeholder="Số dòng trên trang" ng-model="entry" ng-change="paginate()" style="border-radius:25px; border: 1px solid rgba(221,226,232,.49); box-shadow: inset 0 1px 0 rgba(0,0,0,.075); width: 72%;"> -->
+                    <select class="form-control" style="border-radius:25px; border: 1px solid rgba(221,226,232,.49); box-shadow: inset 0 1px 0 rgba(0,0,0,.075);" ng-change="loadAllPost(postType, 1)" ng-model="postType">
+                        <option value="Recruitment">Đối tác</option>
+                        <option value="Recruitment_other">Công ty ngoài</option>
+                        <option value="Research">NCKH</option>
+                    </select>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="alert alert-warning" ng-if="warning">
+                    <strong>{{warningMessage}}</strong>
+                </div>
+                <div class="alert alert-success" ng-if="success">
+                    <strong>{{successMessage}}</strong>
+                </div>
+                <div class="alert alert-danger" ng-if="danger">
+                    <strong>{{errorMessage}}</strong>
+                </div>
+                <form class="form-horizontal form-label-left collapse" id="create_post" ng-init="post.content = ''">
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li><a data-toggle="collapse" data-target="#create_post" id="close_create_post" hclass="cursor"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+                    </ul>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-4 col-xs-12" for="first-name">Tiêu đề: <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" id="first-name" required="required" class="form-control col-md-7 col-xs-12" ng-model="post.title">
+                        </div>
+                    </div>
+                    <!-- <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Mô tả: <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <textarea class="form-control col-md-7 col-xs-12" rows="5" ng-model="post.describePost"></textarea>
+                        </div>
+                    </div> -->
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Số lượng cần tuyển: <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="number" name="last-name" class="form-control col-md-7 col-xs-12" ng-model="post.requiredNumber">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Ngày hết hạn đăng kí:
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="date" name="last-name" class="form-control col-md-7 col-xs-12" ng-model="post.expiryTime">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Loại bài đăng: <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select class="form-control" ng-model="post.postType">
+                                <option value="Recruitment">Thực tập đối tác</option>
+                                <!-- <option value="Recruitment_other">Thực tập ngoài</option> -->
+                                <option value="Research" ng-click="selectPartner($scope.cntt)">NCKH</option>
+                                <!-- <option value="Normal">Thường</option> -->
+                            </select>
+                        </div>
+                    </div>
+                    <!-- <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Tags: <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" name="last-name" required="required" class="form-control col-md-7 col-xs-12" ng-model="post.tags">
+                        </div>
+                    </div> -->
+                    <!-- <div class="form-group" ng-if="post.postType == 'Recruitment' || post.postType == 'Research'"> -->
+                    <div class="form-group" ng-if="post.postType == 'Recruitment'">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Tên đối tác:</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select class="form-control" ng-model="post.partner" ng-change="selectPartner(post.partner)">
+                                <option ng-repeat="partner in fitPartners" value="{{partner}}">
+                                    {{partner.partnerName}}
+                                </option>
+                            </select>
+                            <!-- <p ng-if="input.continentId >= 0" ng-init="init()">{{input.continentId}}</p> -->
+                        </div>
+                    </div>
+                    <div class="form-group" ng-if="post.postType == 'Recruitment_other'">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Tên công ty ngoài:</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select class="form-control" ng-model="post.partner" ng-change="selectPartner(post.partner)">
+                                <option value="other">-- Chưa có --</option>
+                                <option ng-repeat="partner in otherPartners" value="{{partner}}">
+                                    {{partner.partnerName}}
+                                </option>
+                            </select>
+                            <!-- <p ng-if="input.continentId >= 0" ng-init="init()">{{input.continentId}}</p> -->
+                        </div>
+                    </div>
+                    <div class="form-group" ng-if="post.postType != 'Research' && post.postType != undefined && post.postType != 'Recruitment_other'">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Tên liên hệ: </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select class="form-control" ng-model="post.partnerContactId">
+                                <option value="other"> -- Khác -- </option>
+                                <option value="no"> -- Không có -- </option>
+                                <option value="{{contact.id}}" ng-repeat="contact in Partner.partnerContacts"> {{contact.contactName}} - {{contact.phone}} - {{contact.email}} </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-if="post.postType == 'Research'">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Tên liên hệ: </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select class="form-control" ng-model="post.partnerContactId">
+                                <option value="other"> -- Khác -- </option>
+                                <option value="no"> -- Để trống -- </option>
+                                <option value="{{contact.id}}" ng-repeat="contact in cntt.partnerContacts"> {{contact.contactName}} - {{contact.phone}} - {{contact.email}} </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div ng-if="post.partnerContactId == 'other'">
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-4 col-xs-12" for="first-name">Tên liên hệ: <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="first-name" required="required" class="form-control col-md-7 col-xs-12" ng-model="post.partnerContactDTO.contactName">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-4 col-xs-12" for="first-name">Email: <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="first-name" required="required" class="form-control col-md-7 col-xs-12" ng-model="post.partnerContactDTO.email">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-4 col-xs-12" for="first-name">Số điện thoại: <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="first-name" required="required" class="form-control col-md-7 col-xs-12" ng-model="post.partnerContactDTO.phone">
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-if="post.partner == 'other' && post.postType =='Recruitment_other'">
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Tên công ty:
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="last-name" name="last-name" required="required" class="form-control col-md-7 col-xs-12" ng-model="input.partner.partnerName">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Địa chỉ:
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="last-name" name="last-name" required="required" class="form-control col-md-7 col-xs-12" ng-model="input.partner.address">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Website:
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="last-name" name="last-name" required="required" class="form-control col-md-7 col-xs-12" ng-model="input.partner.website">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Tên liên hệ:
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="last-name" name="last-name" required="required" class="form-control col-md-7 col-xs-12" ng-model="input.partnerContactDTO.contactName">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Số điện thoại:
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="last-name" name="last-name" required="required" class="form-control col-md-7 col-xs-12" ng-model="input.partnerContactDTO.phone">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Email:
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="last-name" name="last-name" required="required" class="form-control col-md-7 col-xs-12" ng-model="input.partnerContactDTO.email">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Ảnh bài viết</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <button class="btn btn-left" ng-click="click()">Click to select image</button>
+                        </div>
+                    </div>
+                    <div class="container cropper" ng-if="ima != null">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="img-container">
+                                    <img data-ng-src="{{ima}}" style="width: 70%;">
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                    <div class="form-group">
+                        <div class="col-md-2 col-sm-6 col-xs-12"></div>
+                        <div class="col-md-8 col-sm-6 col-xs-12">
+                            <summernote height="500" ng-model="post.content"></summernote>
+                        </div>
+                        <div class="col-md-2 col-sm-6 col-xs-12"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-8 col-sm-6 col-xs-12">
+                        </div>
+                        <div class="col-md-1 col-sm-6 col-xs-12">
+                            <button type="submit" class="btn btn-success" ng-click="createPost()">Submit</button>
+                        </div>
+                    </div>
+                    <div class="divider-dashed"></div>
+                </form>
+                <div class="clearfix"></div>
+                <div class="table-responsive">
+                    <div class="pagination-wrapper">
+                        <ul class="pagination pagination-sm">
+                            <li class="{{previousPage.class}}"><a href="#post/page={{previousPage.page}}">Previous</a></li>
+                            <li class="{{page.class}}" ng-repeat="page in pages" ng-if="page.page != null">
+                                <a href="#post/page={{page.page}}">{{page.page}}</a>
+                            </li>
+                            <li class="{{nextPage.class}}"><a href="#post/page={{nextPage.page}}">Next</a></li>
+                        </ul>
+                    </div>
+                    <table class="table table-striped jambo_table bulk_action">
+                        <thead>
+                            <tr class="headings">
+                                <th class="column-title">STT</th>
+                                <th class="column-title">Tiêu đề </th>
+                                <th class="column-title">Tên đối tác</th>
+                                <th class="column-title">Ngày đăng</th>
+                                <th class="column-title">Ngày hết hạn</th>
+                                <th class="column-title">Số lượng yêu cầu</th>
+                                <th class="column-title">Lượt ứng tuyển</th>
+                                <th class="column-title">Status</th>
+                                <th class="column-title">Sửa </th>
+                                <th class="column-title">Xóa </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="even pointer" ng-repeat="post in allPosts">
+                                <td class="">{{$index + 1}}</td>
+                                <td class="">
+                                    <a data-toggle="modal" class="cursor" data-target="#show_post" ng-click="showPostModal(post)">
+                                        {{post.title}}
+                                    </a>
+                                </td>
+                                <!-- <td class="">
+                                    <a data-toggle="modal" class="cursor" data-target="#show_post" ng-click="showPostModal(post)" ng-bind-html="post.describePost">
+                                    </a>
+                                </td> -->
+                                <td class="">{{post.partnerName}}</td>
+                                <td class="">
+                                    {{post.datePost | date:'dd-MM-yyyy'}}
+                                </td>
+                                <td class="">
+                                    {{post.expiryTime | date:'dd-MM-yyyy'}}
+                                </td>
+                                <td class="">
+                                    {{post.requiredNumber}}
+                                </td>
+                                <td class="cursor">
+                                    <a data-toggle="modal" data-target="#show_follow" ng-click="showFollow(post.follows)">
+                                        {{post.follows.length}}
+                                    </a>
+                                </td>
+                                <td class="">
+                                    <a class="">{{post.status}}</a>
+                                </td>
+                                <td class="">
+                                    <a data-toggle="modal" data-target="#edit_post" ng-click="editPost(post)">
+                                        <i class="fa fa-edit cursor"></i>
+                                    </a>
+                                </td>
+                                <td class="">
+                                    <a class="cursor" data-toggle="modal" data-target="#delete_post" ng-click="confirmDelete(post.id)">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="pagination-wrapper">
+                        <ul class="pagination pagination-sm">
+                            <li class="{{previousPage.class}}"><a href="#post/page={{previousPage.page}}">Previous</a></li>
+                            <li class="{{page.class}}" ng-repeat="page in pages" ng-if="page.page != null">
+                                <a href="#post/page={{page.page}}">{{page.page}}</a>
+                            </li>
+                            <li class="{{nextPage.class}}"><a href="#post/page={{nextPage.page}}">Next</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- post -->
+                <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" id="show_post">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <!--  <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" id="close_modal_edit"><span aria-hidden="true">×</span>
+                                </button>
+                                <h4 class="modal-title" id="myModalLabel">Các bài viết của Đối tác</h4>
+                            </div> -->
+                            <!-- <div class="modal-body">
+                                <div class="alert alert-danger" ng-if="danger_edit">
+                                    <strong>{{errorMessage}}</strong>
+                                </div>
+                                <div class="alert alert-success" ng-if="successdelete_edit">
+                                    <strong>{{successMessage}}</strong>
+                                </div> -->
+                            <div class="col-md-12 col-sm-12 col-xs-12 profile_details">
+                                <div class="well profile_view">
+                                    <div class="col-sm-12">
+                                        <button type="button" class="close" data-dismiss="modal" id="close_modal_edit"><span aria-hidden="true">×</span>
+                                        </button>
+                                        <div class="col-xs-12">
+                                            <h2>{{modalPost.title}}</h2>
+                                        </div>
+                                        <div class="col-xs-12">
+                                            <p>Ngày đăng: {{modalPost.datePost | date:'dd-MM-yyyy'}}</p>
+                                            <p>Ngày hết hạn: {{modalPost.expiryTime | date:'dd-MM-yyyy'}}</p>
+                                        </div>
+                                        <div class="col-xs-12">
+                                            <h4>Số lượng cần tuyển: {{modalPost.requiredNumber}}</h4>
+                                        </div>
+                                        <div class="col-xs-12">
+                                            <h4>Liên hệ</h4>
+                                            <p>Tên: {{modalPost.partnerContact.contactName}}</p>
+                                            <p>Email {{modalPost.partnerContact.email}}</p>
+                                            <p>Số điện thoại: {{modalPost.partnerContact.phone}}</p>
+                                        </div>
+                                        <!-- <div class="col-xs-12">
+                                            <img ng-src="{{clientAdd}}{{modalPost.image}}" alt="" style="width:100%;">
+                                        </div> -->
+                                        <div class="col-xs-12" ng-bind-html="modalPost.content">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- </div> -->
+                            <!-- <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                <button type="button" class="btn btn-primary" ng-click="editContract()">Lưu thay đổi</button>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+                <!-- end post -->
+                <!-- modal follow -->
+                <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" id="show_follow">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" id="close_modal_edit"><span aria-hidden="true">×</span>
+                                </button>
+                                <h4 class="modal-title" id="myModalLabel">Các bài viết của Đối tác</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="alert alert-danger" ng-if="danger_edit">
+                                    <strong>{{errorMessage}}</strong>
+                                </div>
+                                <div class="alert alert-success" ng-if="successdelete_edit">
+                                    <strong>{{successMessage}}</strong>
+                                </div>
+                                <!-- <div class="col-md-8 col-sm-8 col-xs-12" ng-if="show_post">
+                                    <div class="col-sm-12">
+                                        <img ng-src="{{post.image}}">
+                                    </div>
+                                    <div class="single-post-content" ng-bind-html="post.content">
+                                    </div>
+                                </div> -->
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Họ và tên</th>
+                                            <th>Email vnu</th>
+                                            <th>Email</th>
+                                            <th ng-if="postType == 'Research'">Giảng viên</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="follow in modelFollows | orderBy:'status'" id="">
+                                            <td id="">{{$index + 1}}</td>
+                                            <td id="">{{follow.student.fullName}}</td>
+                                            <td id="">{{follow.student.info_by_school.emailvnu}}</td>
+                                            <td id="">{{follow.student.email}}</td>
+                                            <td id="">{{follow.student.email}}</td>
+                                            <td id="" ng-if="postType == 'Research'">{{follow.lecturersName}}</td>
+                                            <td id="">{{follow.status}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="col-md-12 col-sm-12 col-xs-12 profile_details" ng-if="show_post">
+                                    <div class="well profile_view">
+                                        <div class="col-sm-12">
+                                            <ul class="nav navbar-right panel_toolbox">
+                                                <li ng-click="closePost()"><a class="cursor"><i class="fa fa-close"></i></a>
+                                                </li>
+                                            </ul>
+                                            <div class="col-xs-12">
+                                                <img ng-src="{{post.image}}" alt="" style="width:100%;">
+                                            </div>
+                                            <div class="col-xs-12" ng-bind-html="post.content">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                <button type="button" class="btn btn-primary" ng-click="editContract()">Lưu thay đổi</button>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+                <!-- end modal follow -->
+                <!-- edit post -->
+                <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" id="edit_post">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" id="close_modal_edit_post"><span aria-hidden="true">×</span>
+                                </button>
+                                <h4 class="modal-title" id="myModalLabel"></h4>
+                            </div>
+                            <div class="modal-body">
+                                <form class="form-horizontal form-label-left">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Tiêu đề: <span class="required">*</span>
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" id="first-name" required="required" class="form-control col-md-7 col-xs-12" ng-model="editPostModal.title">
+                                        </div>
+                                    </div>
+                                    <!-- <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Mô tả: <span class="required">*</span>
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <textarea class="form-control col-md-7 col-xs-12" rows="5" ng-model="editPostModal.describePost"></textarea>
+                                        </div>
+                                    </div> -->
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Số lượng cần tuyển: <span class="required">*</span>
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="number" name="last-name" required="required" class="form-control col-md-7 col-xs-12" ng-model="editPostModal.requiredNumber">
+                                        </div>
+                                    </div>
+                                    <!-- <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Ngày bắt đầu:
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="date" name="last-name" class="form-control col-md-7 col-xs-12" ng-model="editPostTimeModal.startDate">
+                                        </div>
+                                    </div> -->
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Ngày hết hạn đăng kí:
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="date" name="last-name" class="form-control col-md-7 col-xs-12" ng-model="editPostTimeModal.expiryTime">
+                                        </div>
+                                    </div>
+                                    <!-- <div class="form-group">
+                                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-4">
+                                            <button class="btn btn-left" ng-click="click()">Click to select image</button>
+                                            <button type="submit" class="btn btn-success" ng-click="saveEditPost()" ng-if="editPostModal.content !='' && editPostModal.describePost !='' && ima !=null">Save</button>
+                                        </div>
+                                    </div> -->
+                                    <!-- <div class="container cropper" ng-if="ima !=null">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="img-container">
+                                                    <img data-ng-src="{{ima}}" style="width: 70%;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> -->
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Tên liên hệ: </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <!-- <select class="form-control" ng-model="editPostModal.partnerContactId">
+                                                <option value="" selected> {{editPostModal.partnerContact.contactName}} - {{editPostModal.partnerContact.phone}} - {{editPostModal.partnerContact.email}} </option>
+                                                <option value="other"> -- Khác -- </option>
+                                                <option value="no"> -- Không có -- </option>
+                                                <option value="{{contact.id}}" ng-repeat="contact in editPostModal.partner.partnerContacts" ng-if="contact.id != editPostModal.partnerContactId"> {{contact.contactName}} - {{contact.phone}} - {{contact.email}} </option>
+                                            </select> -->
+                                            <select class="form-control" ng-options="contact.contactName for contact in editPostModal.partner.partnerContacts track by contact.id" ng-model="editPostModal.partnerContact"></select>
+                                        </div>
+                                    </div>
+                                    <!-- {{editPostModal.partnerContact.contactName}} -->
+                                    <div ng-if="editPostModal.partnerContact.id == 'other'">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-4 col-xs-12" for="first-name">Tên liên hệ: <span class="required">*</span>
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <input type="text" id="first-name" required="required" class="form-control col-md-7 col-xs-12" ng-model="editPostModal.partnerContactDTO.contactName">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-4 col-xs-12" for="first-name">Email: <span class="required">*</span>
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <input type="text" id="first-name" required="required" class="form-control col-md-7 col-xs-12" ng-model="editPostModal.partnerContactDTO.email">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-4 col-xs-12" for="first-name">Số điện thoại: <span class="required">*</span>
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <input type="text" id="first-name" required="required" class="form-control col-md-7 col-xs-12" ng-model="editPostModal.partnerContactDTO.phone">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-1 col-sm-6 col-xs-12"></div>
+                                        <div class="col-md-10 col-sm-6 col-xs-12">
+                                            <summernote height="500" ng-model="editPostModal.content"></summernote>
+                                        </div>
+                                        <div class="col-md-1 col-sm-6 col-xs-12"></div>
+                                    </div>
+                                    <div class="divider-dashed"></div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                <button type="button" class="btn btn-primary" ng-click="saveEditPost()">Lưu thay đổi</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- edit post -->
+                <!-- confirm delete post -->
+                <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true" id="delete_post">
+                    <div class="modal-dialog modal-sm">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" id="close_modal_delete_post"><span aria-hidden="true">×</span>
+                                </button>
+                                <h4 class="modal-title" id="myModalLabel">Bạn có chắc muốn xóa post này</h4>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                <button type="button" class="btn btn-primary" ng-click="deletePost(confirmDeleteId)">Xóa</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end confirm delete -->
+            </div>
+        </div>
+    </div>
+</div>

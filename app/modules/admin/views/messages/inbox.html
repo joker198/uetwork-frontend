@@ -1,0 +1,204 @@
+<div class="">
+    <div ng-if="initPage == 1" ng-init="getAllMessage(1)"></div>
+    <div class="clearfix"></div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="x_panel">
+                <div class="x_content">
+                    <div class="row">
+                        <div class="col-sm-3 mail_list_column" id="scroll_mail_list" infinite-scroll="" infinite-scroll-distance="1" infinite-scroll-container="#scroll_mail_list" style="overflow: auto; height: 85vh;">
+                            <div class="pagination-wrapper ">
+                                <ul class="pagination pagination-sm">
+                                    <!-- <li>
+                                        <a class="cursor" ng-click="getAllMessage()">Lode more</a>
+                                    </li> -->
+                                    <!-- <li class="{{previousPage.class}}">
+                                        <a class="cursor" ng-click="getAllMessage(previousPage.page)" ng-if="previousPage.class != 'disabled'">Previous</a>
+                                        <a class="cursor" ng-if="previousPage.class == 'disabled'">Previous</a>
+                                    </li>
+                                    <li class="{{page.class}}" ng-repeat="page in pages" ng-if="page.page != null">
+                                        <a class="cursor" ng-click="getAllMessage(page.page)">{{page.page}}</a>
+                                    </li> -->
+                                    <li class="{{nextPage.class}}">
+                                        <a class="cursor" ng-click="getAllMessage(nextPage.page)" ng-if="nextPage.class != 'disabled'">Next</a>
+                                        <a class="cursor" ng-if="nextPage.class == 'disabled'">Next</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <a class="cursor" ng-repeat="message in messages | orderBy:'-lastUpdated'" ng-click="showMessage(message)">
+                                <div class="mail_list {{message.status}}">
+                                    <div class="left" ng-if="message.status == 'NEW'">
+                                        <i class="fa fa-circle"></i>
+                                    </div>
+                                    <div class="right">
+                                        <h3>{{message.senderName}}<small>{{message.sendDate | date:'medium'}}</small></h3>
+                                        <p>{{message.title}}</p>
+                                    </div>
+                                </div>
+                            </a>
+                            <div class="pagination-wrapper ">
+                                <ul class="pagination pagination-sm">
+                                    <!-- <li class="{{previousPage.class}}">
+                                        <a class="cursor" ng-click="getAllMessage(previousPage.page)" ng-if="previousPage.class != 'disabled'">Previous</a>
+                                        <a class="cursor" ng-if="previousPage.class == 'disabled'">Previous</a>
+                                    </li>
+                                    <li class="{{page.class}}" ng-repeat="page in pages" ng-if="page.page != null">
+                                        <a class="cursor" ng-click="getAllMessage(page.page)">{{page.page}}</a>
+                                    </li> -->
+                                    <li class="{{nextPage.class}}">
+                                        <a class="cursor" ng-click="getAllMessage(nextPage.page)" ng-if="nextPage.class != 'disabled'">Next</a>
+                                        <a class="cursor" ng-if="nextPage.class == 'disabled'">Next</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- /MAIL LIST -->
+                        <!-- CONTENT MAIL -->
+                        <div class="col-sm-9 mail_view">
+                            <div class="inbox-body">
+                                <div class="alert alert-warning" ng-if="warning">
+                                    <strong>{{warningMessage}}</strong>
+                                </div>
+                                <div class="alert alert-success" ng-if="success">
+                                    <strong>{{successMessage}}</strong>
+                                </div>
+                                <div class="alert alert-danger" ng-if="danger">
+                                    <strong>{{errorMessage}}</strong>
+                                </div>
+                                <div class="mail_heading row">
+                                    <div class="col-md-10">
+                                        <!-- <div class="btn-group">
+                                            <button class="btn btn-sm btn-primary" type="button"><i class="fa fa-reply"></i> Reply</button>
+                                            <button class="btn btn-sm btn-default" type="button" data-placement="top" data-toggle="tooltip" data-original-title="Forward"><i class="fa fa-share"></i></button>
+                                            <button class="btn btn-sm btn-default" type="button" data-placement="top" data-toggle="tooltip" data-original-title="Print"><i class="fa fa-print"></i></button>
+                                            <button class="btn btn-sm btn-default" type="button" data-placement="top" data-toggle="tooltip" data-original-title="Trash"><i class="fa fa-trash-o"></i></button>
+                                        </div> -->
+                                        <!-- <div class="btn-group" ng-if="selectedMessage != null">
+                                            <button class="btn btn-sm btn-primary cursor" type="button" data-toggle="collapse" data-target="#reply_message"><i class="fa fa-reply"></i> Reply</button>
+                                        </div> -->
+                                    </div>
+                                    <div class="col-md-12">
+                                        <h3> {{selectedMessage.title}}</h3>
+                                    </div>
+                                </div>
+                                <div class="sender-info">
+                                    <div class="row">
+                                        <div class="col-md-12" ng-if="selectedMessage != null">
+                                            <strong>{{selectedMessage.senderName}}</strong> to <strong>{{selectedMessage.receiverName}}</strong>
+                                            <span class="date" style="float: right;">{{selectedMessage.sendDate | date:'medium'}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="view-mail">
+                                    <p ng-bind-html="selectedMessage.content"></p>
+                                    <!-- Button trigger modal -->
+                                    <!-- <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal" ng-click="getLinkFile()">
+                                        Launch demo modal
+                                    </button> -->
+                                </div>
+                                <div class="attachment" ng-if="selectedMessage.attachFileAdd != null">
+                                    <p>
+                                        <span><i class="fa fa-paperclip"></i> {{getFileName(selectedMessage.attachFileAdd)}} </span>
+                                        <!-- <a href="#">Download all attachments</a> | -->
+                                        <!-- <a href="#">View all images</a> -->
+                                    </p>
+                                    <ul>
+                                        <li>
+                                            <a class="atch-thumb cursor" data-toggle="modal" data-target="#view_file" ng-click="getLinkFile(selectedMessage.attachFileAdd)">
+                                                <img id="" ng-src="{{clientAdd}}/img/document-icon.png" alt="img" style="width: 40%; height: 40%;" />
+                                            </a>
+                                            <!-- <div class="file-name">
+                                                {{getFileName(selectedMessage.attachFileAdd)}}
+                                            </div> -->
+                                            <div class="links">
+                                                <a class="cursor" data-toggle="modal" data-target="#view_file" ng-click="getLinkFile(selectedMessage.attachFileAdd)">View</a> -
+                                                <a href="{{getLinkDownLoad(selectedMessage.attachFileAdd)}}" target="_blank">Download</a>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- <div class="col-md-8 text-right">
+                                    <p class="date"> {{selectedMessage.sendDate | date:'medium'}}</p>
+                                </div> -->
+                                <!-- <div class="col-sm-9 mail_view" ng-repeat="message in selectedMessage.messages"> -->
+                                <hr ng-if="selectedMessage != null">
+                                <div class="mail_list" ng-repeat="message in selectedMessage.messages">
+                                    <div class="mail_heading row">
+                                        <div class="col-md-8">
+                                        </div>
+                                    </div>
+                                    <div class="sender-info">
+                                        <div class="row">
+                                            <div class="col-md-12" ng-if="message != null">
+                                                <strong>{{message.senderName}}</strong> to <strong>{{message.receiverName}}</strong>
+                                                <span class="date" style="float: right;">
+                                                    {{message.sendDate | date:'medium'}}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- <br> -->
+                                    <div class="view-mail">
+                                        <p ng-bind-html="message.content"></p>
+                                    </div>
+                                    <div class="attachment" ng-if="message.attachFileAdd != null">
+                                        <p>
+                                            <span><i class="fa fa-paperclip"></i> {{getFileName(message.attachFileAdd)}} </span>
+                                            <!-- <a href="#">Download all attachments</a> | -->
+                                            <!-- <a href="#">View all images</a> -->
+                                        </p>
+                                        <ul>
+                                            <li>
+                                                <a class="atch-thumb cursor" data-toggle="modal" data-target="#view_file" ng-click="getLinkFile(message.attachFileAdd)">
+                                                    <img id="" ng-src="{{clientAdd}}/img/document-icon.png" alt="img" style="width: 40%; height: 40%;" />
+                                                </a>
+                                                <!-- <div class="file-name">
+                                                {{getFileName(selectedMessage.attachFileAdd)}}
+                                            </div> -->
+                                                <div class="links">
+                                                    <a class="cursor" data-toggle="modal" data-target="#view_file" ng-click="getLinkFile(message.attachFileAdd)">View</a> -
+                                                    <a href="{{getLinkDownLoad(message.attachFileAdd)}}" target="_blank">Download</a>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <br>
+                                <!-- </div> -->
+                                <div class="mail_list" ng-if="selectedMessage != null">
+                                    <form id="reply_message" data-parsley-validate class="form-horizontal form-label-left collapse in">
+                                        <div class="form-group">
+                                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                                <textarea class="form-control col-md-12 col-xs-12" rows="5" ng-model="reply.content" placeholder="Content" style="border-radius: 5px;"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <div class="form-group">
+                                            <div class="col-md-1 col-sm-1 col-xs-12">
+                                                <button type="submit" class="btn btn-primary" ng-click="replyMessage()">Send</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <br />
+                        </div>
+                        <!-- /CONTENT MAIL -->
+                        <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" id="view_file">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <div style="text-align: center;">
+                                            <iframe src="{{modalFileLink}}" style="width:100%; height:90vh;" frameborder="0"></iframe>
+                                        </div>
+                                        <!-- {{modalFileLink}} -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

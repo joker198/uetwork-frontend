@@ -1,0 +1,310 @@
+<div class="page-title" ng-init="getAllLecturers()">
+    <div class="title_left">
+        <h3>Giảng viên và Khoa</h3>
+    </div>
+    <div class="title_right">
+        <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search for..." ng-model="search">
+                <span class="input-group-btn">
+                      <button class="btn btn-default" type="button">Go!</button>
+                    </span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <!-- <h2>VNU</h2> -->
+                <ul class="nav navbar-right panel_toolbox">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle cursor" data-toggle="dropdown" role="button" aria-expanded="false">Options <i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li>
+                                <a data-toggle="collapse" data-target="#create_lecturers" class="cursor"> Thêm Giảng viên </a>
+                            </li>
+                            <li>
+                                <a data-toggle="collapse" data-target="#insert_excel" class="cursor"> Thêm Giảng viên từ excel </a>
+                            </li>
+                            <!-- <li><a data-toggle="collapse" data-target="#create_faculty" class="cursor"> Thêm Khoa </a>
+                            </li> -->
+                        </ul>
+                    </li>
+                </ul>
+                <!-- <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Số dòng trên trang" ng-model="entry" ng-change="paginate()" style="border-radius:25px; border: 1px solid rgba(221,226,232,.49); box-shadow: inset 0 1px 0 rgba(0,0,0,.075); width: 72%;">
+                </div> -->
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="alert alert-success" ng-if="success">
+                    <strong>{{successMessage}}</strong>
+                </div>
+                <div class="alert alert-danger" ng-if="danger">
+                    <strong>{{errorMessage}}</strong>
+                </div>
+                <!-- insert lecturers -->
+                <form class="form-horizontal form-label-left collapse" id="insert_excel">
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li><a data-toggle="collapse" data-target="#insert_excel" id="close_insert_excel" hclass="cursor"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+                    </ul>
+                    <input class="btn btn-left" type="file" name="xlfile" id="xlf" ng-init="convert()">
+                    <button class="btn btn-left" ng-click="setExcelTable()">Show Lecturers List </button>
+                    <button class="btn btn-left" ng-click="send()">Upload </button>
+                    <!-- </p> -->
+                    <table class="table table-striped jambo_table bulk_action" ng-if="excelTable != null">
+                        <thead>
+                            <tr class="headings">
+                                <th class="column-title">STT</th>
+                                <th class="column-title">Họ và Tên</th>
+                                <th class="column-title">Mã số sinh viên</th>
+                                <th class="column-title">Ngành học</th>
+                                <th class="column-title">Lớp</th>
+                                <th class="column-title">Username</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="lecturers in excelTable" id="{{lecturers.userName}}">
+                                <td class=" ">{{lecturers.STT}}</td>
+                                <td class=" ">{{lecturers.fullName}}</td>
+                                <td class=" ">{{lecturers.subject}}</td>
+                                <td class=" ">{{lecturers.phoneNumber}}</td>
+                                <td class=" ">{{lecturers.emailvnu}}</td>
+                                <td class=" ">{{lecturers.userName}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="divider-dashed"></div>
+                </form>
+                <!-- end insert lecturers -->
+                <!-- create_lecturers -->
+                <form class="form-horizontal form-label-left collapse" id="create_lecturers">
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li><a data-toggle="collapse" data-target="#create_lecturers" class="cursor"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+                    </ul>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Username</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" name="country" class="form-control col-md-10" ng-model="lecturers.userName" required />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Password</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="password" name="country" class="form-control col-md-10" ng-model="lecturers.password" required />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Họ và tên</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" name="country" class="form-control col-md-10" ng-model="lecturers.fullName" required />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Bộ môn</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" name="country" class="form-control col-md-10" ng-model="lecturers.subject" required />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Số điện thoại</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" name="country" class="form-control col-md-10" ng-model="lecturers.phoneNumber" required />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">VNU email</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" name="country" class="form-control col-md-10" ng-model="lecturers.emailvnu" required />
+                        </div>
+                    </div>
+                    <!-- <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Khoa: </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select class="form-control" ng-model="lecturers.facultyId">
+                                <option ng-repeat="faculty in allFaculty" value="{{faculty.id}}">
+                                    {{faculty.facultyName}}
+                                </option>
+                            </select>
+                        </div>
+                    </div> -->
+                    <div class="form-group">
+                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                            <button type="submit" class="btn btn-success" ng-click="createLecturers()">Tạo</button>
+                        </div>
+                    </div>
+                    <div class="divider-dashed"></div>
+                </form>
+                <span class="pull-right"> 
+                    <ul class="list-inline">
+                      <li class="list-inline-item">Hiển thị:</li>
+                      <li class="list-inline-item cursor" ng-click=" entry = 25; paginate();" ng-class="{underline : entry == 25, bold : entry == 25}">25</li>
+                      <li class="list-inline-item cursor" ng-click=" entry = 50; paginate();" ng-class="{underline : entry == 50, bold : entry == 50}">50</li>
+                      <li class="list-inline-item cursor" ng-click=" entry = 100; paginate();" ng-class="{underline : entry == 100, bold : entry == 100}">100</li>
+                      <li class="list-inline-item cursor" ng-click=" entry = totalItems; paginate();" ng-class="{underline : entry == totalItems, bold : entry == totalItems}">Tất cả</li>
+                      <li class="list-inline-item cursor">|</li>
+                      <li class="list-inline-item"  ng-if="currentPage != undefined">{{(currentPage * entryLimit) - entryLimit + 1}}-{{currentPage * entryLimit}} trong tổng số {{totalItems}}</li>
+                    </ul>
+                </span>
+                <ul uib-pagination total-items="totalItems" ng-model="currentPage" max-size="noOfPages" items-per-page="entryLimit"></ul>
+                <table class="table table-striped jambo_table bulk_action">
+                    <thead>
+                        <tr class="headings">
+                            <th>STT</th>
+                            <th>Tên</th>
+                            <!-- <th class="column-title">Mô tả</th> -->
+                            <th class="column-title">Email</th>
+                            <th class="column-title">Email Vnu</th>
+                            <th class="column-title">Bộ Môn giảng dạy</th>
+                            <!-- <th>Khoa</th> -->
+                            <th class="column-title">SĐT</th>
+                            <th>Sửa</th>
+                            <th class="column-title">Xóa</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="lecturers in filtered = allLecturers | filter : search |
+                                startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit">
+                            <td>{{(currentPage * entryLimit) - entryLimit + 1 + $index}}</td>
+                            <th id="fullName_{{lecturers.id}}" class=" ">{{lecturers.fullName}}</th>
+                            <th id="email_{{lecturers.id}}" class=" ">{{lecturers.email}}</th>
+                            <th id="emailVNU_{{lecturers.id}}" class=" ">{{lecturers.emailVNU}}</th>
+                            <th id="subject_{{lecturers.id}}" class=" ">{{lecturers.subject}}</th>
+                            <th id="phoneNumber_{{lecturers.id}}" class=" ">{{lecturers.phoneNumber}}</th>
+                            <th>
+                                <i id="edit_lecturers_{{lecturers.id}}" class="fa fa-edit cursor" ng-click="editLecturers(lecturers.id); edit_lecturers = true"></i>
+                                <i id="save_edit_lecturers_{{lecturers.id}}" class="fa fa-save cursor" ng-click="saveEditLecturers(lecturers.id)" ng-if="edit_lecturers"></i>
+                            </th>
+                            <th class=" ">
+                                <a class="cursor" data-toggle="modal" data-target="#delete_lecturers" ng-click="confirmDelete(lecturers.id, lecturers.fullName)">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                            </th>
+                        </tr>
+                    </tbody>
+                </table>
+                <ul uib-pagination total-items="totalItems" ng-model="currentPage" max-size="noOfPages" items-per-page="entryLimit"></ul>
+                <!-- </div> -->
+                <!-- </div> -->
+                <!-- </div> -->
+                <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true" id="delete_lecturers">
+                    <div class="modal-dialog modal-sm">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" id="close_modal_delete_lecturers"><span aria-hidden="true">×</span>
+                                </button>
+                                <h4 class="modal-title" id="myModalLabel">Bạn có chắc muốn xóa giảng viên {{confirmDeleteName}}</h4>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                <button type="button" class="btn btn-primary" ng-click="deleteLecturers(confirmDeleteId)">Xóa</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="col-md-6 col-sm-6 col-xs-12" ng-init="getAllFaculty()">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2>Khoa</h2>
+                            <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Search for..." ng-model="faculty" style="border-radius:25px; border: 1px solid rgba(221,226,232,.49); box-shadow: inset 0 1px 0 rgba(0,0,0,.075)">
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Khoa</th>
+                                        <th>Sửa</th>
+                                        <th>Xóa</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="faculty in uetMan_filtered = allUetMan | filter : uet_man | startFrom:(uetMan_currentPage-1)*uetMan_entryLimit | limitTo:uetMan_entryLimit" id="tr_uetMan_{{uetMan.id}}">
+                                        <th scope="row">{{uetMan.id}}</th>
+                                        <td id="uetMan_{{uetMan.id}}">{{uetMan.uetManName}}</td>
+                                        <th>
+                                            <i id="edit_uetMan_{{uetMan.id}}" class="fa fa-edit cursor" ng-click="editUetMan(uetMan.id); edit_uetMan = true"></i>
+                                            <i id="save_edit_uetMan_{{uetMan.id}}" class="fa fa-save cursor" ng-click="saveEditUetMan(uetMan.id)" ng-if="edit_uetMan"></i>
+                                        </th>
+                                        <th id="confirm_delete_uetMan_{{uetMan.id}}">
+                                            <i id="i_confirm_delete_uetMan_{{uetMan.id}}" class="fa fa-trash cursor" ng-click="confirmDeleteUetMan(uetMan.id); deleteUetManValue = true"></i>
+                                            <button id="button_confirm_delete_uetMan_{{uetMan.id}}" ng-if="deleteUetManValue" type="button" class="btn btn-default btn-xs" ng-click="cancerDeleteUetMan(uetMan.id)">Hủy</button>
+                                            <button id="button_delete_uetMan_{{uetMan.id}}" ng-if="deleteUetManValue" type="button" class="btn btn-success btn-xs" ng-click="deleteUetMan(uetMan.id)">Xác nhận</button>
+                                        </th>
+                                    </tr>
+                                    <tr ng-repeat="faculty in allFaculty" id="tr_uetMan_{{uetMan.id}}">
+                                        <th scope="row">{{faculty.id}}</th>
+                                        <td id="uetMan_{{uetMan.id}}">{{faculty.facultyName}}</td>
+                                        <th>
+                                            <i id="edit_uetMan_{{uetMan.id}}" class="fa fa-edit cursor" ng-click="editUetMan(uetMan.id); edit_uetMan = true"></i>
+                                            <i id="save_edit_uetMan_{{uetMan.id}}" class="fa fa-save cursor" ng-click="saveEditUetMan(uetMan.id)" ng-if="edit_uetMan"></i>
+                                        </th>
+                                        <th id="confirm_delete_uetMan_{{uetMan.id}}">
+                                            <i id="i_confirm_delete_uetMan_{{uetMan.id}}" class="fa fa-trash cursor" ng-click="confirmDeleteUetMan(uetMan.id); deleteUetManValue = true"></i>
+                                            <button id="button_confirm_delete_uetMan_{{uetMan.id}}" ng-if="deleteUetManValue" type="button" class="btn btn-default btn-xs" ng-click="cancerDeleteUetMan(uetMan.id)">Hủy</button>
+                                            <button id="button_delete_uetMan_{{uetMan.id}}" ng-if="deleteUetManValue" type="button" class="btn btn-success btn-xs" ng-click="deleteUetMan(uetMan.id)">Xác nhận</button>
+                                        </th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <ul uib-pagination total-items="uetMan_totalItems" ng-model="uetMan_currentPage" max-size="uetMan_noOfPages" items-per-page="uetMan_entryLimit"></ul>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+            <!-- <div class="x_content" ng-if="role == 'ADMIN'">
+                <div class="col-md-6 col-sm-6 col-xs-12" ng-init="getAllUnitName()">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2>Đơn vị theo dõi</h2>
+                            <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Search for..." ng-model="all_unit" style="border-radius:25px; border: 1px solid rgba(221,226,232,.49); box-shadow: inset 0 1px 0 rgba(0,0,0,.075)">
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Đơn vị theo dõi</th>
+                                        <th>Sửa</th>
+                                        <th>Xóa</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="unitName in allUnit_filtered = allUnit | filter : all_unit | startFrom:(allUnit_currentPage-1)*allUnit_entryLimit | limitTo:allUnit_entryLimit" id="tr_unitName_{{unitName.id}}">
+                                        <th scope="row">{{unitName.id}}</th>
+                                        <td id="unitName_{{unitName.id}}">{{unitName.unitName}}</td>
+                                        <th>
+                                            <i id="edit_unitName_{{unitName.id}}" class="fa fa-edit cursor" ng-click="editUnitName(unitName.id); edit_unitName = true"></i>
+                                            <i id="save_edit_unitName_{{unitName.id}}" class="fa fa-save cursor" ng-click="saveEditUnitName(unitName.id)" ng-if="edit_unitName"></i>
+                                        </th>
+                                        <th id="confirm_delete_unitName_{{unitName.id}}">
+                                            <i id="i_confirm_delete_unitName_{{unitName.id}}" class="fa fa-trash cursor" ng-click="confirmDeleteUnitName(unitName.id); deleteUnitNameValue = true"></i>
+                                            <button id="button_confirm_delete_unitName_{{unitName.id}}" ng-if="deleteUnitNameValue" type="button" class="btn btn-default btn-xs" ng-click="cancerDeleteUnitName(unitName.id)">Hủy</button>
+                                            <button id="button_delete_unitName_{{unitName.id}}" ng-if="deleteUnitNameValue" type="button" class="btn btn-success btn-xs" ng-click="deleteUnitName(unitName.id)">Xác nhận</button>
+                                        </th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <ul uib-pagination total-items="allUnit_totalItems" ng-model="allUnit_currentPage" max-size="allUnit_noOfPages" items-per-page="allUnit_entryLimit"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+    </div>
+</div>

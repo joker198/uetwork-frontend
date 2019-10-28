@@ -1,0 +1,94 @@
+<div class="col-sm-8" ng-init="loadPartnerInfo()">
+    <div class="blog-post blog-single-post">
+        <div class="single-post-title">
+            <h3>Partner Infomation </h3>
+        </div>
+        <div class="single-post-info">
+        </div>
+        <div class="single-post-image">
+            <img src="../../img/none_pic.PNG" height="200" width="200" ng-if="partnerInfo.logo == null && image == false"/>
+            <img ng-src="{{myCroppedImage}}" ng-if="pic == false">
+            <img ng-src="{{clientAdd}}{{partnerInfo.logo}}" ng-if="pic == true">
+            <div>Select an image file: <input type="file" id="fileInput" accept="image/*"/></div>
+
+        </div>
+        <div id="crop_img" class="single-post-image" ng-hide="pic == true">
+            <img-crop image="myImage"  result-image-format="image/jpeg" result-image-quality="0.2"
+                      result-image="myCroppedImage" area-type="square"
+                      on-change="pic = false" change-on-fly = "true"
+                      area-min-size="20">
+            </img-crop>
+            <button ng-click="changeLogo()" ng-if="image != false">Submit</button>
+        </div>
+        <div class="single-post-content">
+            <div class="post-coments">
+                <div class="comment-form-wrapper">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="name">Partner Name:</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="name" placeholder="Enter your name" ng-model="partnerInfo.partnerName" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="addr">Tax code:</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="addr" placeholder="Enter your tax code" ng-model="partnerInfo.taxCode">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="birth">Director:</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="birth" placeholder="Enter your Director"  ng-model="partnerInfo.director">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">Field Work:</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" placeholder="Enter your Field Work" ng-model="partnerInfo.fieldWork">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="phone">Website:</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="phone" placeholder="Enter your Website"  ng-model="partnerInfo.website">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="hometown">Address:</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="hometown" placeholder="Enter your Address" ng-model="partnerInfo.address">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">Phone:</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" placeholder="Enter your Phone" ng-model="partnerInfo.phone">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">Email:</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" placeholder="Enter your Email" ng-model="partnerInfo.email">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="form-group-button">
+                                <button type="Delete" class="btn btn-right button-right" ng-click="deletePartnerInfo()" onclick="confirm('OK????')">Delete</button>
+                                <button type="Save" class="btn btn-right button-right" ng-click="editPartnerInfo()">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+
+            <!-- End Comments -->
+        </div>
+    </div>
+</div>

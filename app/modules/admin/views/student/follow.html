@@ -1,0 +1,276 @@
+<div class="page-title">
+    <div class="title_left">
+        <h3>
+            <a class="cursor">Danh sách ứng tuyển {{typeName}}</a>
+        </h3>
+    </div>
+    <div class="title_right">
+        <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search for Partner" ng-model="search">
+                <span class="input-group-btn">
+                      <button class="btn btn-default" type="button">Go!</button>
+                    </span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
+<div class="row" ng-init="getAllFollowByInternshipTerm()">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <!-- <h2>Danh sách ứng tuyển thực tập</h2> -->
+                <ul class="nav navbar-right panel_toolbox">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle cursor" data-toggle="dropdown" role="button" aria-expanded="false">Options <i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li>
+                                <a class="cursor" ng-click="exportDataRegistration()"> Tải danh sách đăng kí </a>
+                            </li>
+                            <li>
+                                <a class="cursor" ng-click="exportDataRegistrationResearch()"> Tải danh sách đăng kí tại Khoa CNTT</a>
+                            </li>
+                            <li>
+                                <a data-toggle="modal" data-target="#send_pass_interview_message" class="cursor" ng-click="createListStudentToSendMessage('pass')"> Gửi thông báo trúng tuyển </a>
+                            </li>
+                            <li>
+                                <a data-toggle="modal" data-target="#send_fail_interview_message" class="cursor" ng-click="createListStudentToSendMessage('fail')"> Gửi thông trượt phỏng vấn </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="input-group">
+                    <!-- <input type="text" class="form-control" placeholder="Số dòng trên trang" ng-model="entry" ng-change="paginate()" style="border-radius:25px; border: 1px solid rgba(221,226,232,.49); box-shadow: inset 0 1px 0 rgba(0,0,0,.075); width: 72%;"> -->
+                    <select class="form-control" style="border-radius:25px; border: 1px solid rgba(221,226,232,.49); box-shadow: inset 0 1px 0 rgba(0,0,0,.075);" ng-change="changeType(postTitle)" ng-model="postTitle">
+                        <option value="">-- Chọn loại thực tập --</option>
+                        <option value="Recruitment">Thực tập đối tác</option>
+                        <option value="Recruitment_other">Thực tập công ty ngoài</option>
+                        <option value="Research">Thực tập tại trường</option>
+                        <option value="noFollow">Sinh viên chưa đăng kí thực tập</option>
+                    </select>
+                </div>
+                <div class="clearfix">
+                    <!-- <div class="form-group">
+                        <label class="control-label col-md-4 col-sm-3 col-xs-12">Chọn tên đối tác: </label>
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <select class="form-control" ng-model="partnerId">
+                                <option value="" ng-click="getAllFollows">All</option>
+                                <option value="{{data.partnerId}}" ng-selected="partnerId" ng-repeat="data in allFollows" ng-click="getAllFollowOfPartner(data.partnerId)">{{data.partnerName}}</option>
+                            </select>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+            <div class="x_content">
+                <div class="alert alert-warning" ng-if="warning">
+                    <strong>{{warningMessage}}</strong>
+                </div>
+                <div class="alert alert-success" ng-if="success">
+                    <strong>{{successMessage}}</strong>
+                </div>
+                <div class="alert alert-danger" ng-if="danger">
+                    <strong>{{errorMessage}}</strong>
+                </div>
+                <div class="table-responsive" ng-show="postTitle != 'noFollow'">
+                    <!-- <p class="pull-right" ng-if="currentPage != undefined">{{(currentPage * entryLimit) - entryLimit + 1}}-{{currentPage * entryLimit}} trong tổng số {{totalItems}}</p> -->
+                    <span class="pull-right"> 
+                        <ul class="list-inline">
+                          <li class="list-inline-item">Hiển thị:</li>
+                          <li class="list-inline-item cursor" ng-click=" entry = 25; paginate();" ng-class="{underline : entry == 25, bold : entry == 25}">25</li>
+                          <li class="list-inline-item cursor" ng-click=" entry = 50; paginate();" ng-class="{underline : entry == 50, bold : entry == 50}">50</li>
+                          <li class="list-inline-item cursor" ng-click=" entry = 100; paginate();" ng-class="{underline : entry == 100, bold : entry == 100}">100</li>
+                          <li class="list-inline-item cursor" ng-click=" entry = totalItems; paginate();" ng-class="{underline : entry == totalItems, bold : entry == totalItems}">Tất cả</li>
+                          <li class="list-inline-item cursor">|</li>
+                          <li class="list-inline-item"  ng-if="currentPage != undefined && currentPage * entryLimit <= totalItems ">{{(currentPage * entryLimit) - entryLimit + 1}}-{{currentPage * entryLimit}} trong tổng số {{totalItems}}</li>
+                          <li class="list-inline-item"  ng-if="currentPage != undefined && currentPage * entryLimit > totalItems "">{{(currentPage * entryLimit) - entryLimit + 1}}-{{totalItems}} trong tổng số {{totalItems}}</li>
+                        </ul>
+                    </span>
+                    <ul uib-pagination total-items="totalItems" ng-model="currentPage" max-size="noOfPages" items-per-page="entryLimit"></ul>
+                    <table class="table table-striped jambo_table bulk_action" id="tableExcel">
+                        <thead>
+                            <tr class="headings">
+                                <th class="column-title">STT</th>
+                                <th class="column-title">Họ và Tên</th>
+                                <th class="column-title">Email VNU</th>
+                                <th class="column-title">Email</th>
+                                <th class="column-title">Số điện thoại</th>
+                                <th class="column-title">Loại thực tập</th>
+                                <th class="column-title" ng-if="postTitle != 'Research'">Đối tác</th>
+                                <th class="column-title" ng-if="postTitle == 'Research'">Giảng viên</th>
+                                <th class="column-title">Thời gian</th>
+                                <th class="column-title">Status</th>
+                                <th class="column-title">
+                                    <input type="checkbox" ng-checked="selectStudent" class="flat" name="table_records" ng-click="selectAllStudent()">
+                                </th>
+                                <!-- </th> -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- <tr class="even pointer" ng-repeat="data in filtered = allFollows | filter : search | -->
+                            <!-- startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit"> -->
+                            <tr ng-repeat="data in filtered = allFollows | filter : search | filter: filterPosttitle | startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit | orderBy:'-id'">
+                                <td>{{(currentPage * entryLimit) - entryLimit + 1 + $index}}</td>
+                                <td class=" ">{{data.student.fullName}}</td>
+                                <td class=" ">{{data.student.infoBySchool.emailvnu}}</td>
+                                <td class=" ">{{data.student.email}}</td>
+                                <td class=" ">{{data.student.phoneNumber}}</td>
+                                <td class=" ">{{data.postTitle}}</td>
+                                <td class=" " ng-if="postTitle != 'Research'">{{data.partnerName}}</td>
+                                <td class=" " ng-if="postTitle == 'Research'">{{data.lecturersName}}</td>
+                                <td class=" ">{{data.createdAt | date:'dd-MM-yyyy HH:mm'}}</td>
+                                <td class=" ">{{data.status}}</td>
+                                <td class="a-center ">
+                                    <input type="checkbox" ng-if="data.status =='WAIT'" class="flat" name="table_records" ng-click="data.checked = !data.checked" ng-checked="data.checked">
+                                    <input type="checkbox" ng-if="data.status !='WAIT'" class="flat" name="table_records" disabled="disabled">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <ul uib-pagination total-items="totalItems" ng-model="currentPage" max-size="noOfPages" items-per-page="entryLimit"></ul>
+                </div>
+                <div class="table-responsive" ng-show="postTitle == 'noFollow'">
+                    <!-- <p class="pull-right" ng-if="currentPage != undefined">{{(currentPage * entryLimit) - entryLimit + 1}}-{{currentPage * entryLimit}} trong tổng số {{totalItems}}</p> -->
+                    <span class="pull-right"> 
+                        <ul class="list-inline">
+                          <li class="list-inline-item">Hiển thị:</li>
+                          <li class="list-inline-item cursor" ng-click=" entrynoFollows = 25; paginatenoFollows();" ng-class="{underline : entrynoFollows == 25, bold : entrynoFollows == 25}">25</li>
+                          <li class="list-inline-item cursor" ng-click=" entrynoFollows = 50; paginatenoFollows();" ng-class="{underline : entrynoFollows == 50, bold : entrynoFollows == 50}">50</li>
+                          <li class="list-inline-item cursor" ng-click=" entrynoFollows = 100; paginatenoFollows();" ng-class="{underline : entrynoFollows == 100, bold : entrynoFollows == 100}">100</li>
+                          <li class="list-inline-item cursor" ng-click=" entrynoFollows = totalItemsnoFollows; paginatenoFollows();" ng-class="{underline : entrynoFollows == totalItems, bold : entrynoFollows == totalItemsnoFollows}">Tất cả</li>
+                          <li class="list-inline-item cursor">|</li>
+                          <li class="list-inline-item"  ng-if="currentPagenoFollows != undefined && currentPagenoFollows * entryLimitnoFollows <= totalItemsnoFollows">{{(currentPagenoFollows * entryLimitnoFollows) - entryLimitnoFollows + 1}}-{{currentPagenoFollows * entryLimitnoFollows}} trong tổng số {{totalItemsnoFollows}}</li>
+                          <li class="list-inline-item"  ng-if="currentPagenoFollows != undefined && currentPagenoFollows * entryLimitnoFollows > totalItemsnoFollows">{{(currentPagenoFollows * entryLimitnoFollows) - entryLimitnoFollows + 1}}-{{totalItemsnoFollows}} trong tổng số {{totalItemsnoFollows}}</li>
+                        </ul>
+                    </span>
+                    <ul uib-pagination total-items="totalItemsnoFollows" ng-model="currentPagenoFollows" max-size="noOfPagesnoFollows" items-per-page="entryLimitnoFollows"></ul>
+                    <table class="table table-striped jambo_table bulk_action" id="tableExcel">
+                        <thead>
+                            <tr class="headings">
+                                <th class="column-title">STT</th>
+                                <th class="column-title">Họ và Tên</th>
+                                <th class="column-title">Email VNU</th>
+                                <th class="column-title">Email</th>
+                                <th class="column-title">Số điện thoại</th>
+                                <!-- </th> -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- <tr class="even pointer" ng-repeat="data in filtered = allFollows | filter : search | -->
+                            <!-- startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit"> -->
+                            <tr ng-repeat="student in filterednoFollows = noFollows | filter : search | startFrom:(currentPagenoFollows-1)*entryLimitnoFollows | limitTo:entryLimitnoFollows | orderBy:'-id'">
+                                <td>{{(currentPagenoFollows * entryLimitnoFollows) - entryLimitnoFollows + 1 + $index}}</td>
+                                <td class=" ">{{student.fullName}}</td>
+                                <td class=" ">{{student.infoBySchool.emailvnu}}</td>
+                                <td class=" ">{{student.email}}</td>
+                                <td class=" ">{{student.phoneNumber}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <ul uib-pagination total-items="totalItemsnoFollows" ng-model="currentPagenoFollows" max-size="noOfPagesnoFollows" items-per-page="entryLimitnoFollows"></ul>
+                </div>
+                <!-- pass interview -->
+                <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" id="send_pass_interview_message">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" id="close_send_pass_interview_message"><span aria-hidden="true">×</span>
+                                </button>
+                                <h4 class="modal-title" id="myModalLabel">Thông báo trúng tuyển</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="alert alert-danger" ng-if="danger_edit">
+                                    <strong>{{errorMessage}}</strong>
+                                </div>
+                                <div class="alert alert-success" ng-if="successdelete_edit">
+                                    <strong>{{successMessage}}</strong>
+                                </div>
+                                <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-1 col-sm-3 col-xs-12" for="first-name">Tới:
+                                        </label>
+                                        <div class="col-md-11 col-sm-12 col-xs-12">
+                                            <label class="btn btn-default" ng-repeat="student in listStudent">
+                                                {{student.studentName}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-1 col-sm-3 col-xs-12" for="last-name">Tiêu đề:
+                                        </label>
+                                        <div class="col-md-10 col-sm-10 col-xs-12">
+                                            <input type="text" class="form-control col-md-12 col-xs-12" rows="5" ng-model="message.title">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-1 col-sm-3 col-xs-12" for="last-name">Nội dung:
+                                        </label>
+                                        <div class="col-md-10 col-sm-10 col-xs-12">
+                                            <textarea class="form-control col-md-12 col-xs-12" rows="5" ng-model="message.content"></textarea>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                <button type="button" class="btn btn-primary" ng-click="sendMessage()">Gửi</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end pass interview -->
+                <!-- fail -->
+                <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" id="send_fail_interview_message">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" id="close_send_fail_interview_message"><span aria-hidden="true">×</span>
+                                </button>
+                                <h4 class="modal-title" id="myModalLabel"></h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="alert alert-danger" ng-if="danger_edit">
+                                    <strong>{{errorMessage}}</strong>
+                                </div>
+                                <div class="alert alert-success" ng-if="successdelete_edit">
+                                    <strong>{{successMessage}}</strong>
+                                </div>
+                                <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-1 col-sm-3 col-xs-12" for="first-name">Tới:
+                                        </label>
+                                        <div class="col-md-11 col-sm-12 col-xs-12">
+                                            <label class="btn btn-default" ng-repeat="student in listStudent">
+                                                {{student.studentName}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-1 col-sm-3 col-xs-12" for="last-name">Tiêu đề:
+                                        </label>
+                                        <div class="col-md-10 col-sm-10 col-xs-12">
+                                            <input type="text" class="form-control col-md-12 col-xs-12" rows="5" ng-model="message.title">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-1 col-sm-3 col-xs-12" for="last-name">Nội dung:
+                                        </label>
+                                        <div class="col-md-10 col-sm-10 col-xs-12">
+                                            <textarea class="form-control col-md-12 col-xs-12" rows="5" ng-model="message.content"></textarea>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                <button type="button" class="btn btn-primary" ng-click="createFailInterviewMessage()">Gửi</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end fail -->
+            </div>
+        </div>
+    </div>
+</div>
+</div>

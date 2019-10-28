@@ -1,0 +1,119 @@
+<div class="page-title">
+    <div class="title_left">
+        <h3>Quản lý tài khoản</h3>
+    </div>
+    <div class="title_right">
+        <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+            <form>
+                <div class="input-group">
+                    <input type="text" class="form-control" ng-model="input.userName" placeholder="Tìm kiếm tên tài khoản" id="input-search-user">
+                    <span class="input-group-btn">
+                      <input class="btn btn-default" id="btn-search-user" type="submit" ng-click="redirectToSearchUser()" value="Tìm" style="border-radius: 0 25px 25px 0;
+    border: 1px solid rgba(221,226,232,.49);
+    border-left: 0;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    color: #93A2B2;
+    margin-bottom: 0!important;">
+                    </span>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12" ng-init="getAllUser()">
+        <div class="x_panel">
+            <div class="x_title">
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="alert alert-warning" ng-if="warning">
+                    <strong>{{warningMessage}}</strong>
+                </div>
+                <div class="alert alert-success" ng-if="success">
+                    <strong>{{successMessage}}</strong>
+                </div>
+                <div class="alert alert-danger" ng-if="danger">
+                    <strong>{{errorMessage}}</strong>
+                </div>
+                <div class="table-responsive">
+                    <div class="pagination-wrapper">
+                        <ul class="pagination pagination-sm">
+                            <li class="{{previousPage.class}}"><a href="#user/page={{previousPage.page}}">Previous</a></li>
+                            <li class="{{page.class}}" ng-repeat="page in pages" ng-if="page.page != null">
+                                <a href="#user/page={{page.page}}">{{page.page}}</a>
+                            </li>
+                            <li class="{{nextPage.class}}"><a href="#user/page={{nextPage.page}}">Next</a></li>
+                        </ul>
+                    </div>
+                    <table class="table table-striped jambo_table bulk_action">
+                        <thead>
+                            <tr class="headings">
+                                <th class="column-title">#</th>
+                                <th class="column-title">Tên đăng nhập</th>
+                                <th class="column-title">Loại tài khoản</th>
+                                <th class="column-title">Lần đăng nhập cuối </th>
+                                <th class="column-title">Ngày tạo </th>
+                                <th class="column-title">Thông tin chi tiết </th>
+                                <th class="column-title">Thay đổi password</th>
+                                <!-- <th class="column-title">Xóa </th> -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="even pointer" ng-repeat="user in allUsers">
+                                <td class="">{{((nextPage.page - 1) * 50) - 50 + 1 + $index}}</td>
+                                <td class="">
+                                    {{user.userName}}
+                                </td>
+                                <td class="">
+                                    {{user.role}}
+                                </td>
+                                <td class="">
+                                    {{user.lastLogin | date:'dd-MM-yyyy HH:mm'}}
+                                </td>
+                                <td class="">
+                                    {{user.createdAt | date:'dd-MM-yyyy HH:mm'}}
+                                </td>
+                                <td class="">
+                                    <a class="cursor" ng-click="getStudentInformationByUserId(user.id)" data-target="#student_information" data-toggle="modal">
+                                        Thông tin
+                                    </a>
+                                </td>
+                                <td>
+                                    <a class="cursor" data-target="#reset_pass" data-toggle="modal" ng-click="selectUser(user)">
+                                        Đổi pass
+                                    </a>
+                                </td>
+                                <!-- <td class="">
+                                    <a class="cursor" data-toggle="modal" data-target="#delete_post" ng-click="confirmDelete(post.id)">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                </td> -->
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="pagination-wrapper">
+                        <ul class="pagination pagination-sm">
+                            <li class="{{previousPage.class}}"><a href="#user/page={{previousPage.page}}">Previous</a></li>
+                            <li class="{{page.class}}" ng-repeat="page in pages" ng-if="page.page != null">
+                                <a href="#user/page={{page.page}}">{{page.page}}</a>
+                            </li>
+                            <li class="{{nextPage.class}}"><a href="#user/page={{nextPage.page}}">Next</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true" id="reset_pass">
+                    <div class="modal-dialog modal-sm" style="width:40vw;">
+                        <div ui-view="modal_reset_password"></div>
+                    </div>
+                </div>
+                <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" id="student_information">
+                    <div class="modal-dialog modal-lg">
+                        <div ui-view="modal_student_information"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

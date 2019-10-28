@@ -1,0 +1,35 @@
+<div class="col-md-8 col-sm-8 col-xs-12">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>Insert internship</h2>
+            <input type="file" name="xlfile" id="xlf" ng-init="convert()">
+            <button ng-click="setExcelTable()">Show Students</button>
+            <button ng-click="send()">Upload</button>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <table class="table table-striped" ng-if="excelTable != null">
+                <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Birthday</th>
+                    <th>Student Code</th>
+                    <th>Grade</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="intern in excelTable">
+                    <th scope="row">{{intern.studentName}}</th>
+                    <td>{{intern.birthday}}</td>
+                    <td>{{intern.studentCode}}</td>
+                    <td>{{intern.grade}}</td>
+                    <td>{{intern.startDate | date:'medium'}}</td>
+                    <td>{{intern.endDate | date:'medium'}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

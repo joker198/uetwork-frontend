@@ -1,0 +1,65 @@
+<div class="col-sm-8">
+<div ng-if="initPage == 1" ng-init="getAllMessage(1)"></div>
+    <div class="blog-post blog-single-post">
+        <div class="single-post-title">
+            <h3>Inbox </h3>
+        </div>
+        <div class="single-post-content">
+            <div class="post-coments">
+                <ul class="post-comments">
+                    <li ng-repeat="message in messages | filter:{ messageType: '!Reply'} | orderBy:'-lastUpdated'">
+                        <a href="/#/messages/inbox/{{message.id}}" ng-click="selectMessage(message)">
+                            <div class="comment-wrapper">
+                                <div class="comment-author"> {{message.senderName}}: {{message.title}}</div>
+                                <p class="{{message.status}}" ng-bind-html="message.content | limitTo:150">
+                                </p>
+                                <!-- Comment Controls -->
+                                <div class="comment-actions">
+                                    <span class="comment-date" style="color: #828282;">{{message.lastUpdated | date:'medium'}}</span>
+                                    <!-- <a href="#" class="btn btn-micro btn-grey comment-reply-btn"><i class="glyphicon glyphicon-share-alt"></i> Reply</a> -->
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+                <!-- Pagination -->
+                <div class="pagination-wrapper ">
+                    <ul class="pagination pagination-sm">
+                        <!-- <li class="{{previousPage.class}}">
+                            <a class="cursor" ng-click="getAllMessage(previousPage.page)" ng-if="previousPage.class != 'disabled'">Previous</a>
+                            <a class="cursor" ng-if="previousPage.class == 'disabled'">Previous</a>
+                        </li>
+                        <li class="{{page.class}}" ng-repeat="page in pages" ng-if="page.page != null">
+                            <a class="cursor" ng-if="page.class != 'active'" ng-click="getAllMessage(page.page)">{{page.page}}</a>
+                            <a class="cursor" ng-if="page.class == 'active'">{{page.page}}</a>
+                        </li> -->
+                        <li class="{{nextPage.class}}">
+                            <a class="cursor" ng-click="getAllMessage(nextPage.page)" ng-if="nextPage.class != 'disabled'">Next</a>
+                            <a class="cursor" ng-if="nextPage.class == 'disabled'">Next</a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- Comments Form -->
+                <!-- <div class="comment-form-wrapper">
+                    <form class="">
+                        <div class="form-group">
+                            <label for="comment-email"><i class="glyphicon glyphicon-envelope"></i> <b>Title</b></label>
+                            <input class="form-control" id="comment-email" type="text" placeholder="">
+                        </div>
+                        <div class="form-group">
+                            <label for="comment-message"><i class="glyphicon glyphicon-comment"></i> <b>Your Message</b></label>
+                            <textarea class="form-control" rows="5" id="comment-message"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-large pull-right">Send</button>
+                        </div>
+                        <div class="clearfix"></div>
+                    </form>
+                </div> -->
+                <!-- End Comment Form -->
+            </div>
+            <!-- End Comments -->
+        </div>
+    </div>
+    <!-- End Blog Post -->
+</div>

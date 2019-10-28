@@ -1,0 +1,39 @@
+<div class="section" ng-init="search.data = 'searchStudent'">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-8  col-md-offset-0 col-sm-8 col-sm-offset-8">
+                <div class="cart-promo-code">
+                    <form class="">
+                        <div class="input-group">
+                            <input class="form-control input-sm" id="appendedInputButton" type="text" ng-model="search.input" placeholder="type student name here">
+                            <span class="input-group-btn">
+                                <input class="btn btn-sm btn-grey" type="button" ng-click="search()" value="Search">
+                            </span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="section" >
+    <div class="container" >
+        <div class="row service-wrapper-row" ng-repeat="student in searchResponses">
+            <div class="col-sm-4">
+                <div class="service-image">
+                    <a href="/#/student/{{student.id}}">
+                        <img src="../../img/no-avatar.jpg" height="100" width="100" ng-if="student.avatar == null"/>
+                        <img ng-src="{{clientAdd}}{{student.avatar}}" height="100" width="100" ng-if="student.avatar != null"/>
+                    </a>
+                </div>
+            </div>
+            <div class="col-sm-8">
+                <div class="caption"><a href="/#/student/{{student.id}}">{{student.fullName}}</a></div>
+            </div>
+        </div>
+        
+    </div>
+</div>                

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <base href="/">
+    <title>UET Works</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" type="image/x-icon" href="favicon.ico" sizes="16x16">
+    <!-- angucomplete-alt -->
+    <link rel="stylesheet" href="bower_components/angucomplete-alt/angucomplete-alt.css">
+    <!-- Bootstrap -->
+    <link href="bower_components/gentelella/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="bower_components/summernote/dist/summernote.css">
+    <!-- <link rel="stylesheet" href="bower_components/angular-ui-select/select.css"> -->
+    <link rel="stylesheet" href="css/icomoon-social.css">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,600,800' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="css/leaflet.css" />
+    <!--[if lte IE 8]>
+            <link rel="stylesheet" href="css/leaflet.ie.css" />
+        <![endif]-->
+    <!-- jQuery -->
+    <script src="bower_components/gentelella/vendors/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="bower_components/gentelella/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="bower_components/angular-bootstrap/ui-bootstrap-csp.css">
+    <link rel="stylesheet" href="bower_components/tags-input/tags-input.css">
+    <!-- <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script> -->
+    <script src="bower_components/angular/angular.min.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+    <script src="bower_components/angular-cookies/angular-cookies.min.js"></script>
+    <script src="main/app.js"></script>
+    <!-- <script src="main/uglify/concat.min.js"></script> -->
+    <script src="main/controllers/main.ctrl.js"></script>
+</head>
+
+<body ng-app="myApp" ng-controller="mainCtrl">
+    <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+    <div ng-view ng-if="loggedIn == false"></div>
+    <div ng-if="loggedIn" ng-cloak>
+        <!-- Navigation & Logo-->
+        <div class="mainmenu-wrapper" ng-init="getNewMessage()">
+            <div class="container">
+                <div class="menuextras">
+                    <div class="extras">
+                        <ul>
+                            <!-- <li class="dropdown active" ng-if="role == 'STUDENT'">
+                                <form>
+                                    <span class="glyphicon glyphicon-search cursor" data-toggle="dropdown"></span>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <input type="text" name="search" class="form-control input-sm" ng-model="search.input">
+                                        <select class="form-control input-sm" ng-model="search.data">
+                                            <option value="searchPartner" selected>Partner</option>
+                                            <option value="searchDescription">Post describtion</option>
+                                            <option value="searchContent">Post content</option>
+                                        </select>
+                                        <li class="cursor">Partner</li>
+                                        <li class="cursor">Post describtion</li>
+                                        <li class="cursor">Post content</li>
+                                        <button type="submit" ng-click="search()">
+                                            <span class="glyphicon glyphicon-search cursor"></span>
+                                        </button>
+                                    </ul>
+                                </form>
+                            </li> -->
+                            <!-- <li ng-if="loggedIn">
+                                <a href="/#/user/info" ng-if="role == 'STUDENT'" class="cursor">{{username}}</a>
+                                <a href="/#/partner/info" ng-if="role == 'VIP_PARTNER' || role == 'NORMAL_PARTNER'">{{username}}</a>
+                            </li> -->
+                            <li class="dropdown active" style="list-style-type: none;" ng-if="role == 'VIP_PARTNER' || role == 'NORMAL_PARTNER'">
+                                <a class="dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="/#/partner/info">Infomation</a></li>
+                                    <li><a href="/#/partner/contact">Contact</a></li>
+                                    <li><a href="/#/partner/insert-intern">Insert internship</a></li>
+                                    <li><a href="/#/partner/show-intern">All Internship</a></li>
+                                    <li><a href="/#/partner/post">Post</a></li>
+                                    <li><a href="/#/partner/add-post">Add Post</a></li>
+                                </ul>
+                            </li>
+                            <li ng-click="logout()" class="cursor"><a>Log Out</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <nav id="mainmenu" class="mainmenu">
+                    <ul>
+                        <li class="logo-wrapper">
+                            <a href="/#/recruitment" ng-if="role == 'STUDENT'">
+                                <img src="img/UET-logo.png">
+                            </a>
+                            <a href="/#/partner/info" ng-if="role != 'STUDENT'">
+                                <img src="img/UET-logo.png">
+                            </a>
+                        </li>
+                        <!-- <li class="active">
+                            <a ui-sref="home" ng-if="role == 'STUDENT'">Home</a>
+                            <a href="/#/partner/info" ng-if="role != 'STUDENT'">Home</a>
+                        </li> -->
+                        <li ng-if="role == 'VIP_PARTNER'" ng-class="{active: currentPage.indexOf('search') != -1}">
+                            <a href="/#/search">Search</a>
+                        </li>
+                        <li ng-if="role == 'STUDENT'" ng-class="{active: currentPage.indexOf('recruitment') != -1}">
+                            <a href="/#/recruitment">Tin tuyển dụng</a>
+                        </li>
+                        <li ng-if="role == 'STUDENT'" ng-class="{active: currentPage.indexOf('interview-List') != -1}">
+                            <a href="/#/interview-List">Thông tin thực tập</a>
+                        </li>
+                        <li ng-if="role == 'STUDENT'" ng-class="{active: currentPage.indexOf('/user.') != -1}">
+                            <a href="/#/user/info">Thông tin cá nhân</a>
+                        </li>
+                        <!-- <li class=" " ng-class="{active: currentPage.indexOf('messages') != -1}">
+                            <a href="/#/messages/inbox">
+                                Message
+                                <span ng-if="messagesCount != 0" class="badge" style="background-color: #4f8db3;">{{messagesCount}}</span>
+                            </a>
+                        </li> -->
+                        <li class=" " ng-if="messagesCount == 0" ng-class="{active: currentPage.indexOf('messages') != -1}">
+                            <a href="/#/messages/inbox">Tin nhắn</a>
+                        </li>
+                        <li ng-if="messagesCount != 0" class="dropdown cursor" ng-class="{active: currentPage.indexOf('messages') != -1}">
+                            <a class="dropdown-toggle" data-toggle="dropdown">
+                                Message
+
+                                <span class="badge" style="background-color: #4f8db3;">{{messagesCount}}</span>
+                            </a>
+                            <!-- <a class="dropdown-toggle" data-toggle="dropdown" ng-if="newNoti == false">New Notification <span class="caret"></span></a> -->
+                            <ul class="dropdown-menu" role="menu">
+                                <li ng-repeat="message in newMessages">
+                                    <a href="/#/messages/inbox/{{message.id}}" ng-click="selectMessage(message)">
+                                        {{message.senderName}} : {{message.title}}
+                                    </a>
+                                </li>
+                                <li class="text-center">
+                                    <a href="/#/messages/inbox">See all</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <div ui-view></div>
+        <div ui-view="internship"></div>
+        <div ui-view="fit-post"></div>
+        <div ui-view="reseach"></div>
+        <div ui-view="registration"></div>
+        <!-- <div ui-view="other-post"></div> -->
+        <!-- <div ui-view="slider" ng-if="role == 'STUDENT'"></div> -->
+        <!-- <div ui-view="slider"></div> -->
+        <!-- <div ui-view="gif-loader"></div> -->
+        <!-- <div ui-view="logo"></div> -->
+        <!-- <div ui-view="comment"></div> -->
+        <!-- <div class="footer" style="
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 100px;
+    width: 100%;
+    overflow: hidden;
+">
+            <div class="container">
+                <div class="row">
+                    <h3>Contacts</h3>
+                    <div class="col-footer col-md-4 col-xs-6">
+                        <p class="contact-us-details" style="margin-bottom: 20px;">
+                            <span><b>Địa Chỉ:</b> P301, nhà E3, 144 Xuân Thủy, Cầu Giấy, Hà Nội</span>
+                        </p>
+                    </div>
+                    <div class="col-footer col-md-4 col-xs-6">
+                        <p class="contact-us-details" style="margin-bottom: 20px;">
+                            <br/>
+                            <span>
+                        <b>Email:</b> 
+                        <a href="mailto:getintoutch@khoa.cntt.vnu@gmail.com">khoa.cntt.vnu@gmail.com</a>
+                        |
+                        <a href="mailto:getintoutch@carbc@vnu.edu.vn">carbc@vnu.edu.vn</a>
+                    </span>
+                        </p>
+                    </div>
+                    <div class="col-footer col-md-4 col-xs-6">
+                        <p class="contact-us-details" style="margin-bottom: 20px;">
+                            <span>
+                        <b>Điện thoại:</b> 0243.3754.7064
+                    </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+    </div>
+    <!-- <div ng-if="loggedIn"> -->
+    login
+    <script src="main/controllers/login.ctrl.js"></script>
+    <script src="main/services/login.service.js"></script>
+    info
+    <script src="main/controllers/info.ctrl.js"></script>
+    <script src="main/services/info.service.js"></script>
+    jobSkill
+    <script src="main/controllers/jobSkill.ctrl.js"></script>
+    <script src="main/services/jobSkill.service.js"></script>
+    intern
+    <script src="main/controllers/intern.ctrl.js"></script>
+    <script src="main/services/intern.service.js"></script>
+    httpRequestInterceptor
+    <script src="main/services/httpRequestInterceptor.js"></script>
+    partnerInfo
+    <script src="main/controllers/partnerInfo.ctrl.js"></script>
+    <script src="main/services/partnerInfo.service.js"></script>
+    partnerContact
+    <script src="main/controllers/partnerContact.ctrl.js"></script>
+    <script src="main/services/partnerContact.service.js"></script>
+    partnerPost
+    <script src="main/controllers/partnerPost.ctrl.js"></script>
+    <script src="main/services/partnerPost.service.js"></script>
+    search
+    <script src="main/controllers/search.ctrl.js"></script>
+    <script src="main/services/search.service.js"></script>
+    message
+    <script src="main/controllers/message.ctrl.js"></script>
+    <script src="main/services/message.service.js"></script>
+    sockjs stom js
+    <script src="bower_components/sockjs-client/dist/sockjs.min.js"></script>
+    <script src="js/stomp.min.js"></script>
+    angular md5
+    <script src="bower_components/angular-md5/angular-md5.js"></script>
+    bootstrap
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    crop img
+    <script src="bower_components/ng-img-crop-full-extended/compile/minified/ng-img-crop.js"></script>
+    summernote
+    <script src="bower_components/summernote/dist/summernote.min.js"></script>
+    <script src="bower_components/angular-summernote/dist/angular-summernote.min.js"></script>
+    sanitize
+    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+    base64
+    <script src="bower_components/angular-base64/angular-base64.js"></script>
+    tags-input
+    <script src="bower_components/tags-input/tags-input.js"></script>
+    xlsx
+    <script src="bower_components/js-xlsx/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.rawgit.com/zenorocha/clipboard.js/master/dist/clipboard.min.js"></script>
+    angucomplete
+    <script src="bower_components/angucomplete-alt/angucomplete-alt.js"></script>
+</body>
+
+</html>

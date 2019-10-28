@@ -1,0 +1,83 @@
+<div class="section blog-posts-wrapper">
+    <div class="container">
+        <div class="row" ng-init="getCurrentInternshipOfInternshipTerm()">
+            <div class="col-md-8 col-sm-8">
+                <div class="blog-post">
+                    <div class="post-title">
+                    </div>
+                    <div class="post-summary">
+                        <h3>
+                            Thực tập chuyên ngành đợt {{internship.internshipTerm.term}} năm {{internship.internshipTerm.year}}
+                            
+
+                            <button ng-click="createInternship()" ng-if="internship.id == 0" class="btn pull-right">Đăng ký</button>
+                            <button data-toggle="modal" data-target="#unregist_internship" ng-if="internship.id != 0" class="btn pull-right">Hủy đăng ký</button>
+                        </h3>
+                        <p>
+                            - Thời gian đăng ký thực tập: {{internship.internshipTerm.startDate | date:'dd-MM-yyyy'}} đến {{internship.internshipTerm.expiredDate | date:'dd-MM-yyyy'}}
+                        </p>
+                        <p>
+                            - Nếu bạn muốn đăng kí thực tập vào kì hiện tại và được phân công giảng viên. Hãy đăng kí ở đây
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-4" style="height: 180px;" ng-show="success || danger">
+                <div class="blog-post">
+                    <div class="post-summary">
+                        <div class="alert alert-success" role="alert" ng-if="success" >
+                            <button type="button" class="close" ng-click="successMessage =''; success = false;" aria-label="Close" onclick="$('.alert').fadeTo(500, 0).slideUp(500)">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <strong>{{successMessage}}</strong>
+                        </div>
+                        <div class="alert alert-danger" ng-if="danger">
+                            <button type="button" class="close" ng-click="errorMessage =''; danger = false;" aria-label="Close" onclick="$('.alert').fadeTo(500, 0).slideUp(500)">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <strong>{{errorMessage}}</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="unregist_internship" class="modal fade" role="dialog" ng-controller="partnerPostCtrl">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" ng-if="internship.follows.length != 0">Bạn phải hủy đăng ký tất cả công ty thì mới hủy được đăng ký thực tập</h4>
+                <h4 class="modal-title" ng-if="internship.follows.length == 0">Bạn có chắc muốn hủy đăng ký thực tập</h4>
+            </div>
+            <div class="modal-body" ng-if="internship.follows.length != 0">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Tên đơn vị đã đăng ký </th>
+                            <!-- <th>Post</th> -->
+                            <th>Trạng thái</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="follow in internship.follows">
+                            <th>{{follow.partnerName}}</th>
+                            <!-- <td><a href="/#/post/{{follow.postId}}">{{follow.postTitle}}</a></td> -->
+                            <th>{{follow.status}}</th>
+                            <th>
+                                <button class="btn" ng-click="unfollow(follow.postId, 'unregist_internship', postTitle, $index)">Hủy đăng ký</button>
+                            </th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer" ng-if="internship.follows.length == 0">
+                <button type="button" class="btn btn-default" id="close_select_partner" data-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-default" ng-click="deleteInternship()">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+</div>

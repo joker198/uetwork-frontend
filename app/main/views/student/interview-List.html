@@ -1,0 +1,128 @@
+<div id="choose_internship" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Bạn có chắc muốn chọn {{selectedPartnerName}} làm thực tập, bạn chỉ chọn được 1 lần!</h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="close_select_partner" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" ng-click="selectPartner()">Choose</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="section" ng-init="getAllInternship()">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-8" ng-repeat="internship in allInternship | orderBy:'-internshipTerm.id'">
+                <div class="blog-post blog-single-post">                    
+                    <div class="single-post-title">
+                        <h3>Đợt {{internship.internshipTerm.term}} năm {{internship.internshipTerm.year}}</h3>
+                    </div>
+                    <div class="single-post-info">
+                    </div>
+                    <div class="single-post-content">
+                        <div class="post-coments">
+                            <div class="comment-form-wrapper">
+                                <form class="form-horizontal">
+                                    <div class="form-group">
+                                        <label class="col-sm-3">Giảng viên : </label>
+                                        <p>{{internship.lecturers.fullName}}</p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3">Loại thực tập : </label>
+                                        <p>{{internship.internshipType}}</p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3">Nơi thực tập : </label>
+                                        <p>{{internship.partnerName}}</p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3">Điểm : </label>
+                                        <p>{{internship.score}}</p>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="alert alert-warning" ng-if="warning">
+                            <strong>{{warningMessage}}</strong>
+                        </div>
+                        <div class="alert alert-success" ng-if="success">
+                            <strong>{{successMessage}}</strong>
+                        </div>
+                        <div class="alert alert-danger" ng-if="danger">
+                            <strong>{{errorMessage}}</strong>
+                        </div>
+                        <form class="form-horizontal" ng-if="selected != true">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Tên đơn vị</th>
+                                        <!-- <th>Post</th> -->
+                                        <th>Trạng thái</th>
+                                        <th>#</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="follow in internship.follows">
+                                        <th><a href="/#/post/{{follow.postId}}">{{follow.partnerName}}</a></th>
+                                        <!-- <td><a href="/#/post/{{follow.postId}}">{{follow.postTitle}}</a></td> -->
+                                        <th>{{follow.status}}</th>
+                                        <th ng-if="internship.internshipTerm.id == currentInternshipTerm">
+                                            <input type="radio" class="flat" name="table_records" ng-if="follow.status == 'PASS'" ng-click="select(follow.partnerId, follow.partnerName)">
+                                            <input type="radio" class="flat" name="table_records" disabled="disabled" ng-if="follow.status != 'PASS'">
+                                        </th>
+                                        <th ng-if="internship.internshipTerm.id != currentInternshipTerm">
+                                            <input type="radio" class="flat" name="table_records" disabled="disabled">
+                                        </th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="form-group" ng-if="showButton">
+                                <div class="form-group-button">
+                                    <button type="Save" data-toggle="modal" data-target="#choose_internship" class="btn btn-right button-right">Choose</button>
+                                </div>
+                            </div>
+                        </form>
+                        <form class="form-horizontal" ng-if="selected == true">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Tên đơn vị đã đăng ký   </th>
+                                        <!-- <th>Post</th> -->
+                                        <th>Trạng thái</th>
+                                        <th>#</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="follow in allFollow">
+                                        <th>{{follow.partnerName}}</th>
+                                        <!-- <td><a href="/#/post/{{follow.postId}}">{{follow.postTitle}}</a></td> -->
+                                        <th>{{follow.status}}</th>
+                                        <th>
+                                            <input type="radio" class="flat" name="table_records" ng-if="follow.status == 'SELECTED'" checked="checked">
+                                            <input type="radio" class="flat" name="table_records" disabled="disabled" ng-if="follow.status != 'SELECTED'">
+                                        </th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="form-group" ng-if="showButton && selected != true">
+                                <div class="form-group-button">
+                                    <button type="Save" data-toggle="modal" data-target="#choose_internship" class="btn btn-right button-right">Choose</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div><!-- 
+                    <div class="single-post-title">
+                        <h3>Danh sách đăng ký thực tập</h3>
+                    </div>
+                    <div class="single-post-info">
+                        
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

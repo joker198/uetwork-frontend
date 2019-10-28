@@ -1,0 +1,89 @@
+<div class="col-md-12 col-sm-12 col-xs-12" ng-init="loadAllPartnerPost(partnerIdSelected)">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>
+          <a ng-href="#admin/partner/{{partnerIdSelected}}">Infomation</a>
+          |
+          <u><a class="active">Post</a></u>
+          |
+          <a href="#admin/partner/{{partnerIdSelected}}/intern">Internship</a>
+        </h2>
+            <ul class="nav navbar-right panel_toolbox">
+                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#">Settings 1</a>
+                        </li>
+                        <li><a href="#">Settings 2</a>
+                        </li>
+                    </ul>
+                </li>
+                <li><a class="close-link"><i class="fa fa-close"></i></a>
+                </li>
+            </ul>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <p>Add class <code>bulk_action</code> to table for bulk actions options on row select</p>
+            <!-- Small modal -->
+            <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel2">Bạn có chắc muốn chuyển trạng thái bài viết này?</h4>
+                        </div>
+                        <div class="modal-body">
+                            <h4>Text in a modal</h4>
+                            <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
+                            <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="changePostStatus(postId)">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /modals -->
+            <div class="table-responsive">
+                <table class="table table-striped jambo_table bulk_action">
+                    <thead>
+                        <tr class="headings">
+                            <th>
+                                <input type="checkbox" id="check-all" class="flat">
+                            </th>
+                            <th class="column-title">Title </th>
+                            <th class="column-title">Date</th>
+                            <th class="column-title">Order </th>
+                            <th class="column-title">Status </th>
+                            <th class="column-title">Total Follower </th>
+                            <!-- <th class="column-title no-link last"><span class="nobr">Action</span> -->
+                            <!-- </th> -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="even pointer" ng-repeat="post in allPost">
+                            <td class="a-center ">
+                                <input type="checkbox" class="flat" name="table_records">
+                            </td>
+                            <td class=" " ng-click="showPost(post)">{{post.describePost}}</td>
+                            <td class=" " ng-click="showPost(post)">{{post.datePost | date:'medium'}}</td>
+                            <td class=" " ng-click="showPost(post)">121000210 <i class="success fa fa-long-arrow-up"></i></td>
+                            <td class=" " ng-if="post.status == 'A'" ng-click="postStatus(post.id)">
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-sm">Active</button>
+                            </td>
+                            <td class=" " ng-if="post.status == 'D'" ng-click="postStatus(post.id)">
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-sm">Deactive</button>
+                            </td>
+                            <td class=" last" ng-click="showPost(post)">{{post.follow}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,84 @@
+<div class="col-sm-8" ng-init="loadContact()">
+    <div class="blog-post blog-single-post">
+        <div class="single-post-title">
+            <h3>Contact </h3>
+        </div>
+        <div class="single-post-info">
+        </div>
+        <div class="single-post-content">
+            <div class="post-coments">
+                <div class="comment-form-wrapper">
+                    <form class="form-horizontal" ng-repeat="contact in partnerContact">
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="com">Contact Name : </label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" placeholder="Contact Name" ng-model="contact.contactName">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="skill">Address:</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" placeholder="Address" ng-model="contact.address">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="skill">Email:</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" placeholder="Email" ng-model="contact.email">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="skill">Skype:</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" placeholder="Skype" ng-model="contact.skype">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-group-button">
+                                <button type="Delete" class="btn btn-right button-right" ng-click="deleteAContact(contact.id)" onclick="confirm('OK????')">Delete</button>
+                                <button type="Save" class="btn btn-right button-right" ng-click="editAContact(contact.id)">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <br>
+                <hr>
+                <br>
+                <div class="comment-form-wrapper">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="com">Contact Name : </label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="com" placeholder="Contact Name" ng-model="contactName">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="skill">Address:</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" placeholder="Address" ng-model="address">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="skill">Email:</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" placeholder="Email" ng-model="email">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="skill">Skype:</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="skill" placeholder="Skype" ng-model="skype">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-group-button">
+                                <button class="btn btn-right button-right" ng-click="createAContact()">Creat</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- End Comments -->
+    </div>
+</div>

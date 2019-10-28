@@ -1,0 +1,29 @@
+<div class="section"  ng-if="loggedIn && index" ng-init="getTopComment()">
+    <div class="container">
+        <h2>Top comments</h2>
+        <div class="row">
+            <!-- Testimonial -->
+            <div class="testimonial col-md-4 col-sm-6" ng-repeat="comment in topComments | orderBy:'filter'">
+                <!-- Author Photo -->
+                <div class="author-photo">
+                    <img src="img/user1.jpg" alt="Author 1">
+                </div>
+                <div class="testimonial-bubble">
+                    <blockquote>
+                        <!-- Quote -->
+                        <p class="quote">
+                            "{{comment.content}}"
+                        </p>
+                        {{comment.rating}}<span class="glyphicon glyphicon-star"></span>
+                        <!-- Author Info -->
+                        <!--<cite class="author-info">-->
+                            <!-- - Cu Thang,<br>Thanh niên xa mẹ <a href="#"> xa luôn cả gái </a>-->
+                        <!--</cite>-->
+                    </blockquote>
+                    <div class="sprite arrow-speech-bubble"></div>
+                </div>
+            </div>
+            <!-- End Testimonial -->
+        </div>
+    </div>
+</div>

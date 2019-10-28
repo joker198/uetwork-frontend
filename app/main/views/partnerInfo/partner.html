@@ -1,0 +1,38 @@
+<div class="section">
+
+    <div class="container">
+        <div class="row">
+
+            <div class="col-sm-4 blog-sidebar" ng-if="role == 'VIP_PARTNER'">
+                <h4></h4>
+                <form>
+                    <div class="input-group">
+
+                    </div>
+                </form>
+                <h4>Partner Infomation</h4>
+                <ul class="recent-posts">
+                    <li><a ui-sref=".info">Partner Infomation</a></li>
+                </ul>
+                <h4>Partner contact</h4>
+                <ul class="blog-categories">
+                    <li><a ui-sref=".contact">Partner contact</a></li>
+                </ul>
+                <h4>Internship</h4>
+                <ul class="blog-categories">
+                    <li><a ui-sref=".insert-intern">Insert internship</a></li>
+                    <li><a ui-sref=".show-intern">All Internships</a></li>
+                </ul>
+                <h4>Posts</h4>
+                <ul  class="blog-categories">
+                    <li><a ui-sref=".post">Post</a></li>
+                    <li><a ui-sref=".add-post">Add Post</a></li>
+                </ul>
+            </div>
+
+            <div ui-view></div>
+            
+        </div>
+    </div>
+
+</div>

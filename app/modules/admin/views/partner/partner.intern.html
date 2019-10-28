@@ -1,0 +1,123 @@
+<div class="col-md-12 col-sm-12 col-xs-12" ng-init="showAllInternOfPartner()">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>
+                <a ng-href="#admin/partner/{{partnerId}}">Infomation</a>
+                |
+                <a href="#admin/partner/{{partnerId}}/post">Post</a>
+                |
+                <u>
+                    <a class="active">Internship</a>
+                </u>
+                |
+                <a ng-click="showComment(partnerId)">Comment</a>
+            </h2>
+
+            <div class="clearfix"></div>
+        </div>
+        <!--<li class="dropdown active">-->
+
+            <!-- <a class="dropdown-toggle" data-toggle="dropdown" ng-if="newNoti == false">New Notification <span class="caret"></span></a> -->
+            <ul class="dropdown-menu" role="menu">
+                <li ng-repeat="noti in notification">
+                    <a href="/#/channel/{{noti.channelId}}">
+                        {{noti.postUser}} vừa bình luận vào topic: {{noti.channelName}}
+                    </a>
+                </li>
+            </ul>
+        <!--</li>-->
+        <div class="x_content">
+
+            <h2>{{company}} has {{count}} Internship</h2>
+            <!-- Small modal -->    
+            From:
+            <input type="date" ng-model="search.startDate">
+            {{search.startDate | date: "dd-MM-yyyy"}}
+            To:
+            <input type="date" ng-model="to_date">
+            <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel2">Bạn có chắc muốn chuyển trạng thái bài viết này?</h4>
+                        </div>
+                        <div class="modal-body">
+                            <h4>Text in a modal</h4>
+                            <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
+                            <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="changePostStatus(postId)">Save changes</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- /modals -->
+            <div class="table-responsive" ng-if="hideIntern == false">
+              <table class="table table-striped jambo_table bulk_action">
+                <thead>
+                  <tr class="headings">
+                    <th>
+                      <input type="checkbox" id="check-all" class="flat">
+                    </th>
+                    <th class="column-title">Student Name </th>
+                    <th class="column-title">Birthday</th>
+                    <th class="column-title">Student Code </th>
+                    <th class="column-title">Grade </th>
+                    <th class="column-title">Start Date </th>
+                    <th class="column-title">End Date </th>
+                    <!-- <th class="column-title no-link last"><span class="nobr">Action</span> -->
+                    <!-- </th> -->
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="even pointer" ng-repeat="intern in allInternOfPartner">
+                    <td class="a-center ">
+                      <input type="checkbox" class="flat" name="table_records">
+                    </td>
+                    <td class=" ">{{intern.studentInfo.fullName}}</td>
+                    <td class=" ">{{intern.studentInfo.birthday}}</td>
+                    <td class=" " data-toggle="collapse" data-target="#rate_partner">cai nay chua co</td>
+                    <td class=" ">vi co moi studentId ma cai nay o infobyschool</td>
+                    <td class=" ">{{intern.startDate | date:'medium'}}</td>
+                    <td class="last">{{intern.endDate | date:'medium'}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="table-responsive" ng-if="hideIntern == true">
+                <table class="table table-striped jambo_table bulk_action">
+                    <thead>
+                    <tr class="headings">
+                        <th class="column-title">Content </th>
+                        <th class="column-title">Rating</th>
+                        <th class="column-title">Filter </th>
+                        <!-- <th class="column-title no-link last"><span class="nobr">Action</span> -->
+                        <!-- </th> -->
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="even pointer" ng-repeat="comment in comments | orderBy:'filter'" ng-init="comment.check = false">
+                        <td class=" ">{{comment.content}}</td>
+                        <td class=" ">{{comment.rating}}</td>
+                        <td class=" ">
+                            <input type="text" ng-model="comment.filter" ng-change="comment.check = true">
+                            <button ng-click="changeFilterValue(comment); comment.check = false" ng-if="comment.check">Save change</button>
+                        </td>
+                        <!--<td ></td>-->
+                        <!--<input  class="col-md-1 col-xs-1" type="text" ng-model="">-->
+                    </tr>
+                    </tbody>
+                </table>
+                <button type="submit" class="btn btn-primary" ng-click="saveManyFilterValue()">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

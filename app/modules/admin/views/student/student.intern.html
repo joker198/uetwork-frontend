@@ -1,0 +1,54 @@
+<form class="form-horizontal form-label-left" id="create_internship">
+    <ul class="nav navbar-right panel_toolbox">
+        <li><a data-toggle="collapse" data-target="#create_internship" hclass="cursor"><i class="fa fa-chevron-up"></i></a>
+        </li>
+    </ul>
+    <div class="form-group">
+        <label class="control-label col-md-4 col-sm-3 col-xs-12" for="first-name">Email vnu: <span class="required">*</span>
+        </label>
+        <div class="col-md-4 col-sm-6 col-xs-12">
+            <input type="text" id="first-name" required="required" class="form-control col-md-7 col-xs-12" ng-model="intern.emailVNU">
+        </div>
+    </div>
+    <div class="form-group" ng-init="getNameAndIdOfPartners()">
+        <label class="control-label col-md-4 col-sm-3 col-xs-12">Hình thức thực tập: </label>
+        <div class="col-md-4 col-sm-6 col-xs-12">
+            <select class="form-control" ng-model="intern.internshipType">
+                <option value=""> -- Chọn hình thực thực tập -- </option>
+                <option value="company">Tại công ty</option>
+                <option value="university">Tại trường</option>
+                <option value="NCKH">Nghiên cứu khoa học</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group" ng-if="intern.internshipType != 'university' && intern.internshipType!= 'NCKH'">
+        <label class="control-label col-md-4 col-sm-3 col-xs-12">Tên công ty: </label>
+        <div class="col-md-4 col-sm-6 col-xs-12">
+            <select class="form-control" ng-model="intern.partnerId">
+                <option value="other"> -- Công ty khác -- </option>
+                <option value="{{partner.partnerId}}" ng-repeat="partner in nameAndIdPartners"> {{partner.partnerName}} </option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group" ng-if="intern.partnerId == 'other' && intern.internshipType == 'company'">
+        <label class="control-label col-md-4 col-sm-3 col-xs-12" for="last-name">Tên công ty:
+        </label>
+        <div class="col-md-4 col-sm-6 col-xs-12">
+            <input type="text" id="last-name" name="last-name" required="required" class="form-control col-md-7 col-xs-12" ng-model="intern.partnerName">
+        </div>
+    </div>
+    <!-- <div class="form-group" ng-init="getNameAndIdOfLecturers()">
+                        <label class="control-label col-md-4 col-sm-3 col-xs-12">Tên giảng viên: </label>
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <select class="form-control" ng-model="intern.lecturersId">
+                                <option value="{{lecturers.lecturersId}}" ng-repeat="lecturers in nameAndIdOfLecturers"> {{lecturers.lecturersName}} </option>
+                            </select>
+                        </div>
+                    </div> -->
+    <div class="form-group">
+        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-4">
+            <button type="submit" class="btn btn-success" ng-click="createInternship()">Tạo</button>
+        </div>
+    </div>
+    <div class="divider-dashed"></div>
+</form>

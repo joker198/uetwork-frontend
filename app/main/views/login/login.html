@@ -1,0 +1,110 @@
+<div class="mainmenu-wrapper">
+    <div class="container">
+        <nav id="mainmenu" class="mainmenu">
+            <ul>
+                <li class="logo-wrapper">
+                    <a href=""><img src="img/UET-logo.png"></a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+<!-- Page Title -->
+<div class="section section-breadcrumbs">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- <h1>Login</h1> -->
+            </div>
+        </div>
+    </div>
+</div>
+<div class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-5">
+                <div class="basic-login">
+                    <div class="alert alert-success" ng-if="success">
+                        <strong ng-bind-html="successMessage"></strong>
+                    </div>
+                    <div class="alert alert-danger" ng-if="danger">
+                        <strong>{{errorMessage}}</strong>
+                    </div>
+                    <div ng-if="wait">
+                        <img src="https://kenhmp3.com/img/loading.gif">
+                    </div>
+                    <form role="form" role="form" ng-init="resetPass = false">
+                        <div class="form-group">
+                            <label for="login-username"><i class="icon-user"></i> <b>Username</b></label>
+                            <input class="form-control" ng-model="login.username" id="login-username" type="text" placeholder="">
+                        </div>
+                        <div class="form-group">
+                            <label for="login-password"><i class="icon-lock"></i> <b>Password</b></label>
+                            <input class="form-control" ng-model="login.password" id="login-password" type="password" placeholder="">
+                        </div>
+                        <div class="form-group">
+                            <a class="forgot-password cursor" ng-click="resetPass = ! resetPass">Forgot password?</a>
+                            <p>Not a member? <a href="/#/signup">Register here</a></p>
+                            <button type="submit" class="btn pull-right" ng-click="login()">Login</button>
+                            <div class="clearfix"></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="basic-login" ng-if="resetPass">
+                    <div ng-if="waitReset">
+                        <img src="https://kenhmp3.com/img/loading.gif">
+                    </div>
+                    <form role="form" role="form">
+                        <div class="form-group">
+                            <label for="login-username"><i class="icon-user"></i> <b>VNU email</b></label>
+                            <input class="form-control" ng-model="input.emailVNU" id="login-username" type="text" placeholder="">
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn pull-right" ng-click="resetPassword()">Send</button>
+                            <div class="clearfix"></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-sm-6 col-sm-offset-1 social-login" ng-init="getNotificationMessage()">
+                <div class="form-group">
+                    <label>Notification:</label>
+                    <li ng-repeat="message in messages" ng-bind-html="message.content"></li>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <!-- <div class="col-footer col-md-4 col-xs-6"> -->
+            <h3>Contacts</h3>
+            <div class="col-footer col-md-4 col-xs-6">
+                <p class="contact-us-details" style="margin-bottom: 20px;">
+                    <span><b>Địa Chỉ:</b> P301, nhà E3, 144 Xuân Thủy, Cầu Giấy, Hà Nội</span>
+                </p>
+            </div>
+            <div class="col-footer col-md-4 col-xs-6">
+                <p class="contact-us-details" style="margin-bottom: 20px;">
+                    <!-- <br/> -->
+                    <span>
+                        <b>Email:</b> 
+                        <a href="mailto:getintoutch@khoa.cntt.vnu@gmail.com">khoa.cntt.vnu@gmail.com</a>
+                        |
+                        <a href="mailto:getintoutch@carbc@vnu.edu.vn">carbc@vnu.edu.vn</a>
+                    </span>
+                </p>
+            </div>
+            <div class="col-footer col-md-4 col-xs-6">
+                <p class="contact-us-details" style="margin-bottom: 20px;">
+                    <!-- <br/> -->
+                    <span>
+                        <b>Điện thoại:</b> 0243.3754.7064
+                    </span>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>

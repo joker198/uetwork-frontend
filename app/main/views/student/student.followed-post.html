@@ -1,0 +1,14 @@
+<div class="col-sm-8" ng-init="showFollowedPost()">
+    <h2 ng-if="posts == ''">No Posts</h2>
+    <h2 ng-if="posts != ''">Followed Posts</h2>
+    <div class="loading-spiner-holder gif-loading blog-post blog-single-post" data-loading>
+        <div class="loading-spiner">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif" class="ajax-loader" />
+        </div>
+    </div>
+    <div class="blog-post blog-single-post" ng-repeat="post in posts">
+        <div class="single-post-title">
+            <h3><a href="/#/post/{{post.postId}}">{{post.postTitle}}</a></h3>
+        </div>
+    </div>
+</div>

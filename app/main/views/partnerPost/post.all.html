@@ -1,0 +1,53 @@
+<div class="section blog-posts-wrapper" ng-init="showLastestPost()">
+    <div class="container">
+        <h2 ng-if="currentPage == '/home'">
+            <a href="/#/all-posts/page=1" style="color: #53555c; text-decoration: none;">Lastest Post</a>
+        </h2>
+        <div class="row">
+            <div class="col-md-4 col-sm-6" ng-repeat="post in allPosts" style="height: 180px;">
+                <div class="blog-post">
+                    <!-- <div class="post-info">
+                    </div> -->
+                    <!-- <a href="/#/post/{{post.id}}"><img ng-src="{{clientAdd}}{{post.image}}" class="post-image"></a> -->
+                    <div class="post-title">
+                        <h3><a href="/#/post/{{post.id}}">{{post.title}}</a></h3>
+                    </div>
+                    <!-- <div class="post-summary" ng-bind-html="post.content | limitTo:100">
+                    </div> -->
+                    <div class="post-more">
+                        <a href="/#/post/{{post.id}}">Read more</a>
+                        <div class="post-date">
+                            <div class="date">{{post.datePost | date:'medium'}}</div>
+                        </div>
+                    </div>
+                    <div class="post-info" ng-repeat="follow in post.follows" ng-if="follow.studentName == username && post.expiryTime > today">
+                        <div class="post-date">
+                            <div class="date">Followed</div>
+                        </div>
+                    </div>
+                    <div class="post-info" ng-if="post.expiryTime < today">
+                        <div class="post-date">
+                            <div class="date">Expired</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" data-loading>
+            <div class="pagination-wrapper">
+                <img ng-src="{{clientAdd}}/img/bx_loader.gif">
+            </div>
+        </div>
+        <div class="row" ng-if="currentPage != '/home'">
+            <div class="pagination-wrapper ">
+                <ul class="pagination pagination-sm ">
+                    <li class="{{previousPage.class}}"><a href="/#/all-posts/page={{previousPage.page}}">Previous</a></li>
+                    <li class="{{page.class}}" ng-repeat="page in pages" ng-if="page.page != null">
+                        <a href="/#/all-posts/page={{page.page}}">{{page.page}}</a>
+                    </li>
+                    <li class="{{nextPage.class}}"><a href="/#/all-posts/page={{nextPage.page}}">Next</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

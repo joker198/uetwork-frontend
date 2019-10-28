@@ -1,0 +1,49 @@
+<div class="mainmenu-wrapper">
+    <div class="container">
+        <div class="menuextras">
+            <div class="extras">
+                <ul>
+                    <li>
+                        <input class="form-control input-sm" id="appendedInputButton" type="text" ng-model="search.input">
+                    </li>
+                    <li>
+                        <a href="/#/user/info" ng-if="role == 'STUDENT'" class="cursor">{{username}}</a>
+                        <a href="/#/partner/info" ng-if="role == 'VIP_PARTNER' || role == 'NORMAL_PARTNER'">{{username}}</a>
+                    </li>
+                    <li class="dropdown active" style="list-style-type: none;">
+                        <a class="dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
+                        <!-- <a class="dropdown-toggle" data-toggle="dropdown" ng-if="newNoti == false">New Notification <span class="caret"></span></a> -->
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="/#/partner/info">Infomation</a></li>
+                            <li><a href="/#/partner/contact">Contacts</a></li>
+                            <li><a href="/#/partner/insert-intern">Insert internship</a></li>
+                            <li><a href="/#/partner/show-intern">All Internships</a></li>
+                            <li><a href="/#/partner/post">Post</a></li>
+                            <li><a href="/#/partner/add-post">Add Post</a></li>
+                        </ul>
+                    </li>
+                    <li ng-click="logout()" class="cursor"><a>Log Out</a></li>
+                </ul>
+            </div>
+        </div>
+        <nav id="mainmenu" class="mainmenu">
+            <ul>
+                <li class="logo-wrapper">
+                    <a ui-sref="home">
+                        <img src="img/mPurpose-logo.png" alt="Multipurpose Twitter Bootstrap Template">
+                    </a>
+                </li>
+                <li class="active" ng-click="indexLocation()">
+                    <a href="">Home</a>
+                </li>
+                <li>
+                    <a href="/#/search">Search</a>
+                </li>
+                <li>
+                    <a href="/#/report">Report</a>
+                </li>
+                <!-- 3 # ở trên sau có thêm thì sửa link sau -->
+            </ul>
+        </nav>
+    </div>
+</div>

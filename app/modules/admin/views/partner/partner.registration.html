@@ -1,0 +1,99 @@
+<div class="page-title">
+    <div class="title_left">
+        <h3>Danh sách sinh viên {{internshipName}}</h3>
+    </div>
+    <div class="title_right">
+        <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+            <!-- <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search for...">
+                <span class="input-group-btn">
+                      <button class="btn btn-default" type="button">Go!</button>
+                    </span>
+            </div> -->
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12" ng-init="getAllWaitpartner()">
+        <div class="x_panel">
+            <div class="x_title">
+                <ul class="nav navbar-right panel_toolbox">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle cursor" data-toggle="dropdown" role="button" aria-expanded="false">Options <i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li>
+                                <a ng-click="acceptPartner()" class="cursor"> Chấp nhận công ty </a>
+                            </li>
+                            <li>
+                                <a class="cursor" ng-click="notAcceptPartner()"> Không chấp nhận </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="alert alert-warning" ng-if="warning">
+                    <strong>{{warningMessage}}</strong>
+                </div>
+                <div class="alert alert-success" ng-if="success">
+                    <strong>{{successMessage}}</strong>
+                </div>
+                <div class="alert alert-danger" ng-if="danger">
+                    <strong>{{errorMessage}}</strong>
+                </div>
+                <!-- end add partnerContact -->
+                <div class="clearfix"></div>
+                <div class="table-responsive">
+                    <span class="pull-right"> 
+                        <ul class="list-inline">
+                          <li class="list-inline-item">Hiển thị:</li>
+                          <li class="list-inline-item cursor" ng-click=" entry = 25; paginate();" ng-class="{underline : entry == 25, bold : entry == 25}">25</li>
+                          <li class="list-inline-item cursor" ng-click=" entry = 50; paginate();" ng-class="{underline : entry == 50, bold : entry == 50}">50</li>
+                          <li class="list-inline-item cursor" ng-click=" entry = 100; paginate();" ng-class="{underline : entry == 100, bold : entry == 100}">100</li>
+                          <li class="list-inline-item cursor" ng-click=" entry = totalItems; paginate();" ng-class="{underline : entry == totalItems, bold : entry == totalItems}">Tất cả</li>
+                          <li class="list-inline-item cursor">|</li>
+                          <li class="list-inline-item"  ng-if="currentPage != undefined">{{(currentPage * entryLimit) - entryLimit + 1}}-{{currentPage * entryLimit}} trong tổng số {{totalItems}}</li>
+                        </ul>
+                    </span>
+                    <ul uib-pagination total-items="totalItems" ng-model="currentPage" max-size="noOfPages" items-per-page="entryLimit"></ul>
+                    <table class="table table-striped jambo_table bulk_action">
+                        <thead>
+                            <tr class="headings">
+                                <th class="column-title">#</th>
+                                <th class="column-title">Tên đối tác </th>
+                                <th class="column-title">Địa chỉ</th>
+                                <th class="column-title">Email</th>
+                                <th class="column-title">Số điện thoại</th>
+                                <th class="column-title"></th>
+                                <!-- <th class="column-title no-link last"><span class="nobr">Action</span> -->
+                                <!-- </th> -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="partner in filtered = allWaitPartner | filter : search |
+                                startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit | orderBy:'-id'">
+                                <td class=" ">{{(currentPage * entryLimit) - entryLimit + 1 + $index}}</td>
+                                <td class=" ">{{partner.partnerName}}</td>
+                                <td class=" ">{{partner.address}}</td>
+                                <td class=" ">{{partner.email}}</td>
+                                <td class=" ">{{partner.phone}}</td>
+                                <!-- <td ng-if="data.status == 'A' || data.status == true">
+                                    Active
+                                </td>
+                                <td ng-if="data.status == 'D' || data.status == false">
+                                    Deactive
+                                </td> -->
+                                <td class="a-center ">
+                                    <input type="checkbox" id="checkbox_{{student.id}}" class="flat" name="table_records" ng-click="partner.checked = !partner.checked; addPartner(partner);" ng-checked="partner.checked">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <ul uib-pagination total-items="totalItems" ng-model="currentPage" max-size="noOfPages" items-per-page="entryLimit"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

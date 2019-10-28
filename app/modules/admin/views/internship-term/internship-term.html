@@ -1,0 +1,235 @@
+<div class="page-title" ng-init="getAllInternshipTerm()">
+    <div class="title_left">
+        <h3>Kì thực tập</h3>
+    </div>
+    <div class="title_right">
+        <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+            <!-- <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search for...">
+                <span class="input-group-btn">
+                      <button class="btn btn-default" type="button">Go!</button>
+                    </span>
+            </div> -->
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <!-- <h2>Châu lục</h2> -->
+                <ul class="nav navbar-right panel_toolbox">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle cursor" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a data-toggle="collapse" data-target="#add_internship_term" class="cursor"> Thêm kì thực tập </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="alert alert-success" ng-if="success">
+                    <strong>{{successMessage}}</strong>
+                </div>
+                <div class="alert alert-danger" ng-if="danger">
+                    <strong>{{errorMessage}}</strong>
+                </div>
+                <form class="form-horizontal form-label-left collapse" id="add_internship_term">
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li><a data-toggle="collapse" data-target="#add_internship_term" class="cursor"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+                    </ul>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Năm</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" name="country" class="form-control col-md-10" ng-model="input.year" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Ngày bắt đầu</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="date" class="form-control col-md-10" ng-model="input.startDate" ng-change="alertDate()" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Ngày hết hạn đăng ký thực tập</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="date" class="form-control col-md-10" ng-model="input.expiredDate" ng-change="alertDate()" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Ngày kết thúc</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="date" class="form-control col-md-10" ng-model="input.endDate" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                            <button type="submit" class="btn btn-success" ng-click="createInternshipTerm()">Tạo</button>
+                        </div>
+                    </div>
+                    <div class="divider-dashed"></div>
+                </form>
+                <div class="table-responsive">
+                    <table class="table table-striped jambo_table bulk_action">
+                        <thead>
+                            <tr class="headings">
+                                <!-- <th> -->
+                                <!-- <input type="checkbox" id="check-all" class="flat"> -->
+                                <!-- </th> -->
+                                <th class="column-title">Năm </th>
+                                <th class="column-title">Đợt</th>
+                                <th class="column-title">Ngày bắt đầu</th>
+                                <th class="column-title">Ngày hết hạn đăng ký</th>
+                                <th class="column-title">Ngày kết thúc</th>
+                                <th class="column-title">Số sinh viên thực tập</th>
+                                <th class="column-title">Số bài tuyển dụng</th>
+                                <th>Sửa</th>
+                                <th>Xóa</th>
+                                <!-- <th class="column-title no-link last"><span class="nobr">Action</span> -->
+                                <!-- </th> -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="even pointer" ng-repeat="internshipTerm in allInternshipTerm" ng-init="internshipTerm.opened = false">
+                                <td class=" " ng-init="internshipTerm.edit = false">{{internshipTerm.year}}</td>
+                                <td class=" ">{{internshipTerm.term}}</td>
+                                <td class=" " ng-if="internshipTerm.edit == false">{{internshipTerm.startDate | date:'dd-MM-yyyy'}}</td>
+                                <td class=" " ng-if="internshipTerm.edit" ng-init="internshipTerm.changeStartDate = false">
+                                    <input type="date" style="border-radius:3px; border: 1px solid;" value="{{internshipTerm.startDate}}" ng-model="internshipTerm.startDate" ng-change="internshipTerm.changeStartDate = true" />
+                                </td>
+                                <td class=" " ng-if="internshipTerm.edit == false">{{internshipTerm.expiredDate | date:'dd-MM-yyyy'}}</td>
+                                <td class=" " ng-if="internshipTerm.edit" ng-init="internshipTerm.changeExpiredDate = false">
+                                    <input type="date" style="border-radius:3px; border: 1px solid;" value="{{internshipTerm.expiredDate}}" ng-model="internshipTerm.expiredDate" ng-change="internshipTerm.changeExpiredDate = true" />
+                                </td>
+                                <td class=" " ng-if="internshipTerm.edit == false">{{internshipTerm.endDate | date:'dd-MM-yyyy'}}</td>
+                                <td class=" " ng-if="internshipTerm.edit" ng-init="internshipTerm.changeEndDate = false">
+                                    <input type="date" style="border-radius:3px; border: 1px solid;" value="{{internshipTerm.endDate}}" ng-model="internshipTerm.endDate" ng-change="internshipTerm.changeEndDate = true" />
+                                </td>
+                                <td class=" ">
+                                    <a href="#internship-term/{{internshipTerm.year}}/{{internshipTerm.term}}/{{internshipTerm.id}}/student">
+                                        {{internshipTerm.internshipCount}}
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="#internship-term/{{internshipTerm.year}}/{{internshipTerm.term}}/{{internshipTerm.id}}/post">
+                                        {{internshipTerm.postCount}}
+                                    </a>
+                                </td>
+                                <td class=" ">
+                                    <i class="fa fa-edit cursor" ng-click="internshipTerm.edit = true; editInternshipTerm(internshipTerm.startDate, internshipTerm.endDate, internshipTerm.expiredDate, internshipTerm.id)" ng-if="internshipTerm.edit == false"></i>
+                                    <i class="fa fa-save cursor" ng-click="saveEditinternshipTerm(internshipTerm); internshipTerm.edit = false" ng-if="internshipTerm.edit == true"></i>
+                                </td>
+                                <td class=" ">
+                                    <i class="fa fa-trash cursor" data-toggle="modal" data-target="#delete_internship_term" ng-click="comfirmDelete(internshipTerm.id)"></i>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- <div class="col-md-6">
+                        <p class="input-group">
+                            <input type="text" class="form-control" uib-datepicker-popup ng-model="dt" is-open="popup2.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" ng-click="open2()" />
+                            <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+                        </p>
+                    </div> -->
+                </div>
+                <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true" id="delete_internship_term">
+                    <div class="modal-dialog modal-sm">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="close_modal_delete_internship_term"><span aria-hidden="true">×</span>
+                                </button>
+                                <h4 class="modal-title" id="myModalLabel2">Bạn có chắc muốn xóa kì thực tập này?</h4>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                <button type="button" class="btn btn-primary" ng-click="deleteInternshipTerm(comfirmDeleteId)">Xóa</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- partner post -->
+                <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" id="show_internship_term_post">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" id="close_modal_edit"><span aria-hidden="true">×</span>
+                                </button>
+                                <h4 class="modal-title" id="myModalLabel">Các bài viết của Đối tác</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="alert alert-danger" ng-if="danger_edit">
+                                    <strong>{{errorMessage}}</strong>
+                                </div>
+                                <div class="alert alert-success" ng-if="successdelete_edit">
+                                    <strong>{{successMessage}}</strong>
+                                </div>
+                                <!-- <div class="col-md-8 col-sm-8 col-xs-12" ng-if="show_post">
+                                    <div class="col-sm-12">
+                                        <img ng-src="{{post.image}}">
+                                    </div>
+                                    <div class="single-post-content" ng-bind-html="post.content">
+                                    </div>
+                                </div> -->
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <!-- <th>#</th> -->
+                                            <th>Tiêu đề</th>
+                                            <th>Nội dung</th>
+                                            <th>Ngày đăng</th>
+                                            <th>Sô lượng cần tuyển</th>
+                                            <th>Số ứng tuyển</th>
+                                            <th>Sửa</th>
+                                            <th>Xóa</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="post in allPosts" id="">
+                                            <!-- <th scope="row">{{typeContract.id}}</th> -->
+                                            <td id="">{{post.describePost}}</td>
+                                            <td class="cursor" id="" ng-bind-html="post.content | limitTo:200" ng-click="showPost(post)"></td>
+                                            <td id="">{{post.datePost | date:'medium'}}</td>
+                                            <td id="">{{post.requiredNumber}}</td>
+                                            <td id="">{{post.follow}}</td>
+                                            <th>
+                                                <i id="edit_contact_{{contact.id}}" class="fa fa-edit cursor" ng-click="editContact(contact.id); edit_contact = true"></i>
+                                                <i id="save_edit_contact_{{contact.id}}" class="fa fa-save cursor" ng-click="saveEditContact(contact.id)" ng-if="edit_contact"></i>
+                                            </th>
+                                            <th><i class="fa fa-trash cursor" data-toggle="modal" data-target="#delete_partner_contact" ng-click="comfirmDelete(contact.id)"></i></th>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="col-md-12 col-sm-12 col-xs-12 profile_details" ng-if="show_post">
+                                    <div class="well profile_view">
+                                        <div class="col-sm-12">
+                                            <ul class="nav navbar-right panel_toolbox">
+                                                <li ng-click="closePost()"><a class="cursor"><i class="fa fa-close"></i></a>
+                                                </li>
+                                            </ul>
+                                            <div class="col-xs-12">
+                                                <img ng-src="{{post.image}}" alt="" style="width:100%;">
+                                            </div>
+                                            <div class="col-xs-12" ng-bind-html="post.content">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                <button type="button" class="btn btn-primary" ng-click="editContract()">Lưu thay đổi</button>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+                <!-- end partner post -->
+            </div>
+        </div>
+    </div>
+</div>

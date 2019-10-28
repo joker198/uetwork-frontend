@@ -1,0 +1,469 @@
+<div class="page-title">
+    <div class="title_left">
+        <h3>Danh sách sinh viên {{internshipName}}</h3>
+    </div>
+    <div class="title_right">
+        <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+            <!-- <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search for...">
+                <span class="input-group-btn">
+                      <button class="btn btn-default" type="button">Go!</button>
+                    </span>
+            </div> -->
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12" ng-init="getAllStudentByInternshipTerm()">
+        <div class="x_panel">
+            <div class="x_title">
+                <ul class="nav navbar-right panel_toolbox">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle cursor" data-toggle="dropdown" role="button" aria-expanded="false">Options <i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <!-- <li>
+                                <a data-toggle="collapse" data-target="#insert_student" class="cursor"> Thêm sinh viên từ excel </a>
+                            </li>
+                            <li>
+                                <a href="/users_data/example/Student-Data.xlsx" target="_blank" class="cursor"> Download mẫu excel </a>
+                            </li> -->
+                            <li>
+                                <a data-toggle="collapse" data-target="#create_internship" class="cursor"> Tạo internship cho sinh viên </a>
+                            </li>
+                            <li>
+                                <a data-toggle="collapse" data-target="#add_follow_student" class="cursor" ng-click="addFollow = true"> thêm follow cho sinh viên </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="input-group">
+                    <!-- <input type="text" class="form-control" placeholder="Số dòng trên trang" ng-model="entry" ng-change="paginate()" style="border-radius:25px; border: 1px solid rgba(221,226,232,.49); box-shadow: inset 0 1px 0 rgba(0,0,0,.075); width: 72%;"> -->
+                    <select class="form-control" style="border-radius:25px; border: 1px solid rgba(221,226,232,.49); box-shadow: inset 0 1px 0 rgba(0,0,0,.075);" ng-change="getAllStudentByInternshipTerm(internTerm)" ng-model="internTerm">
+                        <option value="">-- Chọn đợt thực tập --</option>
+                        <!-- <option value="all">Tất cả sinh viên</option> -->
+                        <option ng-repeat="internshipTerm in allInternshipTerm | orderBy:'-id'" value="{{internshipTerm}}">
+                            Đợt {{internshipTerm.term}} năm {{internshipTerm.year}}
+                        </option>
+                    </select>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="alert alert-warning" ng-if="warning">
+                    <strong>{{warningMessage}}</strong>
+                </div>
+                <div class="alert alert-success" ng-if="success">
+                    <strong>{{successMessage}}</strong>
+                </div>
+                <div class="alert alert-danger" ng-if="danger">
+                    <strong>{{errorMessage}}</strong>
+                </div>
+                <form class="form-horizontal form-label-left collapse" id="insert_student">
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li><a data-toggle="collapse" data-target="#insert_student" id="close_create_post" hclass="cursor"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+                    </ul>
+                    <input class="btn btn-left" type="file" name="xlfile" id="xlf" ng-init="convert()">
+                    <button class="btn btn-left" ng-click="setExcelTable()">Show Student List </button>
+                    <button class="btn btn-left" ng-click="send()">Upload </button>
+                    <!-- </p> -->
+                    <table class="table table-striped jambo_table bulk_action" ng-if="excelTable != null">
+                        <thead>
+                            <tr class="headings">
+                                <th class="column-title">Họ và Tên</th>
+                                <th class="column-title">Mã số sinh viên</th>
+                                <th class="column-title">Ngành học</th>
+                                <th class="column-title">Lớp</th>
+                                <th class="column-title">Bằng cấp</th>
+                                <th class="column-title">Khóa</th>
+                                <th class="column-title">Điểm trung bình</th>
+                                <th class="column-title">Năm tốt nghiệp</th>
+                                <th class="column-title">VNU email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="student in excelTable" id="{{student.emailvnu}}">
+                                <td class=" ">{{student.studentName}}</td>
+                                <td class=" ">{{student.studentCode}}</td>
+                                <td class=" ">{{student.major}}</td>
+                                <td class=" ">{{student.studentClass}}</td>
+                                <td class=" ">{{student.diploma}}</td>
+                                <td class=" ">{{student.grade}}</td>
+                                <td class=" ">{{student.gpa}}</td>
+                                <td class=" ">{{student.graduationYear}}</td>
+                                <td class=" ">{{student.emailvnu}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="divider-dashed"></div>
+                </form>
+                <form class="form-horizontal form-label-left collapse" id="add_follow_student" ng-init="getNameAndIdOfPartners()">
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li><a data-toggle="collapse" data-target="#add_follow_student" hclass="cursor"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+                    </ul>
+                    <div class="form-group">
+                        <label class="control-label col-md-1 col-sm-3 col-xs-12" for="first-name">Sinh viên:
+                        </label>
+                        <div class="col-md-11 col-sm-12 col-xs-12">
+                            <label class="btn btn-default" ng-repeat="student in listStudent" id="{{student.id}}" ng-mouseover="student.show = true" ng-mouseleave="student.show = false" ng-click="removeStudent($index, student.id)">
+                                {{student.studentName}}
+                                <span id="span_{{student.id}}" ng-show="student.show">x</span>
+                            </label>
+                        </div>
+                    </div>
+                    <table ng-init="getAllPost()" class="table table-striped jambo_table bulk_action">
+                        <thead>
+                            <tr class="headings">
+                                <th class="column-title">công ty</th>
+                                <th class="column-title">#</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- <tr class="even pointer" ng-repeat="contract in filtered = allContract | filter : search | -->
+                            <!-- startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit"> -->
+                            <tr ng-repeat="post in allposts">
+                                <td class=" ">{{post.partnerName}}</td>
+                                <td class=" ">
+                                    <input type="radio" name="follow" ng-click="selectPost(post.id)">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- <div class="form-group" ng-init="getNameAndIdOfLecturers()">
+                        <label class="control-label col-md-4 col-sm-3 col-xs-12">Tên giảng viên: </label>
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <select class="form-control" ng-model="intern.lecturersId">
+                                <option value="{{lecturers.lecturersId}}" ng-repeat="lecturers in nameAndIdOfLecturers"> {{lecturers.lecturersName}} </option>
+                            </select>
+                        </div>
+                    </div> -->
+                    <div class="form-group">
+                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-4">
+                            <button ng-click="asd()">Theem</button>
+                        </div>
+                    </div>
+                    <div class="divider-dashed"></div>
+                </form>
+                <form class="form-horizontal form-label-left collapse" id="create_internship">
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li><a data-toggle="collapse" data-target="#create_internship" hclass="cursor"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+                    </ul>
+                    <div class="form-group">
+                        <label class="control-label col-md-4 col-sm-3 col-xs-12" for="first-name">Email vnu: <span class="required">*</span>
+                        </label>
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <input type="text" id="first-name" required="required" class="form-control col-md-7 col-xs-12" ng-model="intern.emailVNU">
+                        </div>
+                    </div>
+                    <div class="form-group" ng-init="getNameAndIdOfPartnersFit()">
+                        <label class="control-label col-md-4 col-sm-3 col-xs-12">Hình thức thực tập: </label>
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <select class="form-control" ng-model="intern.internshipType">
+                                <option value=""> -- Chọn hình thực thực tập -- </option>
+                                <option value="company">Tại công ty</option>
+                                <option value="university">Tại trường</option>
+                                <option value="NCKH">Nghiên cứu khoa học</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-if="intern.internshipType != 'university' && intern.internshipType!= 'NCKH'">
+                        <label class="control-label col-md-4 col-sm-3 col-xs-12">Tên công ty: </label>
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <select class="form-control" ng-model="intern.partnerId">
+                                <option value="other"> -- Công ty ngoài -- </option>
+                                <option value="{{partner.partnerId}}" ng-repeat="partner in nameAndIdPartnersFit"> {{partner.partnerName}} </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-if="intern.partnerId == 'other' && intern.internshipType == 'company'">
+                        <label class="control-label col-md-4 col-sm-3 col-xs-12"></label>
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <select class="form-control" ng-model="intern.partnerNotFitId">
+                                <option value="other"> -- Chưa có -- </option>
+                                <option value="{{partner.partnerId}}" ng-repeat="partner in nameAndIdPartners"> {{partner.partnerName}} </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div ng-if="intern.partnerNotFitId == 'other' && intern.internshipType == 'company'">
+                        <div class="form-group">
+                            <label class="control-label col-md-4 col-sm-3 col-xs-12" for="last-name">Tên công ty:
+                            </label>
+                            <div class="col-md-4 col-sm-6 col-xs-12">
+                                <input type="text" id="last-name" name="last-name" required="required" class="form-control col-md-7 col-xs-12" ng-model="intern.partner.partnerName">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4 col-sm-3 col-xs-12" for="last-name">Địa chỉ:
+                            </label>
+                            <div class="col-md-4 col-sm-6 col-xs-12">
+                                <input type="text" id="last-name" name="last-name" required="required" class="form-control col-md-7 col-xs-12" ng-model="intern.partner.address">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4 col-sm-3 col-xs-12" for="last-name">Website:
+                            </label>
+                            <div class="col-md-4 col-sm-6 col-xs-12">
+                                <input type="text" id="last-name" name="last-name" required="required" class="form-control col-md-7 col-xs-12" ng-model="intern.partner.website">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4 col-sm-3 col-xs-12" for="last-name">Tên liên hệ:
+                            </label>
+                            <div class="col-md-4 col-sm-6 col-xs-12">
+                                <input type="text" id="last-name" name="last-name" required="required" class="form-control col-md-7 col-xs-12" ng-model="intern.partnerContactDTO.contactName">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4 col-sm-3 col-xs-12" for="last-name">Số điện thoại:
+                            </label>
+                            <div class="col-md-4 col-sm-6 col-xs-12">
+                                <input type="text" id="last-name" name="last-name" required="required" class="form-control col-md-7 col-xs-12" ng-model="intern.partnerContactDTO.phone">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4 col-sm-3 col-xs-12" for="last-name">Email:
+                            </label>
+                            <div class="col-md-4 col-sm-6 col-xs-12">
+                                <input type="text" id="last-name" name="last-name" required="required" class="form-control col-md-7 col-xs-12" ng-model="intern.partnerContactDTO.email">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="form-group" ng-init="getNameAndIdOfLecturers()">
+                        <label class="control-label col-md-4 col-sm-3 col-xs-12">Tên giảng viên: </label>
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <select class="form-control" ng-model="intern.lecturersId">
+                                <option value="{{lecturers.lecturersId}}" ng-repeat="lecturers in nameAndIdOfLecturers"> {{lecturers.lecturersName}} </option>
+                            </select>
+                        </div>
+                    </div> -->
+                    <div class="form-group">
+                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-4">
+                            <button type="submit" class="btn btn-success" ng-click="createInternship()">Tạo</button>
+                        </div>
+                    </div>
+                    <div class="divider-dashed"></div>
+                </form>
+                <div class="table-responsive">
+                    <!-- <div class="col-md-4 col-sm-5 col-xs-12 form-group pull-right top_search">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="MSSV" ng-model="search">
+                            <span class="input-group-btn">
+                      <button class="btn btn-default" type="button" ng-click="getStudentByStudentCode()">Tìm Kiếm</button>
+                    </span>
+                        </div>
+                    </div> -->
+                    <span class="pull-right"> 
+                        <ul class="list-inline">
+                          <li class="list-inline-item">Hiển thị:</li>
+                          <li class="list-inline-item cursor" ng-click=" entry = 25; paginate();" ng-class="{underline : entry == 25, bold : entry == 25}">25</li>
+                          <li class="list-inline-item cursor" ng-click=" entry = 50; paginate();" ng-class="{underline : entry == 50, bold : entry == 50}">50</li>
+                          <li class="list-inline-item cursor" ng-click=" entry = 100; paginate();" ng-class="{underline : entry == 100, bold : entry == 100}">100</li>
+                          <li class="list-inline-item cursor" ng-click=" entry = totalItems; paginate();" ng-class="{underline : entry == totalItems, bold : entry == totalItems}">Tất cả</li>
+                          <li class="list-inline-item cursor">|</li>
+                          <li class="list-inline-item"  ng-if="currentPage != undefined && currentPage * entryLimit <= totalItems ">{{(currentPage * entryLimit) - entryLimit + 1}}-{{currentPage * entryLimit}} trong tổng số {{totalItems}}</li>
+                          <li class="list-inline-item"  ng-if="currentPage != undefined && currentPage * entryLimit > totalItems "">{{(currentPage * entryLimit) - entryLimit + 1}}-{{totalItems}} trong tổng số {{totalItems}}</li>
+                        </ul>
+                    </span>
+                    <div class="input-group pull-right">
+                        <input type="text" class="form-control" placeholder="Search for..." ng-model="search" style="border-radius:25px; border: 1px solid rgba(221,226,232,.49); box-shadow: inset 0 1px 0 rgba(0,0,0,.075); width: 72%;">
+                    </div>
+                    <ul uib-pagination total-items="totalItems" ng-model="currentPage" max-size="noOfPages" items-per-page="entryLimit"></ul>
+                    <table class="table table-striped jambo_table bulk_action" id="tableExcel">
+                        <thead>
+                            <tr class="headings">
+                                <!-- <th> -->
+                                <!-- <input type="checkbox" id="check-all" class="flat"> -->
+                                <!-- </th> -->
+                                <th class="column-title">#</th>
+                                <th class="column-title">Họ và Tên</th>
+                                <th class="column-title">MSSV</th>
+                                <th class="column-title">Email VNU</th>
+                                <th class="column-title">Lớp</th>
+                                <th class="column-title">Giảng viên hướng dẫn</th>
+                                <th class="column-title">Hình thức thực tập</th>
+                                <th class="column-title">Tên cty</th>
+                                <!-- <th class="column-title">Trạng thái</th> -->
+                                <th class="column-title">Sửa</th>
+                                <th class="column-title">Xóa</th>
+                                <th class="column-title no-link last"><span class="nobr"></span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- <tr class="even pointer" ng-repeat="contract in filtered = allContract | filter : search | -->
+                            <!-- startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit"> -->
+                            <tr ng-repeat="internship in filtered = allStudents | filter : search |
+                                startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit | orderBy:'-id'">
+                                <td class=" ">{{(currentPage * entryLimit) - entryLimit + 1 + $index}}</td>
+                                <td class=" ">{{internship.student.infoBySchool.studentName}}</td>
+                                <td class=" ">{{internship.student.infoBySchool.studentCode}}</td>
+                                <td class=" ">{{internship.student.infoBySchool.emailvnu}}</td>
+                                <td class=" ">{{internship.student.infoBySchool.grade}}{{internship.student.infoBySchool.studentClass}}</td>
+                                <td class=" " id="lecturers_{{internship.id}}">{{internship.lecturers.fullName}}</td>
+                                <td class="internship_{{internship.id}}">{{internship.internshipType}}</td>
+                                <td class="internship_{{internship.id}}">{{internship.partnerName}}</td>
+                                <!-- <td ng-if="data.status == 'A' || data.status == true">
+                                    Active
+                                </td>
+                                <td ng-if="data.status == 'D' || data.status == false">
+                                    Deactive
+                                </td> -->
+                                <td class="cursor ">
+                                    <a data-toggle="modal" data-target="#edit_student" class="" ng-click="edit(internship.student.infoBySchool)">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                </td>
+                                <td class=" " ng-click="confirmDelete(internship.student.id, internship.student.infoBySchool.studentName, internship.id)">
+                                    <a class="cursor" data-toggle="modal" data-target="#delete_student"><i class="fa fa-trash"></i></a>
+                                </td>
+                                <td class="a-center ">
+                                    <input type="checkbox" id="checkbox_{{internship.id}}" class="flat" name="table_records" ng-click="internship.checked = !internship.checked; addStudent(internship);" ng-checked="internship.checked">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" id="edit_student">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" id="close_modal_edit"><span aria-hidden="true">×</span>
+                                </button>
+                                <h4 class="modal-title" id="myModalLabel">Chỉnh thông tin sinh viên</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="alert alert-danger" ng-if="danger_edit">
+                                    <strong>{{errorMessage}}</strong>
+                                </div>
+                                <div class="alert alert-success" ng-if="successdelete_edit">
+                                    <strong>{{successMessage}}</strong>
+                                </div>
+                                <form id="demo-form2" data-parsley-valitext class="form-horizontal form-label-left">
+                                    <div class="form-group">
+                                        <label for="middle-name" class="control-label col-md-4 col-sm-4 col-xs-12">Họ và Tên: </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input id="middle-name" class="form-control col-md-7 col-xs-12" type="text" name="middle-name" ng-model="student.studentName">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="middle-name" class="control-label col-md-4 col-sm-4 col-xs-12">Mã số sinh viên: </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input id="middle-name" class="form-control col-md-7 col-xs-12" type="text" name="middle-name" ng-model="student.studentCode">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="middle-name" class="control-label col-md-4 col-sm-4 col-xs-12">Ngành học: </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input id="middle-name" class="form-control col-md-7 col-xs-12" type="text" name="middle-name" ng-model="student.major">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4 col-sm-4 col-xs-12" for="last-name">Lớp: </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" class="form-control col-md-7 col-xs-12" ng-model="student.studentClass">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4 col-sm-4 col-xs-12" for="last-name">Khóa: </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" class="form-control col-md-7 col-xs-12" ng-model="student.grade">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4 col-sm-4 col-xs-12" for="last-name">Điểm trung bình: </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" class="form-control col-md-7 col-xs-12" ng-model="student.gpa">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4 col-sm-4 col-xs-12" for="last-name">Năm tốt nghiệp: </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" class="form-control col-md-7 col-xs-12" ng-model="student.graduationYear">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4 col-sm-4 col-xs-12" for="last-name">Bằng cấp: </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" class="form-control col-md-7 col-xs-12" ng-model="student.diploma">
+                                        </div>
+                                    </div>
+                                    <!-- <div class="form-group">
+                                        <label class="control-label col-md-4 col-sm-4 col-xs-12" for="last-name">Trạng thái: </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" class="form-control col-md-7 col-xs-12" ng-model="student.st">
+                                        </div>
+                                    </div> -->
+                                    <!-- <div class="form-group">
+                                        <label class="control-label col-md-4 col-sm-4 col-xs-12">Status</label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <p>
+                                                Active:
+                                                <input type="radio" class="flat" name="gender" disabled="disabled" id="genderM" ng-value="true" ng-model="student.status" /> Deactive:
+                                                <input type="radio" class="flat" name="gender" disabled="disabled" id="genderF" ng-value="false" ng-model="student.status" /> {{studentData.userId}}
+                                                <button type="submit" class="btn btn-success" ng-click="changeStatus(student.userId)">Đổi trạng thái</button>
+                                            </p>
+                                        </div>
+                                    </div> -->
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                <button type="button" class="btn btn-primary" ng-click="saveOne()">Lưu thay đổi</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true" id="delete_student">
+                    <div class="modal-dialog modal-sm">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" id="close_modal_delete_student"><span aria-hidden="true">×</span>
+                                </button>
+                                <h4 class="modal-title" id="myModalLabel">Lựa chọn thông tin cần xóa của {{confirmDeleteName}}</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="alert alert-danger" ng-if="danger_edit">
+                                    <strong>{{errorMessage}}</strong>
+                                </div>
+                                <div class="alert alert-success" ng-if="successdelete_edit">
+                                    <strong>{{successMessage}}</strong>
+                                </div>
+                                <form id="demo-form2" data-parsley-valitext class="form-horizontal form-label-left">
+                                    <table>
+                                        <tr>
+                                            <td>Xóa tài khoản</td>
+                                            <td>
+                                                <input type="radio" name="delete" ng-model="delete" value="acc">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Xóa Giảng viên</td>
+                                            <td>
+                                                <input type="radio" name="delete" ng-model="delete" value="lec">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Xóa Thực tập</td>
+                                            <td>
+                                                <input type="radio" name="delete" ng-model="delete" value="intern">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                <button type="button" class="btn btn-primary" ng-click="deleteStudent(confirmDeleteId)" ng-if="delete == 'acc'">Xóa tài khoản</button>
+                                <button type="button" class="btn btn-primary" ng-click="removeLecturers(confirmDeleteId)" ng-if="delete == 'lec'">Xóa Giảng viên</button>
+                                <button type="button" class="btn btn-primary" ng-click="deleteIntern(confirmDeleteInternId, confirmDeleteId)" ng-if="delete == 'intern'">Xóa Thực tập</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

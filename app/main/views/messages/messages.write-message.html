@@ -1,0 +1,81 @@
+<div class="col-sm-8">
+    <div class="blog-post blog-single-post">
+        <div class="single-post-title">
+            <h3>Write Message </h3>
+        </div>
+        <div class="single-post-content">
+            <div class="post-coments">
+                <!-- <ul class="post-comments">
+                    <li ng-repeat="message in messages">
+                        <div class="comment-wrapper">
+                            <div class="comment-author"> {{message.senderName}}: {{message.title}}</div>
+                            <p class="cursor" ng-bind-html="message.content">
+                            </p>
+                            <div class="comment-actions">
+                                <span class="comment-date">{{message.sendDate | date:'medium'}}</span> -->
+                <!-- <a href="#" class="btn btn-micro btn-grey comment-reply-btn"><i class="glyphicon glyphicon-share-alt"></i> Reply</a> -->
+                <!-- </div>
+                        </div>
+                    </li>
+                </ul> -->
+                <!-- Pagination -->
+                <!-- <div class="pagination-wrapper ">
+                    <ul class="pagination pagination-sm">
+                        <li class="disabled"><a href="#">Previous</a></li>
+                        <li class="active"><a href="#">1</a></li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                        <li><a href="#">4</a></li>
+                        <li><a href="#">5</a></li>
+                        <li><a href="#">Next</a></li>
+                    </ul>
+                </div> -->
+                <!-- Comments Form -->
+                <div class="comment-form-wrapper">
+                    <div class="alert alert-success" ng-if="success">
+                        <strong>{{successMessage}}</strong>
+                    </div>
+                    <div class="alert alert-danger" ng-if="danger">
+                        <strong>{{errorMessage}}</strong>
+                    </div>
+                    <form class="">
+                        <div class="form-group">
+                            <label for="comment-email"><i class="glyphicon glyphicon-envelope"></i> <b>To</b></label>
+                            <input class="form-control" type="text" placeholder="" ng-model="message.receiverName" id="receiverName">
+                        </div>
+                        <div class="form-group">
+                            <label for="comment-email"><i class="glyphicon glyphicon-envelope"></i> <b>Title</b></label>
+                            <input class="form-control" id="comment-email" type="text" placeholder="" ng-model="message.title">
+                        </div>
+                        <div class="form-group">
+                            <label for="comment-message"><i class="glyphicon glyphicon-comment"></i> <b>Your Message</b></label>
+                            <textarea class="form-control" rows="5" id="comment-message" ng-model="message.content"></textarea>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label for="comment-email"><i class="glyphicon glyphicon-envelope"></i> <b>Attach File</b></label>
+                            <input class="form-control col-sm-4" id="baocao" type="file" placeholder="" accept=".doc, .docx">
+                            <!-- <div class="col-sm-4"> -->
+                                <select class="form-control" ng-model="messType" ng-change="changeMess(messType)">
+                                    <option value="">
+                                        Tin nhắn thưòng
+                                    </option>
+                                    <option value="finalReport">
+                                        Báo cáo thực tập cuối kì
+                                    </option>
+                                </select>
+                            <!-- </div> -->
+                        </div>
+                        <div class="form-group">
+                            <img src="https://kenhmp3.com/img/loading.gif" ng-if="loading">
+                            <button type="submit" class="btn btn-large pull-right" ng-click="sendMessage()">Send</button>
+                        </div>
+                        <div class="clearfix"></div>
+                    </form>
+                </div>
+                <!-- End Comment Form -->
+            </div>
+            <!-- End Comments -->
+        </div>
+    </div>
+    <!-- End Blog Post -->
+</div>

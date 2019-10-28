@@ -1,0 +1,74 @@
+<div id="delete_lecturers" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Hủy đăng kí thực tập tại trường?</h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="close_unfollow" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" ng-click="unfollow(researchPostId)">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="section blog-posts-wrapper" ng-init="getNameAndIdOfLecturers(); getResearchPost()">
+    <div class="container" ng-if="researchPost.expiryTime > today" ng-cloak>
+        <h2>
+            <a style="color: #53555c; text-decoration: none;" data-toggle="collapse" data-target="#research" class="cursor">Research in University</a>
+        </h2>
+        <div class="row collapse in" id="research">
+            <div class="col-md-6 col-sm-6" style="height: 180px;">
+                <div class="blog-post">
+                    <div class="post-title">
+                        <h3><a>{{researchPost.title}}</a></h3>
+                    </div>
+                    <div class="post-summary">
+                        <p ng-bind-html="researchPost.content"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6" style="height: 180px;">
+                <div class="blog-post">
+                    
+                    <div ng-show="subs == false">
+                        <div class="post-title">
+                            <h3><a>Chọn giảng viên</a></h3>
+                        </div>
+                        <br>
+                        <div class="">
+                            <select ng-model="nameAndIdOfLecturers.selected">
+                                <option value="">-- Choose Lecturers --</option>
+                                <option ng-repeat="lecturers in nameAndIdOfLecturers | orderBy:'-lecturersName'" value="{{lecturers.lecturersId}}">{{lecturers.lecturersName}}</option>
+                            </select>
+                            <button class="btn" ng-click="followResearch()">Submit</button>
+                            <div class="pull-right" ng-if="loading">
+                                <img src="http://localhost:8000/img/loading-sm.gif">
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-if="subs == true">
+                        <div class="post-title">
+                            <h4>Giảng viên: {{lecturersName}}</h4>
+                            <button class="btn" data-toggle="modal" data-target="#delete_lecturers">Xóa</button>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="alert alert-success" role="alert" ng-if="success">
+                        <button type="button" class="close" ng-click="successMessage =''; success = false;" aria-label="Close" onclick="$('.alert').fadeTo(500, 0).slideUp(500)">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <strong>{{successMessage}}</strong>
+                    </div>
+                    <div class="alert alert-danger" ng-if="danger">
+                        <button type="button" class="close" ng-click="errorMessage =''; danger = false;" aria-label="Close" onclick="$('.alert').fadeTo(500, 0).slideUp(500)">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <strong>{{errorMessage}}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

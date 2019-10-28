@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quản Lý Sinh Viên</title>
+    <!-- Bootstrap -->
+    <link href="bower_components/gentelella/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="bower_components/gentelella/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="bower_components/gentelella/vendors/nprogress/nprogress.css" rel="stylesheet">
+    <!-- Custom Theme Style -->
+    <link href="bower_components/gentelella/build/css/custom.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="bower_components/summernote/dist/summernote.css">
+    <!-- jQuery -->
+    <script src="bower_components/gentelella/vendors/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="bower_components/gentelella/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="bower_components/angular-bootstrap/ui-bootstrap-csp.css">
+    <!-- <link href="bower_components/gentelella/vendors/pnotify/dist/pnotify.nonblock.css" rel="stylesheet"> -->
+    <!-- AngularJs -->
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <!-- <script src="app.js"></script> -->
+    <!-- <script src="main/controllers/main.ctrl.js"></script> -->
+    <script src="modules/admin/appAdmin.js"></script>
+    <script src="modules/admin/controllers/admin.ctrl.js"></script>
+    <style>
+    .cursor {
+        cursor: pointer;
+    }
+
+    .underline {
+        text-decoration: underline;
+    }
+
+    .bold {
+        font-weight: bold;
+    }
+
+    .NEW {
+        background-color: #dddfe2;
+        /*border-radius: 8px;*/
+    }
+
+     ::-webkit-scrollbar-track {
+        border-radius: 10px;
+        background: rgba(0, 0, 0, 0.1);
+        border: 1px solid #ccc;
+    }
+
+     ::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        background: linear-gradient(left, #fff, #e4e4e4);
+        border: 1px solid #aaa;
+    }
+
+     ::-webkit-scrollbar-thumb:hover {
+        background: #fff;
+    }
+
+     ::-webkit-scrollbar-thumb:active {
+        background: linear-gradient(left, #22ADD4, #1E98BA);
+    }
+
+     ::-webkit-scrollbar {
+        width: 10px;
+        background-color: #F5F5F5;
+    }
+    </style>
+</head>
+<div ng-view ng-if="loggedIn != true"></div>
+
+<body class="nav-md" ng-app="myAdminApp" ng-controller="adminCtrl" ng-cloak>
+    <div class="container body" ng-show="loggedIn">
+        <div class="main_container">
+            <div class="col-md-3 left_col">
+                <div class="left_col scroll-view">
+                    <div class="navbar nav_title" style="border: 0;">
+                        <a class="site_title" href="#/"><span>Quản Lý Sinh Viên</span></a>
+                    </div>
+                    <div class="clearfix"></div>
+                    <!-- menu profile quick info -->
+                    <!-- /menu profile quick info -->
+                    <br />
+                    <!-- sidebar menu -->
+                    <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+                        <div class="menu_section">
+                            <h3>General</h3>
+                            <ul class="nav side-menu">
+                                <li><a><i class="fa fa-inbox"></i> Message <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li ng-class="{active : currentPageName == '/inbox'}"><a href="#/inbox"><i class="fa fa-inbox"></i> Inbox </a></li>
+                                        <li ng-class="{active : currentPageName == '/sent'}">
+                                            <a data-toggle="modal" data-target="#write_message" class="cursor">
+                                                <i class="fa fa-send-o"></i> Compose
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li><a><i class="fa fa-university"></i> Student <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li ng-class="{active : currentPageName == '/internship'}" x><a href="#/internship">Student</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- /sidebar menu -->
+                    <!-- /menu footer buttons -->
+                    <!-- /menu footer buttons -->
+                </div>
+            </div>
+            <!-- top navigation -->
+            <div class="top_nav">
+                <div class="nav_menu">
+                    <nav>
+                        <div class="nav toggle">
+                            <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+                        </div>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li class="">
+                                <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                    {{username}}
+                                    <span class="fa fa-angle-down"></span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-usermenu pull-right">
+                                    <li><a ng-click="" data-toggle="modal" data-target="#change_pass" class="cursor"><i class="fa fa-key pull-right"></i> Đổi mật khẩu</a></li>
+                                    <li><a ng-click="logout()" class="cursor"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <!-- /top navigation -->
+            <!-- page content -->
+            <div class="right_col" role="main">
+                <div class="">
+                    <div ui-view=></div>
+                </div>
+                <div class="" ng-controller="messageCtrl">
+                    <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" id="write_message">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" id="close_send_pass_interview_message"><span aria-hidden="true">×</span>
+                                    </button>
+                                    <h4 class="modal-title" id="myModalLabel">Tin nhắn mới</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="alert alert-danger" ng-if="danger_edit">
+                                        <strong>{{errorMessage}}</strong>
+                                    </div>
+                                    <div class="alert alert-success" ng-if="successdelete_edit">
+                                        <strong>{{successMessage}}</strong>
+                                    </div>
+                                    <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-1 col-sm-3 col-xs-12" for="first-name">Tới:
+                                            </label>
+                                            <div class="col-md-10 col-sm-10 col-xs-12">
+                                                <input style="border-radius: 2px;" type="text" class="form-control col-md-12 col-xs-12" rows="5" ng-model="message.receiverName">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-1 col-sm-3 col-xs-12" for="last-name">Tiêu đề:
+                                            </label>
+                                            <div class="col-md-10 col-sm-10 col-xs-12">
+                                                <input style="border-radius: 2px;" type="text" class="form-control col-md-12 col-xs-12" rows="5" ng-model="message.title">
+                                            </div>
+                                        </div>
+                                        <!-- <div class="form-group">
+                                            <label class="control-label col-md-1 col-sm-3 col-xs-12" ></i> <b>File:</b></label>
+                                            <div class="col-md-10 col-sm-10 col-xs-12">
+                                            <input class="form-control col-md-12 col-xs-12" rows="5" id="baocao" type="file" placeholder="" accept=".doc, .docx">
+                                            </div>
+                                        </div> -->
+                                        <div class="form-group">
+                                            <label class="control-label col-md-1 col-sm-3 col-xs-12" for="last-name">Nội dung:
+                                            </label>
+                                            <div class="col-md-10 col-sm-10 col-xs-12">
+                                                <textarea style="border-radius: 2px;" class="form-control col-md-12 col-xs-12" rows="5" ng-model="message.content"></textarea>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button> -->
+                                    <button type="button" class="btn btn-primary" ng-click="sendMessage()">Gửi</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- modal doc -->
+                    
+                </div>
+                <!-- <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" id="write_message">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" id="close_send_pass_interview_message"><span aria-hidden="true">×</span>
+                                </button>
+                                <h4 class="modal-title" id="myModalLabel">Thông báo trúng tuyển</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="alert alert-danger" ng-if="danger_edit">
+                                    <strong>{{errorMessage}}</strong>
+                                </div>
+                                <div class="alert alert-success" ng-if="successdelete_edit">
+                                    <strong>{{successMessage}}</strong>
+                                </div>
+                                <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-1 col-sm-3 col-xs-12" for="first-name">Tới:
+                                        </label>
+                                        <div class="col-md-11 col-sm-12 col-xs-12">
+                                            <label class="btn btn-default" ng-repeat="student in listStudent">
+                                                {{student.studentName}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-1 col-sm-3 col-xs-12" for="last-name">Tiêu đề:
+                                        </label>
+                                        <div class="col-md-10 col-sm-10 col-xs-12">
+                                            <input type="text" class="form-control col-md-12 col-xs-12" rows="5" ng-model="message.title">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-1 col-sm-3 col-xs-12" for="last-name">Nội dung:
+                                        </label>
+                                        <div class="col-md-10 col-sm-10 col-xs-12">
+                                            <textarea class="form-control col-md-12 col-xs-12" rows="5" ng-model="message.content"></textarea>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                <button type="button" class="btn btn-primary" ng-click="sendMessage()">Gửi</button>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+                <!-- <div ui-view="notification"></div> -->
+            </div>
+            <!-- /page content -->
+            <!-- footer content -->
+            <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" id="change_pass">
+                <div class="modal-dialog modal-lg" style="width:40vw;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="close_modal_delete"><span aria-hidden="true">×</span>
+                            </button>
+                            <h4 class="modal-title">Thay đổi mật khẩu</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert alert-danger" ng-if="danger_edit">
+                                <strong>{{errorMessage}}</strong>
+                            </div>
+                            <div class="alert alert-success" ng-if="successdelete_edit">
+                                <strong>{{successMessage}}</strong>
+                            </div>
+                            <form class="form-horizontal form-label-left">
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Mật khẩu hiện tại:</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="password" name="country" class="form-control col-md-10" ng-model="password.oldPassword" required />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Mật khẩu:</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="password" name="country" class="form-control col-md-10" ng-model="password.newPassword" required />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Nhập lại mật khẩu:</label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        <input type="password" name="country" class="form-control col-md-10" ng-model="password.reTypePass" required />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="alert alert-warning col-md-6 col-sm-6 col-xs-12 col-md-offset-3" ng-if="password.newPassword != password.reTypePass && password.reTypePass != null">
+                                        <strong>Mật khẩu mới không khớp</strong>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-if="password.newPassword == password.reTypePass && password.reTypePass != null && password.reTypePass != '' && password.newPassword != null && password.newPassword != ''">
+                                    <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                                        <button type="submit" class="btn btn-success" ng-click="changePass()">Thay đổi</button>
+                                    </div>
+                                </div>
+                                <div class="divider-dashed"></div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button ng-if="showShareContractTable" type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                            <button ng-if="showShareContractTable" type="button" class="btn btn-primary" ng-click="shareContract(selectedContract.originalObject.id, allUnit)">Lưu thay đổi</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer>
+                <div class="pull-right">
+                </div>
+                <div class="clearfix"></div>
+            </footer>
+            <!-- /footer content -->
+        </div>
+    </div>
+    <script type="text/javascript">
+    </script>
+    <!-- bootstrap -->
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <!-- notification -->
+    <script src="modules/admin/controllers/notification.ctrl.js"></script>
+    <script src="modules/admin/services/notification.service.js"></script>
+    <!-- admin -->
+    <script src="modules/admin/controllers/loginAdmin.ctrl.js"></script>
+    <script src="modules/admin/services/admin.service.js"></script>
+    <script src="modules/admin/services/loginAdmin.service.js"></script>
+    <!-- info student -->
+    <script src="modules/admin/controllers/student.ctrl.js"></script>
+    <script src="modules/admin/services/student.service.js"></script>
+    <script src="main/services/info.service.js"></script>
+    <!-- intern -->
+    <script src="modules/admin/controllers/intern.ctrl.js"></script>
+    <script src="modules/admin/services/intern.service.js"></script>
+    <!-- message -->
+    <script src="modules/admin/controllers/message.ctrl.js"></script>
+    <script src="modules/admin/services/message.service.js"></script>
+    <!-- partner -->
+    <script src="modules/admin/controllers/partner.ctrl.js"></script>
+    <script src="modules/admin/services/partner.service.js"></script>
+    <!-- lecturers -->
+    <script src="modules/admin/controllers/lecturers.ctrl.js"></script>
+    <script src="modules/admin/services/lecturers.service.js"></script>
+    <!-- httpRequestInterceptor -->
+    <script src="modules/admin/services/httpRequestInterceptor.js"></script>
+    <!-- FastClick -->
+    <script src="bower_components/gentelella/vendors/fastclick/lib/fastclick.js"></script>
+    <!-- NProgress -->
+    <script src="bower_components/gentelella/vendors/nprogress/nprogress.js"></script>
+    <!-- jQuery Smart Wizard -->
+    <script src="bower_components/gentelella/vendors/jQuery-Smart-Wizard/js/jquery.smartWizard.js"></script>
+    <!-- angular md5 -->
+    <script src="bower_components/angular-md5/angular-md5.js"></script>
+    <!-- Custom Theme Scripts -->
+    <script src="bower_components/gentelella/build/js/custom.min.js"></script>
+    <!-- ui bootstrap -->
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <!-- xlsx excel-->
+    <script src="bower_components/js-xlsx-style/dist/xlsx.full.min.js"></script>
+    <!-- summernote -->
+    <script src="bower_components/summernote/dist/summernote.js"></script>
+    <script src="bower_components/angular-summernote/dist/angular-summernote.min.js"></script>
+    <!-- file saver -->
+    <script src="bower_components/file-saver/FileSaver.js"></script>
+    <!-- <script src="bower_components/angular-sanitize/angular-sanitize.js"></script> -->
+    <!-- sockjs stom js -->
+    <script src="bower_components/sockjs-client/dist/sockjs.min.js"></script>
+    <script src="js/stomp.min.js"></script>
+    <!-- ìninite scroll -->
+    <script src="bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js"></script>
+    <!-- pNotify -->
+    <link href="bower_components/gentelella/vendors/pnotify/dist/pnotify.css" rel="stylesheet">
+    <link href="bower_components/gentelella/vendors/pnotify/dist/pnotify.buttons.css" rel="stylesheet">
+    <link href="bower_components/gentelella/vendors/pnotify/dist/pnotify.nonblock.css" rel="stylesheet">
+    <script src="bower_components/gentelella/vendors/pnotify/dist/pnotify.js"></script>
+    <script src="bower_components/gentelella/vendors/pnotify/dist/pnotify.buttons.js"></script>
+    <script src="bower_components/gentelella/vendors/pnotify/dist/pnotify.nonblock.js"></script>
+    <script src="bower_components/angucomplete-alt/angucomplete-alt.js"></script>
+</body>
+
+</html>

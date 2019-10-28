@@ -1,0 +1,12 @@
+<!-- Our Clients -->
+<div class="section"  ng-if="role != 'NORMAL_PARTNER'" ng-init="getPartnerLogo()">
+    <div class="container">
+        <h2>Our Partners</h2>
+        <div class="clients-logo-wrapper text-center row">
+            <div class="col-lg-1 col-md-1 col-sm-3 col-xs-6" ng-repeat="data in response" ng-if="data.logo != null">
+                <a href="/#/partner/{{data.partnerId}}"><img ng-src="{{clientAdd}}{{data.logo}}" alt="Client Name"></a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Our Clients -->

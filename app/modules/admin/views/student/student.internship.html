@@ -1,0 +1,192 @@
+<div class="page-title">
+    <div ng-if="role == 'ADMIN'" ng-init="getAllStudentByInternshipTerm()"></div>
+    <div ng-if="role == 'LECTURERS'" ng-init="getInternOfLecturers()"></div>
+    <div class="title_left">
+        <h3>Danh sách sinh viên thực tập</h3>
+    </div>
+    <div class="title_right">
+        <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search for..." ng-model="search">
+                <span class="input-group-btn">
+                      <button class="btn btn-default" type="button">Go!</button>
+                    </span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
+<div class="row" ng-init="">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <ul class="nav navbar-right panel_toolbox">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle cursor" data-toggle="dropdown" role="button" aria-expanded="false">Options <i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li>
+                                <a ng-click="addScore()" class="cursor"> Thêm điểm thực tập </a>
+                            </li>
+                            <li>
+                                <a ng-click="editScore()" class="cursor"> Sửa điểm thực tập </a>
+                            </li>
+                            <!-- <li>
+                                <a data-toggle="modal" data-target="#write_multiple_message" class="cursor" ng-click="multipleMes = true; createListStudent(allStudents)"> Gửi tin nhắn cho sinh viên </a>
+                            </li> -->
+                        </ul>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="alert alert-warning" ng-if="warning">
+                    <strong>{{warningMessage}}</strong>
+                </div>
+                <div class="alert alert-success" ng-if="success">
+                    <strong>{{successMessage}}</strong>
+                </div>
+                <div class="alert alert-danger" ng-if="danger">
+                    <strong>{{errorMessage}}</strong>
+                </div>
+                <div class="clearfix"></div>
+                <div class="table-responsive" ng-controller="studentCtrl">
+                    <table class="table table-striped jambo_table bulk_action">
+                        <thead>
+                            <tr class="headings">
+                                <!-- <th> -->
+                                <!-- <input type="checkbox" id="check-all" class="flat"> -->
+                                <!-- </th> -->
+                                <th class="column-title">Sinh viên </th>
+                                <th class="column-title">Email vnu </th>
+                                <th class="column-title">Hình thức thực tập</th>
+                                <th class="column-title">Nơi thực tập</th>
+                                <th class="column-title">Báo cáo cuối kì</th>
+                                <th class="column-title">Điểm thực tập</th>
+                                <th class="column-title">
+                                    <input type="checkbox" class="flat" name="table_records" ng-click="selectAllStudent(allStudents)">
+                                </th>
+                                <!-- <th class="column-title no-link last"><span class="nobr">Action</span> -->
+                                <!-- </th> -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="even pointer" ng-repeat="intern in allStudents | filter:search">
+                                <td class=" ">{{intern.student.fullName}}</td>
+                                <td class=" ">{{intern.student.infoBySchool.emailvnu}}</td>
+                                <td class=" ">{{intern.internshipType}}</td>
+                                <td class=" ">{{intern.partnerName}}</td>
+                                <td class=" " ng-if="intern.attachFileAdd != null" ng-controller="messageCtrl" id="bao_cao_{{intern.student.id}}">
+                                    <a class="cursor" data-toggle="modal" data-target="#view_file_report" ng-click="getLinkFile(intern.attachFileAdd)">View</a> -
+                                    <a href="{{getLinkDownLoad(intern.attachFileAdd)}}" target="_blank">Download</a>
+                                </td>
+                                <td class=" " ng-if="intern.attachFileAdd == null" id="bao_cao_{{intern.student.id}}">
+                                    Chưa có
+                                </td>
+                                <td class=" " id="diem_thuc_tap_{{intern.student.id}}" ng-if="intern.score == null">
+                                    Chưa có
+                                </td>
+                                <td class=" " id="diem_thuc_tap_{{intern.student.id}}" ng-if="intern.score != null">
+                                    {{intern.score}}
+                                </td>
+                                <!-- <td class=" ">
+                                    <a data-toggle="modal" data-target="#edit_partnerInfo" ng-click="editPartner(partner)">
+                                        <i class="fa fa-edit cursor"></i>
+                                    </a>
+                                </td> -->
+                                <td class="a-center ">
+                                    <input type="checkbox" class="flat" name="table_records" ng-click="intern.checked = !intern.checked" ng-checked="intern.checked">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- end partner contact -->
+                <!-- delete intern -->
+                <!-- <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true" id="delete_intern">
+                    <div class="modal-dialog modal-sm">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" id="close_modal_delete_intern"><span aria-hidden="true">×</span>
+                                </button>
+                                <h4 class="modal-title" id="myModalLabel">Bạn có chắc muốn xóa internship này</h4>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                <button type="button" class="btn btn-primary" ng-click="deleteIntern(comfirmDeleteId)">Xóa</button>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+                <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" id="view_file_report">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <div style="text-align: center;">
+                                    <iframe src="{{modalFileLink}}" style="width:100%; height:90vh;" frameborder="0"></iframe>
+                                </div>
+                                <!-- {{modalFileLink}} -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" id="write_multiple_message">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" id="close_send_pass_interview_message"><span aria-hidden="true">×</span>
+                                </button>
+                                <h4 class="modal-title" id="myModalLabel">Tin nhắn mới</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="alert alert-danger" ng-if="danger_edit">
+                                    <strong>{{errorMessage}}</strong>
+                                </div>
+                                <div class="alert alert-success" ng-if="successdelete_edit">
+                                    <strong>{{successMessage}}</strong>
+                                </div>
+                                <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-1 col-sm-3 col-xs-12" for="first-name">Tới:
+                                        </label>
+                                        <!-- <div class="col-md-10 col-sm-10 col-xs-12">
+                                            <input style="border-radius: 2px;" type="text" class="form-control col-md-12 col-xs-12" rows="5" ng-model="message.receiverName">
+                                        </div> -->
+                                        <div class="col-md-11 col-sm-12 col-xs-12">
+                                            <label class="btn btn-default" ng-repeat="student in listStudentOfLecturers">
+                                                {{student.fullName}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-1 col-sm-3 col-xs-12" for="last-name">Tiêu đề:
+                                        </label>
+                                        <div class="col-md-10 col-sm-10 col-xs-12">
+                                            <input style="border-radius: 2px;" type="text" class="form-control col-md-12 col-xs-12" rows="5" ng-model="message.title">
+                                        </div>
+                                    </div>
+                                    <!-- <div class="form-group">
+                                            <label class="control-label col-md-1 col-sm-3 col-xs-12" ></i> <b>File:</b></label>
+                                            <div class="col-md-10 col-sm-10 col-xs-12">
+                                            <input class="form-control col-md-12 col-xs-12" rows="5" id="baocao" type="file" placeholder="" accept=".doc, .docx">
+                                            </div>
+                                        </div> -->
+                                    <div class="form-group">
+                                        <label class="control-label col-md-1 col-sm-3 col-xs-12" for="last-name">Nội dung:
+                                        </label>
+                                        <div class="col-md-10 col-sm-10 col-xs-12">
+                                            <textarea style="border-radius: 2px;" class="form-control col-md-12 col-xs-12" rows="5" ng-model="message.content"></textarea>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button> -->
+                                <button type="button" class="btn btn-primary" ng-click="sendMessage()">Gửi</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

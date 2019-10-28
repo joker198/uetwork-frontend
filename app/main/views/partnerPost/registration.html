@@ -1,0 +1,119 @@
+<div id="showw" class="modal fade" role="dialog" ng-init="checkFollow(0, 'registration', 'Recruitment_other')">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{mess}}</h4>
+            </div>
+            <!-- <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="close_select_partner" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" ng-click="selectPartner()">Choose</button>
+            </div> -->
+        </div>
+    </div>
+</div>
+<div class="section blog-posts-wrapper" ng-init="getPartnerNameAndIdOfOtherPartner()">
+    <div class="container">
+        <h2>
+            <a style="color: #53555c; text-decoration: none;" class="cursor">Research in University</a>
+        </h2>
+        <div class="row">
+            <div class="col-md-5 col-sm-5" style="height: 180px;">
+                <div class="blog-post">
+                    <div class="post-title">
+                        <h3><a>Đăng kí cty thực tập ngoài danh sách của Khoa</a></h3>
+                    </div>
+                    <div class="post-summary">
+                        <form class="form-horizontal">
+                            <!-- <div class="row" data-loading>
+                                <div class="pagination-wrapper">
+                                    <img ng-src="{{clientAdd}}/img/loading-sm.gif">
+                                </div>
+                            </div> -->
+                            <div class="form-group" ng-show="inputNewPartner.partnerName == undefined && inputNewPartner.partnerName == null">
+                                <!-- <label class="control-label col-sm-4">Duration Time: </label> -->
+                                <div class="col-sm-10">
+                                    <angucomplete-alt id="findPartner" placeholder="Tìm kiếm tên công ty" pause="100" selected-object="selectedPartner" local-data="nameAndIdOther" search-fields="1" title-field="1" minlength="1" input-class="form-control inputNewPartner" />
+                                </div>
+                                <label class="btn col-sm-2" data-toggle="collapse" data-target="#registration1" ng-click="registerPartner(); button ='left'">Chọn</label>
+                            </div>
+                            <div class="form-group">
+                                <img data-loading ng-src="{{clientAdd}}/img/loading-sm.gif" ng-if="button == 'left'">
+                            </div>
+                            <button ng-show="showw" id="showModalMess" type="Save" data-toggle="modal" data-target="#showw" class="btn btn-right button-right">Choose</button>
+                            <div class="alert alert-warning" ng-if="warning">
+                                <strong>{{warningMessage}}</strong>
+                            </div>
+                            <div class="alert alert-success" ng-if="success" role="alert">
+                                <button type="button" class="close" ng-click="successMessage =''; success = false;" aria-label="Close" 
+                                onclick="$('.alert').fadeTo(500, 0).slideUp(500)">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <strong>{{successMessage}}</strong>
+                            </div>
+                            <div class="alert alert-danger" ng-if="danger">
+                                <strong>{{errorMessage}}</strong>
+                            </div>
+                        </form>
+                        <p>
+                            <i><span class="require">*</span> Nếu bạn <b>ĐANG</b> đi thực tập tại 1 công ty, hãy tìm kiếm và lựa chọn công ty đó. Nếu không có hãy đăng kí ở form bên cạnh.</i>
+                        </p>
+                        <p>
+                            <i><span class="require">*</span> Việc đăng ký các công ty không thuộc danh sách đối tác của Khoa cần chờ sự xét duyệt của Khoa và có thể sẽ không được chấp nhận.</i>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-7 col-sm-7" id="registration">
+                <div class="blog-post">
+                    <!-- <div class="alert alert-success" ng-if="success">
+                        <strong>{{successMessage}}</strong>
+                    </div> -->
+                    <div class="">
+                        <div class="post-coments">
+                            <div class="comment-form-wrapper">
+                                <!--  -->
+                                <h3>{{inputNewPartner.message}}</h3>
+                                <br>
+                                <form class="form-horizontal">
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-3" for="durationTime">Tên công ty: </label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control inputNewPartner" ng-model="inputNewPartner.partnerName">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-3" for="durationTime">Địa chỉ: </label>
+                                        <div class="col-sm-6">
+                                            <input type="texext" class="form-control inputNewPartner" ng-model="inputNewPartner.address">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-3" for="durationTime">Email liên hệ: </label>
+                                        <div class="col-sm-6">
+                                            <input type="texext" class="form-control inputNewPartner" ng-model="inputNewPartner.email">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-3" for="durationTime">Số điện thoại:</label>
+                                        <div class="col-sm-6">
+                                            <input type="texext" class="form-control inputNewPartner" ng-model="inputNewPartner.phone">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="form-group-button">
+                                            <img class="pull-right" data-loading ng-src="{{clientAdd}}/img/loading-sm.gif" ng-if="button == 'right'">
+                                            <button ng-if="subsRegistration == 'false'" type="Save" class="btn btn-right button-right" ng-click="registerNewPartner(); button ='right'">Đăng ký</button>
+                                            <button ng-if="subsRegistration == 'true'" type="Save" class="btn btn-right button-right" ng-click="unfollow(0, 'registration', 'Recruitment_other'); button ='right'">Hủy đăng ký</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

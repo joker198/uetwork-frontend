@@ -1,0 +1,116 @@
+<div class="mainmenu-wrapper">
+    <div class="container">
+        <nav id="mainmenu" class="mainmenu">
+            <ul>
+                <li class="logo-wrapper">
+                    <a href=""><img src="img/UET-logo.png"></a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+<!-- Page Title -->
+<div class="section section-breadcrumbs">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- <h1>Login</h1> -->
+            </div>
+        </div>
+    </div>
+</div>
+<div class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-5">
+                <div class="basic-login">
+                    <div class="alert alert-success" ng-if="success">
+                        <strong ng-bind-html="successMessage"></strong>
+                    </div>
+                    <div class="alert alert-danger" ng-if="danger">
+                        <strong>{{errorMessage}}</strong>
+                    </div>
+                    <div ng-if="wait">
+                        <img src="https://kenhmp3.com/img/loading.gif">
+                    </div>
+                    <form role="form" role="form">
+                        <div class="form-group">
+                            <label for="login-username"><i class="icon-user"></i> <b>Full Name</b></label>
+                            <input class="form-control" ng-model="signupInput.fullName" type="text" placeholder="example: Nguyễn Hoàng Khánh" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="login-password"><i class="icon-lock"></i> <b>VNU Email</b></label>
+                            <input class="form-control" ng-model="signupInput.emailvnu" type="text" placeholder="VNU email, example: 13010119@vnu.edu.vn" required>
+                        </div>
+                        <div class="form-group">
+                            <!-- <a href="page-password-reset.html" class="forgot-password">Forgot password?</a> -->
+                            <a href="/#/login" class="forgot-password">Login</a>
+                            <button type="submit" class="btn pull-right" ng-click="signup()">Register</button>
+                            <div class="clearfix"></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-sm-6 col-sm-offset-1 social-login" ng-init="getNotificationMessage()">
+                <div class="form-group">
+                    <label>Notification:</label>
+                    <li ng-repeat="message in messages" ng-bind-html="message.content"></li>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Footer -->
+<div class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-footer col-md-3 col-xs-6">
+                <h3>About Us</h3>
+                <div class="portfolio-item">
+                    <div class="portfolio-image">
+                        <a href="page-portfolio-item.html"><img src="img/portfolio6.jpg" alt="Project Name"></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-footer col-md-3 col-xs-6">
+                <h3>Guide</h3>
+                <ul class="no-list-style footer-navigate-section">
+                    <li><a href="page-blog-posts.html">Blog</a></li>
+                    <li><a href="page-portfolio-3-columns-2.html">Portfolio</a></li>
+                    <li><a href="page-products-3-columns.html">eShop</a></li>
+                    <li><a href="page-services-3-columns.html">Services</a></li>
+                    <li><a href="page-pricing.html">Pricing</a></li>
+                    <li><a href="page-faq.html">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="col-footer col-md-4 col-xs-6">
+                <h3>Contacts</h3>
+                <p class="contact-us-details">
+                    <b>Address:</b> 144 Xuan Thuy, Cau Giay, Ha Noi, Viet Nam
+                    <br/>
+                    <b>Phone:</b> +84 001122334455
+                    <br/>
+                    <b>Fax:</b> +84 001122334455
+                    <br/>
+                    <b>Facebook:</b> facebook.com/UET
+                    <br/>
+                    <b>Email:</b> <a href="mailto:getintoutch@yourcompanydomain.com">internship@uetmail.com</a>
+                </p>
+            </div>
+            <div class="col-footer col-md-2 col-xs-6">
+                <h3>Connect Us</h3>
+                <ul class="footer-stay-connected no-list-style">
+                    <li>
+                        <a href="#" class="facebook"></a>
+                    </li>
+                    <li>
+                        <a href="#" class="twitter"></a>
+                    </li>
+                    <li>
+                        <a href="#" class="googleplus"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
