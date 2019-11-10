@@ -140,7 +140,6 @@
         }
 
         function checkFollow(postId, data = {id: null}) {
-            console.log(data);
             return $http({
                 url: $rootScope.serverAdd + '/post/' + postId + '/checkFollow',
                 method: 'PUT',

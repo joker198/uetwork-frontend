@@ -9,7 +9,6 @@
             $scope.getAllStudentClass = function() {
                 lecturersService.getAllStudentClass()
                     .then(function(response) {
-                        console.log(response);
                         $scope.allStudentClass = response.data;
                     }, function(error) {
                         console.log(error);
@@ -42,8 +41,6 @@
             }
 
             $scope.editStudentClass = function(studentClassId, classNameId) {
-                // $('#nation_' + nationId).html('<div class="col-md-4 col-sm-4 col-xs-6">' + 
-                //     '<input type="text" name="country" class="form-control col-md-6" ng-model="' + nationName + '" required /></div>');
                 var studentClass = $('#studentClass_' + studentClassId).text();
                 $('#studentClass_' + studentClassId).html('<input id="studentClass_value_' + studentClassId + '" value="' + studentClass + '" style="border-radius:3px; border: 1px solid; width: 50%;"/>');
                 var className = $('#className_' + studentClassId).text();
@@ -56,24 +53,20 @@
             }
 
             $scope.saveEditStudentClass = function(studentClassId) {
-                // console.log(nationId);
                 var studentClass = $('#studentClass_value_' + studentClassId).val();
                 var className = $('#className_value_' + studentClassId).val();
-                // console.log(v);
                 $scope.request = {
                     id: studentClassId,
                     studentClass: studentClass,
                     className: className
                 }
-                console.log($scope.request);
                 lecturersService.editStudentCLass($scope.request)
                     .then(function() {
                         $('#save_edit_studentClass_' + studentClassId).hide();
                         $('#studentClass_' + studentClassId).html(studentClass);
                         $('#edit_studentClass_' + studentClassId).show();
                         $('#className_' + studentClassId).html(className);
-                        $scope.alertSuccess('Sửa tên lớp thành công!', ''); //dang vuong o cho hien alert success
-                        // $scope.getA();
+                        $scope.alertSuccess('Sửa tên lớp thành công!', '');
                     }, function(error) {
                         console.log(error);
                         $scope.alertDanger(error.data.message, '');
@@ -95,7 +88,6 @@
                             var workbook = XLSX.read(data, { type: 'binary' });
 
                             var first_sheet_name = workbook.SheetNames[0];
-                            /* DO SOMETHING WITH workbook HERE */
                             var worksheet = workbook.Sheets[first_sheet_name];
                             worksheet['B1'].w = "fullName";
                             worksheet['C1'].w = "subject";
@@ -107,31 +99,24 @@
                     }
                 }
                 if (xlf.addEventListener) xlf.addEventListener('change', handleFile, false);
-
-                // input_dom_element.addEventListener('change', handleFile, false);
             }
 
             $scope.setExcelTable = function() {
-                // alert(1);
-                console.log($rootScope.excel);
                 $scope.excelTable = $rootScope.excel;
                 angular.forEach($scope.excelTable, function(lecturers) {
                         lecturers.userName = lecturers.emailvnu.replace(/(?:@vnu.edu.vn|@gmail.com)/g, '');
                     })
-                    // $rootScope.excelTable =$rootScope.excel  ;
             }
 
             $scope.send = function() {
                 $scope.errorCount = 0;
                 lecturersService.createLecturersFromExcel($scope.excelTable)
                     .then(function(response) {
-                        console.log(response);
                         $scope.excelTable = null;
                         angular.forEach(response.data, function(lecturers) {
                             if (lecturers.status == "userNameExisted") {
                                 $('#' + lecturers.userName).css('background-color', '#f0ad4e');
                                 $scope.errorCount++;
-                                console.log(lecturers.userName);
                             } else {
                                 var index = response.data.indexOf(lecturers)
                                 response.data.splice(index, 1);
@@ -151,7 +136,6 @@
             }
 
             $scope.paginate = function() {
-                // console.log($scope.entry);
                 if ($scope.entry != '') {
                     if ($scope.entry > $scope.totalItems) {
                         $scope.entryLimit = $scope.totalItems;
@@ -168,7 +152,6 @@
             $scope.getAllLecturers = function() {
                 lecturersService.getAllLecturers()
                     .then(function(response) {
-                        console.log(response);
                         $scope.allLecturers = response.data;
                         $scope.totalItems = response.data.length;
                         $scope.currentPage = 1;
@@ -208,7 +191,6 @@
             $scope.createLecturers = function() {
                 $scope.lecturers.role = "LECTURERS";
                 $scope.lecturers.password = md5.createHash($scope.lecturers.password || '');
-                console.log($scope.lecturers);
                 lecturersService.createLecturers($scope.lecturers)
                     .then(function(response) {
                         $scope.alertSuccess("Thêm giảng viên thành công!", "");
@@ -221,7 +203,6 @@
             }
 
             $scope.confirmDelete = function(id, name) {
-                console.log(id);
                 $scope.confirmDeleteId = id;
                 $scope.confirmDeleteName = name;
             }
@@ -230,7 +211,6 @@
                 $('#close_modal_delete_lecturers').trigger('click');
                 lecturersService.deleteLecturers(lecturersId)
                     .then(function() {
-                        // $('#close_modal_delete_lecturers').trigger('click');
                         $scope.alertSuccess("Xóa giảng viên thành công", ""),
                             $scope.getAllLecturers();
                     }, function(error) {
@@ -264,7 +244,6 @@
                 var emailVNU = $('#emailVNU_value_' + lecturersId).val();
                 var subject = $('#subject_value_' + lecturersId).val();
                 var phoneNumber = $('#phoneNumber_value_' + lecturersId).val();
-                // console.log(v);
                 $scope.request = {
                         id: lecturersId,
                         fullName: fullName,
@@ -273,7 +252,6 @@
                         subject: subject,
                         phoneNumber: phoneNumber
                     }
-                    // console.log($scope.request);
                 lecturersService.editLecturers($scope.request)
                     .then(function() {
                         $('#edit_lecturers_' + lecturersId).show();
@@ -284,7 +262,6 @@
                         $('#subject_' + lecturersId).html(subject);
                         $('#phoneNumber_' + lecturersId).html(phoneNumber);
                         $scope.alertSuccess('Sửa Giảng viên thành công!', '');
-                        // $scope.getAllContinent();
                     }, function(error) {
                         console.log(error);
                         $scope.alertDanger(error.data.message, '');
@@ -303,7 +280,6 @@
                 } else {
                     $scope.danger = true;
                     $timeout(function() {
-                        // 
                         $(".alert").fadeTo(500, 0).slideUp(500, function() {
                             $scope.danger = false;
                             $scope.errorMessage = "";

@@ -8,20 +8,14 @@
             function($scope, jobSkillService, $rootScope, $route, $window, $cookies) {
                 $rootScope.loaduser = false;
                 $scope.jobSkill = [];
-                //show 1 student 
                 $scope.loadjobSkill = function() {
-                    // alert($cookies.get('id']);
                     jobSkillService.loadjobSkill($cookies.get('studentId'))
                         .then(function(data) {
-                                console.log(data);
                                 $scope.jobSkills = data.data;
-                                // $scope.jobSkill=data.data;
-                                // $scope.response = data.data;
                             },
                             function(error) {
                                 console.log(error);
                                 $scope.er = error;
-                                //alert(1);
                             });
                 };
 
@@ -40,9 +34,6 @@
                 };
 
                 $scope.editJobSkill = function(jobSkill) {
-
-                    //alert($scope.request.company)
-                    // console.log(jobSkill);
                     jobSkillService.editJobSkill(jobSkill, jobSkill.id)
                         .then(function() {}, function(error) {
                             alert('Sửa thông tin không thành công');
@@ -51,10 +42,8 @@
                 };
 
                 $scope.deleteJobSkill_ = function(id) {
-                    // alert(id);
                     deleteUser = $window.confirm('Are you sure you want to delete the Ad?');
                     if (deleteUser) {
-                        //Your action will goes here
                         alert('Yes i want to delete');
                     }
                     jobSkillService.deleteJobSkill(id)

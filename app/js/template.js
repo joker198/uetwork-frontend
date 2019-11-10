@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    
+
 	//Homepage Slider
     var options = {
         nextButton: false,
@@ -10,7 +10,7 @@ $(document).ready(function(){
         autoPlayDelay: 3000,
         preloader: true
     };
-    
+
     var mySequence = $("#sequence").sequence(options).data("sequence");
 
     //Main menu Initialization
@@ -37,7 +37,7 @@ $(document).ready(function(){
 	$('.show-tooltip').tooltip();
 
 	//Contact Us Map
-	if($('#contact-us-map').length > 0){ //Checks if there is a map element
+	if($('#contact-us-map').length > 0){
 		var map = L.map('contact-us-map', {
 			center: [51.502, -0.09],
 			scrollWheelZoom: false,

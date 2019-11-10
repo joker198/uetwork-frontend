@@ -10,7 +10,7 @@
                             $scope.partnerContact=data.data;
                         },
                         function(error) {
-                            console.log('ko the load all contact of a partner')
+                            console.log(error);
                         })
                 };
 
@@ -30,7 +30,7 @@
                             $scope.loadContact();
                         },
                         function(error){
-                            //console.log("Ko the create contact")
+                            console.log(error);
                         })
                 };
 
@@ -46,7 +46,7 @@
                             $scope.loadContact();
                         },
                         function(error){
-                            //console.log("Ko the edit")
+                            console.log(error);
                         })
                 };
 
@@ -57,7 +57,7 @@
                                 $scope.loadContact();
                             },
                             function(error){
-                                //console.log("Ko the delete")
+                                console.log(error);
                             })
                 }
             }])

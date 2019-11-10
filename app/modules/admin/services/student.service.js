@@ -7,7 +7,6 @@
 
     function studentService($log, $http, $q, $rootScope) {
         return {
-            // loadInfo: student/
             saveData: saveData,
             infoBySchool: infoBySchool,
             loadAllStudent: loadAllStudent,

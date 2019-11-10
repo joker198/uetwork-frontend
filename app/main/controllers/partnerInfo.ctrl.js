@@ -6,7 +6,6 @@
                 $location, $route, $cookies) {
                 $scope.partnerInfo = [];
                 $scope.image = false;
-                //crop anh
 
                 $scope.myImage = '';
                 $scope.myCroppedImage = '';
@@ -28,10 +27,7 @@
                     };
                     partnerInfoService.changeLogo($scope.req)
                         .then(function() {
-                                // alert("doi logo thanh cong!")
                                 $scope.pic = true;
-                                // $scope.partnerInfo.logo = "";
-                                // $scope.loadPartnerInfo();
                                 window.location.reload();
                             },
                             function(error) {
@@ -43,7 +39,6 @@
                     partnerPostService.loadPost($stateParams.partnerId)
                         .then(function(response) {
                             $scope.partnerPosts = response.data;
-                            console.log(response.data);
                         }, function(error) {
                             console.log(error);
                         })
@@ -61,7 +56,6 @@
                             angular.forEach($scope.contacts, function(contact) {
                                 contact.tab = contact.id + "_" + contact.partnerId;
                             })
-                            console.log($scope.contacts);
                         }, function(error) {
                             console.log(error);
                         })
@@ -74,13 +68,12 @@
                                     $scope.partnerInfo = data.data;
                                     if ($scope.partnerInfo.logo == null) {
                                         $scope.pic = false;
-                                        // alert(1);
                                     } else {
                                         $scope.pic = true;
                                     }
                                 },
                                 function(error) {
-                                    //console.log('Ko load dc')
+                                    console.log(error);
                                 });
                     } else {
                         $scope.partnerInfo = $rootScope.partnerData;
@@ -88,7 +81,6 @@
                     if ($scope.partnerInfo.averageRating == null) {
                         $scope.partnerInfo.averageRating = false;
                     }
-                    console.log($scope.partnerInfo.averageRating);
                 }
 
                 $scope.loadPartnerInfo = function() {
@@ -97,13 +89,12 @@
                                 $scope.partnerInfo = data.data;
                                 if ($scope.partnerInfo.logo == null) {
                                     $scope.pic = false;
-                                    // alert(1);
                                 } else {
                                     $scope.pic = true;
                                 }
                             },
                             function(error) {
-                                //console.log('Ko load dc')
+                                console.log(error);
                             });
                 };
 
@@ -114,7 +105,7 @@
                                 $scope.loadPartnerInfo();
                             },
                             function(error) {
-                                //console.log('Ko edit dc')
+                                console.log(error);
                             })
                 };
 
@@ -125,10 +116,9 @@
                                 $scope.loadPartnerInfo();
                             },
                             function(error) {
-                                //console.log('Ko edit dc')
+                                console.log(error);
                             })
                 };
-
 
                 var init = function() {
                     if ($stateParams.partnerId) {
@@ -160,7 +150,6 @@
                 $scope.checkFollow = function(postId) {
                     partnerPostService.checkFollow(postId, $rootScope.studentId)
                         .then(function(data) {
-                            console.log(data.data);
                             if (data.data.id == 0) {
                                 $scope.subs = false;
                             } else {

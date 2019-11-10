@@ -6,11 +6,9 @@
             $scope.studentInfoBySchool = [];
             $scope.file = [];
             $scope.taby = { tab: 'tab1' };
-            console.log($rootScope.index);
             $rootScope.loaduser = false;
             $rootScope.info = true;
             $scope.image = false;
-            //crop anh
             $scope.myImage = '';
             $scope.myCroppedImage = '';
             $scope.message = {};
@@ -33,7 +31,6 @@
             $scope.getAllStudentClass = function() {
                 infoService.getAllStudentClass()
                     .then(function(response) {
-                        console.log(response);
                         $scope.allStudentClass = response.data;
                     }, function(error) {
                         console.log(error);
@@ -57,7 +54,6 @@
             $scope.createPassInterviewLink = function(studentId) {
                 infoService.createPassInterviewLink(studentId)
                     .then(function(response) {
-                        console.log(response.data);
                         $scope.comfirmationLink = $rootScope.clientAdd + "/#/comfirmationLink/" + response.data.comfirmationLink;
                         $scope.link = response.data;
                     }, function(error) {
@@ -66,7 +62,6 @@
             }
 
             $scope.sendMessage = function(receiverId) {
-                console.log($scope.message.messageType)
                 if ($scope.message.content != undefined) {
                     $scope.message.receiverRole = "STUDENT";
                     $scope.message.senderRole = "VIP_PARTNER";
@@ -86,7 +81,6 @@
                 if ($rootScope.studentInfo == undefined) {
                     infoService.getStudentInfo()
                         .then(function(response) {
-                            console.log(response);
                             $rootScope.studentInfo = response.data;
                             $rootScope.studentInfo.infoBySchool.grade = parseInt($rootScope.studentInfo.infoBySchool.grade);
                         })
@@ -94,48 +88,26 @@
             }
 
             $scope.changeAva = function() {
-                // alert(1);
                 $scope.req = {
-                    // avatar: $scope.myCroppedImage.substring(22)
                     id: $cookies.get('studentInfoId'),
                     avatar: $scope.myCroppedImage.replace(/^data:image\/(png|jpeg);base64,/, "")
                 };
-                // $scope.info.avatar = $scope.myCroppedImage.substring(22);
                 infoService.changeAva($scope.req)
                     .then(function() {
                         $scope.pic = true;
                         $scope.info.avatar = "";
-                        // window.location.reload()
                         window.location.reload();
                     }, function(error) {
                         console.log(error);
                     });
             };
 
-
-
-
-
-            //edit
+            /* edit */
             $scope.editInfo = function() {
-                //$scope.info.desire = 'data:' + $scope.file.filetype + ';base64,' + $scope.file.base64;
-                //alert($scope.info.desire);
-                // if($scope.myCroppedImage != '') {
-                //     $scope.splited =  $scope.myCroppedImage.substring(22);
-                //     // var s = $scope.myCroppedImage;
-                //     // s = string.cut(0, 21);
-                //     // console.log($scope.splited);
-                //     $scope.info.avatar = $scope.splited;
-                // }
                 $scope.info.avatar = "";
                 $scope.requset = {};
-                // if($scope.studentClass == true){
-                // console.log($rootScope.studentInfo.infoBySchool);
                 $scope.requset.studentClass = $rootScope.studentInfo.infoBySchool.studentClass;
-                // }
-                // if($scope.grade == true){
                 $scope.requset.grade = $rootScope.studentInfo.infoBySchool.grade;
-                // }
                 if ($scope.grade == true || $scope.studentClass == true) {
                     infoService.editInfoBySchool($scope.requset)
                         .then(function() {
@@ -155,17 +127,10 @@
                         });
                 }
             };
-            //delete
-
-
-            //load all student
-
-
-            //load student
+            /* load student */
             $scope.loadStudent = function(id) {
                 infoService.loadStudent(id)
                     .then(function(response) {
-                            console.log(response.data);
                             $scope.student = response.data;
                             if ($scope.student.internship == null) {
                                 $scope.showIntern = false;
@@ -180,13 +145,11 @@
                                 });
                             jobSkillService.loadjobSkill(id)
                                 .then(function(response) {
-                                    console.log(response.data);
                                     $scope.student.jobSkills = response.data;
                                 }, function(error) {
                                     console.log(error);
                                 })
                             if ($scope.student.jobSkills != null) {
-                                console.log($scope.student.jobSkills);
                                 angular.forEach($scope.student.jobSkills, function(jobSkill) {
                                     jobSkill.tab = jobSkill.id + "_" + jobSkill.studentId;
                                 })
@@ -222,7 +185,6 @@
                 } else {
                     $scope.danger = true;
                     $timeout(function() {
-                        // 
                         $(".alert").fadeTo(500, 0).slideUp(500, function() {
                             $scope.danger = false;
                             $scope.errorMessage = "";

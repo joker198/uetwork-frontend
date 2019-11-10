@@ -14,7 +14,6 @@
                 $scope.socket = [];
                 $scope.input = {};
                 $scope.password = {};
-                // console.log = function(){};
 
                 $scope.isLoading = function() {
                     return $http.pendingRequests.length > 0;
@@ -32,17 +31,14 @@
                 });
 
                 $rootScope.reloadState = function(current, element) {
-                    // console.log(element.target.parentNode);
                     var li = element.target.parentNode;
                     if (current == $state.current.name) {
                         $state.reload();
-                        // li.classList.add("active");
                     }
                 }
 
                 $scope.entry = '';
                 $scope.paginate = function() {
-                    // console.log($scope.entry);
                     if ($scope.entry != '') {
                         if ($scope.entry > $scope.totalItems) {
                             $scope.entryLimit = $scope.totalItems;
@@ -66,9 +62,7 @@
                         $rootScope.previousUserPage = $stateParams.page;
                         $stateParams.userName = $scope.input.userName;
                         $state.go('/user/search/username=:userName', { userName: $scope.input.userName });
-                        // $state.reload();
                     }
-                    console.log($stateParams.userName);
                 }
 
                 $scope.selectUser = function(user) {
@@ -76,23 +70,16 @@
                 }
 
                 $scope.searchUser = function(userName) {
-                    console.log(userName);
                     if(userName != undefined){
                         $state.transitionTo('/user/search/username=:userName', { userName: userName }, { location: true, notify: false });
                         $stateParams.userName = userName;
                     }
-                    console.log($stateParams.userName);
-                    // $state.transitionTo('/post/page=:page', { page: 1 }, { location: true, notify: false });
                     if ($stateParams.userName != undefined && $stateParams.userName != null && $stateParams.userName != "") {
                         $scope.searchString = $stateParams.userName;
                         adminService.searchUser($stateParams.userName)
                             .then(function(response) {
-                                console.log(response.data);
                                 $scope.allUsers = response.data;
                                 $scope.mess = 'Tìm thấy ' + $scope.allUsers.length + ' kết quả cho: "' + $stateParams.userName + '"';
-
-                                // console.log($scope.previousPage);
-                                // console.log($scope.pages);
                             }, function(error) {
                                 console.log(error);
                             })
@@ -104,7 +91,6 @@
                         adminService.getStudentInformationByUserId(userId)
                             .then(function(response) {
                                 $scope.studentInformationModal = response.data;
-                                console.log(response);
                             }, function(error) {
                                 console.log(error);
                             })
@@ -115,10 +101,8 @@
                     if (isNaN(parseInt($stateParams.page))) {
                         $stateParams.page = 1;
                     }
-                    console.log($stateParams.page)
                     adminService.getAllUser($stateParams.page - 1, 50)
                         .then(function(response) {
-                            console.log(response);
                             $scope.allUsers = response.data.content;
                             $scope.pages = [];
                             var page = response.data.totalPages;
@@ -134,7 +118,6 @@
                                         class: ""
                                     };
                                 }
-                                // console.log(i);                                
                                 if ($stateParams.page == page) {
                                     $scope.nextPage = {
                                         class: "disabled",
@@ -158,26 +141,10 @@
                                     };
                                 }
                             }
-                            // console.log($scope.previousPage);
-                            // console.log($scope.pages);
-                            console.log(response.data);
                         }, function(error) {
                             console.log(error);
                         })
                 }
-
-                // var input = document.getElementById("input-search-user");
-
-                // // Execute a function when the user releases a key on the keyboard
-                // input.addEventListener("keyup", function(event) {
-                //     // Cancel the default action, if needed
-                //     event.preventDefault();
-                //     // Number 13 is the "Enter" key on the keyboard
-                //     if (event.keyCode === 13) {
-                //         // Trigger the button element with a click
-                //         document.getElementById("btn-search-user").click();
-                //     }
-                // });
 
                 $scope.reconnect = function() {
                     setTimeout($scope.initSockets, 10000);
@@ -188,9 +155,7 @@
                     $scope.socket.stomp.connect({}, function() {
                         $scope.socket.stomp.subscribe("/user/" + sessionStorage['username'] + "/**", function(message) {
                             $scope.response = JSON.parse(message.body);
-                            console.log($rootScope.currentPageName);
                             if ($rootScope.currentPageName == '/inbox') {
-                                console.log($rootScope.selectedMessage);
                                 if ($rootScope.selectedMessage != undefined) {
                                     if ($scope.response.parentId == $rootScope.selectedMessage.id) {
                                         $rootScope.selectedMessage.messages.push($scope.response);
@@ -204,10 +169,8 @@
                                                 $rootScope.markMessageAsSeen($scope.response.parentId);
                                             }
                                         } else {
-                                            console.log("31");
                                             var index = $rootScope.messages.findIndex(x => x.id === $scope.response.parentId);
                                             if (index != -1) {
-                                                console.log("34");
                                                 $rootScope.messages[index].status = 'NEW';
                                                 if ($rootScope.messages[index].messageType == 'Normal') {
                                                     $rootScope.messages[index].messages.push($scope.response);
@@ -222,7 +185,6 @@
                                 } else {
                                     var index = $rootScope.messages.findIndex(x => x.id === $scope.response.parentId);
                                     if (index != -1) {
-                                        console.log("34");
                                         $rootScope.messages[index].status = 'NEW';
                                         if ($rootScope.messages[index].messageType == 'Normal') {
                                             $rootScope.messages[index].messages.push($scope.response);
@@ -236,7 +198,6 @@
                             } else {
                                 var index = $rootScope.messages.findIndex(x => x.id === $scope.response.parentId);
                                 if (index != -1) {
-                                    console.log("34");
                                     $rootScope.messages[index].status = 'NEW';
                                     if ($rootScope.messages[index].messageType == 'Normal') {
                                         $rootScope.messages[index].messages.push($scope.response);
@@ -247,7 +208,6 @@
                                 }
                                 $rootScope.$apply();
                             }
-                            // $rootScope.$apply();
                         });
                     });
                     $scope.socket.client.onclose = $scope.reconnect;
@@ -264,17 +224,13 @@
                         $scope.initSockets();
                     }
                 } else {
-                    console.log(window.location.href);
                     if (window.location.href.indexOf('lecturers') != -1) {
                         window.location.href = 'login/lecturers';
                     } else if (window.location.href.indexOf('admin') != -1) {
                         window.location.href = 'login/admin';
                     }
-                    // window.location.href = 'ad/login';
                 }
 
-                // alert($rootScope.loggedIn);
-                // console.log(sessionStorage['role']);
                 $scope.logout = function() {
                     loginAdService.logout()
                         .then(function() {
@@ -286,7 +242,6 @@
                                 $window.location.href = $rootScope.clientAdd + '/admin';
                             }
                         }, function(error) {
-                            // console.log(error.data);
                             sessionStorage.clear();
                             $window.location.href = $rootScope.clientAdd + '/admin';
                         })
@@ -295,7 +250,6 @@
                 $scope.getAllNotification = function() {
                     adminService.getAllNotification()
                         .then(function(response) {
-                            console.log(response);
                             $rootScope.AllNotifications = response.data;
                         }, function(error) {
                             console.log(error);
@@ -303,22 +257,17 @@
                 }
 
                 $scope.changePassUser = function(user) {
-                    console.log(user)
                     if (user != undefined) {
-                        console.log($scope.password);
                         if ($scope.password.newPassword != undefined) {
                             $scope.password.newPassword = md5.createHash($scope.password.newPassword || '');
-                            // $scope.password.oldPassword = md5.createHash($scope.password.oldPassword || '');
                             $scope.password.userId = user.id;
                             adminService.changePassword($scope.password)
                                 .then(function(response) {
                                     $scope.alertSuccess("Đổi mật khẩu thành công!", "");
-                                    // $scope.password = {};
                                 }, function(error) {
                                     $scope.alertDanger(error.data.message, "");
                                     $scope.password = {};
                                 })
-                            // infoService.changePass($scope.password)
                             $('#close_modal_reset_password').trigger('click');
                             $scope.password = {};
 
@@ -336,12 +285,10 @@
                         adminService.changePassword($scope.password)
                             .then(function(response) {
                                 $scope.alertSuccess("Đổi mật khẩu thành công!", "successdelete_edit");
-                                // $scope.password = {};
                             }, function(error) {
                                 $scope.alertDanger(error.data.message, "");
                                 $scope.password = {};
                             })
-                        // infoService.changePass($scope.password)
                         $scope.password = {};
 
                     }
@@ -360,7 +307,6 @@
                     } else {
                         $scope.danger = true;
                         $timeout(function() {
-                            // 
                             $(".alert").fadeTo(500, 0).slideUp(500, function() {
                                 $scope.danger = false;
                                 $scope.errorMessage = "";
