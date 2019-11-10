@@ -28,11 +28,8 @@
     <script src="../bower_components/angular/angular.js"></script>
     <script src="../bower_components/angular-route/angular-route.min.js"></script>
     <script src="../bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
-    <!-- <script src="app.js"></script> -->
-    <!-- <script src="main/controllers/main.ctrl.js"></script> -->
     <!-- user -->
     <script src="../modules/admin/controllers/user.ctrl.js"></script>
-    <!-- <script src="main/services/user.service.js"></script> -->
     <style>
     .cursor {
         cursor: pointer;
@@ -72,17 +69,12 @@
         user-select: none;
         cursor: default;
     }
-    /*
- * Card component
- */
 
     .card {
         background-color: #F7F7F7;
-        /* just in case there no content*/
         padding: 20px 25px 30px;
         margin: 0 auto 25px;
         margin-top: 50px;
-        /* shadows and rounded borders */
         -moz-border-radius: 2px;
         -webkit-border-radius: 2px;
         border-radius: 2px;
@@ -100,9 +92,6 @@
         -webkit-border-radius: 50%;
         border-radius: 50%;
     }
-    /*
- * Form styles
- */
 
     .profile-name-card {
         font-size: 16px;
@@ -156,9 +145,7 @@
     }
 
     .btn.btn-signin {
-        /*background-color: #4d90fe; */
         background-color: rgb(104, 145, 162);
-        /* background-color: linear-gradient(rgb(104, 145, 162), rgb(12, 97, 33));*/
         padding: 0px;
         font-weight: 700;
         font-size: 14px;
@@ -194,7 +181,6 @@
 <body class="login" ng-app="myAdminApp" ng-controller="userCtrl" ng-cloak>
     <div class="container">
         <div class="card card-container">
-            <!-- <img class="profile-img-card" src="//lh3.googleusercontent.com/-6V8xOA6M7BA/AAAAAAAAAAI/AAAAAAAAAAA/rzlHcD0KYwo/photo.jpg?sz=120" alt="" /> -->
             <img id="profile-img" class="profile-img-card" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" />
             <p id="profile-name" class="profile-name-card"></p>
             <form class="form-signin">
@@ -208,17 +194,8 @@
                 <span id="reauth-email" class="reauth-email"></span>
                 <input type="text" id="inputEmail" ng-model="input.username" class="form-control" placeholder="Tên đăng nhập" required autofocus>
                 <input type="password" id="inputPassword" ng-model="input.password" class="form-control" placeholder="Mật Khẩu" required>
-                <!-- <div id="remember" class="checkbox">
-                    <label>
-                        <input type="checkbox" value="remember-me"> Remember me
-                    </label>
-                </div> -->
                 <button class="cursor btn btn-lg btn-primary btn-block btn-signin" ng-click="login()">Đăng nhập</button>
             </form>
-            <!-- /form -->
-            <!-- <a href="#" class="forgot-password">
-                Forgot the password?
-            </a> -->
         </div>
         <!-- /card-container -->
     </div>

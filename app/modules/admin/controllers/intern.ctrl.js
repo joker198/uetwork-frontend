@@ -33,7 +33,6 @@
                 if ($scope.intern.partnerId == 'other') {
                     $scope.intern.partnerId = 0;
                 }
-                console.log($scope.intern);
                 internService.createIntern($scope.intern)
                     .then(function(response) {
                         $scope.alertSuccess("Tạo internship thành công!", "");
@@ -46,7 +45,6 @@
 
             $scope.entry = '';
             $scope.paginate = function() {
-                // console.log($scope.entry);
                 if ($scope.entry != '') {
                     if ($scope.entry > $scope.totalItems) {
                         $scope.entryLimit = $scope.totalItems;
@@ -66,7 +64,6 @@
             $scope.getAllStudentNoLecturers = function() {
                 internService.getAllStudentNoLecturers()
                     .then(function(response) {
-                        console.log(response.data);
                         $scope.allStudentNoLecturers = response.data;
                         $scope.totalItems = response.data.length;
                         $scope.currentPage = 1;
@@ -90,7 +87,6 @@
             $scope.getNameAndIdOfLecturers = function() {
                 internService.getNameAndIdOfLecturers()
                     .then(function(response) {
-                        console.log(response);
                         $scope.nameAndIdOfLecturers = response.data;
                     }, function(error) {
                         console.log(error);
@@ -101,7 +97,6 @@
                 alert(1);
                 internService.getNameAndIdOfPartners("true")
                     .then(function(response) {
-                        console.log(response);
                         $scope.nameAndIdPartnersFit = response.data;
                     }, function(error) {
                         console.log(error);
@@ -111,7 +106,6 @@
             $scope.getNameAndIdOfPartners = function() {
                 internService.getNameAndIdOfPartners("false")
                     .then(function(response) {
-                        console.log(response);
                         $scope.nameAndIdPartners = response.data;
                     }, function(error) {
                         console.log(error);
@@ -128,9 +122,6 @@
             }
 
             $scope.addLecturersStudent = function() {
-                // console.log($scope.listStudent);
-                // console.log($scope.lecturers.lecturersId);
-
                 internService.addLecturersStudent($scope.listStudent, $scope.lecturers.lecturersId)
                     .then(function() {
                         $scope.alertSuccess("Thêm giảng viên thành công!", "");
@@ -159,27 +150,9 @@
                         studentName: student.fullName
                     })
                 } else {
-                    // if ()
-                    // function findStudent(st) {
-                    //     return st.id === student.id;
-                    // }
-
-                    // var index = $scope.listStudent.find(findStudent);
-                    // console.log(index);
-                    // index = null;
-                    // // $scope.listStudent.splice(index, 1);
-                    // angular.forEach($scope.listStudent, function(st){
-                    //     if(student.id == st.id){
-                    //         $scope.listStudent.splice(st, 1);
-                    //         $('#' + student.id).remove();
-                    //         break;
-                    //     }
-                    // });
                     for (i = 0; i <= $scope.listStudent.length; i++) {
 
                         if (student.id == $scope.listStudent[i].id) {
-                            console.log(student.id);
-                            console.log($scope.listStudent[i]);
                             var index = $scope.listStudent.indexOf($scope.listStudent[i])
                             $scope.listStudent.splice(index, 1);
                             break;
@@ -203,14 +176,12 @@
                         })
                     }
                 });
-                console.log($scope.listStudent);
             }
 
             $scope.getAllStudentByInternshipTerm = function(){
                 internService.getAllStudentByInternshipTerm($stateParams.internshipTermId)
                 .then(function(response){
                     $scope.allInterns = response.data;
-                        console.log(response);
                     }, function(error) {
                         console.log(error);
                     })
@@ -220,7 +191,6 @@
                 internService.getAllInternshipByInternshipTerm($stateParams.internshipTermId)
                     .then(function(response) {
                         $scope.allInterns = response.data;
-                        console.log(response);
                     }, function(error) {
                         console.log(error);
                     })
@@ -245,12 +215,11 @@
             };
 
             $scope.alertDate = function() {
-                console.log($scope.input.startDate);
+                //
             }
 
             $scope.createInternshipTerm = function() {
                 if ($scope.input.year != "" && $scope.input.startDate != "" && $scope.input.endDate != "") {
-                    console.log($scope.input.startDate)
                     internService.createInternshipTerm($scope.input)
                         .then(function(response) {
                             $scope.alertSuccess("Tạo kì thực tập thành công!", "")
@@ -259,7 +228,6 @@
                             $scope.input.startDate = "";
                             $scope.getAllInternshipTerm();
                         }, function(error) {
-                            // console.log(error);
                             $scope.alertDanger(error.message, "")
                         });
                 }
@@ -269,7 +237,6 @@
             $scope.format = $scope.formats[0];
             $scope.altInputFormats = ['M!/d!/yyyy'];
             $scope.dateOptions = {
-                // dateDisabled: disabled,
                 formatYear: 'yy',
                 maxDate: new Date(2020, 5, 22),
                 minDate: new Date(),
@@ -282,26 +249,18 @@
             };
 
             $scope.editInternshipTerm = function(startDate, endDate, internshipTermId) {
-                // $('#nation_' + nationId).html('<div class="col-md-4 col-sm-4 col-xs-6">' + 
-                //     '<input type="text" name="country" class="form-control col-md-6" ng-model="' + nationName + '" required /></div>');
-                // var internshipTermName = $('#internshipTerm_' + internshipTermId).text();
-                // console.log(startDate);
-                // $('#internshipTerm_' + internshipTermId).val(startDate);
                 startDate = new Date();
                 $('#internshipTerm_' + internshipTermId).val(startDate);
                 var curr_date = startDate.getDate();
-                var curr_month = startDate.getMonth() + 1; //Months are zero based
+                var curr_month = startDate.getMonth() + 1;
                 var curr_year = startDate.getFullYear();
                 startDate = curr_year + "-" + curr_month + "-" + curr_date;
             }
 
             $scope.saveEditinternshipTerm = function(internshipTerm) {
-                // console.log(nationId);
-                // console.log(internshipTerm);
                 internService.editInternshipTerm(internshipTerm)
                     .then(function() {
                         $scope.alertSuccess("Sửa kì thực tập thành công!", "");
-                        // $scope.load
                     }, function(error) {
                         $scope.alertDanger(error.data.message, "");
                     })
@@ -310,7 +269,6 @@
             $scope.getAllInternshipTerm = function() {
                 internService.getAllInternshipTerm()
                     .then(function(response) {
-                        console.log(response.data);
                         $scope.allInternshipTerm = response.data;
                     }, function(error) {
                         console.log(error);
@@ -345,7 +303,6 @@
                 };
                 internService.changeFilterValue($scope.request, data.id)
                     .then(function(response) {
-                        console.log(response)
                     }, function(error) {
                         alert("ko thanh cong");
                         console.log(error);
@@ -360,12 +317,7 @@
             };
 
             $scope.searchDate = function(data) {
-                // alert(data);
-                // var myDate=data;
-                // myDate=myDate.split("-");
-                // var newDate=myDate[1]+"/"+myDate[0]+"/"+myDate[2];
-                // // alert(new Date(newDate).getTime());
-                // $scope.search.startDate = new Date(newDate).getTime()
+                //
             };
 
             $scope.showComment = function(partnerid) {
@@ -390,7 +342,6 @@
                     .then(function(response) {
                         $scope.allInternOfPartner = response.data;
                         $scope.count = $scope.allInternOfPartner.length;
-                        // console.log(response.data);
                         angular.forEach($scope.allInternOfPartner, function(intern) {
                             if ($scope.company == null) {
                                 $scope.company = intern.company;
@@ -407,14 +358,6 @@
                         console.log(error)
                     })
             };
-            // $scope.showAllInternOfpartner = function () {
-            //     internService.showAllInternOfpartner($stateParams.partnerId)
-            //         .then(function (response) {
-            //             console.log(response);
-            //         }, function (error) {
-            //             console.log(error);
-            //         })
-            // };
 
             $scope.showAllIntern_ = function() {
                 if ($scope.showIntern == false || $scope.saveIntern == true) {
@@ -469,14 +412,16 @@
                 }
             };
 
+            //sau khi chon MSSV co the hien thi la ten hoac MSSV, tinh sau
             $scope.choosePartner = function(partner) {
-                $scope.create.partnerName = partner.partnerName; //sau khi chon MSSV co the hien thi la ten hoac MSSV, tinh sau
+                $scope.create.partnerName = partner.partnerName;
                 $scope.create.partnerId = partner.id;
                 $scope.partner = false;
             };
 
+            //sau khi chon MSSV co the hien thi la ten hoac MSSV, tinh sau
             $scope.chooseStudent = function(student) {
-                $scope.create.infoBySchool.studentCode = student.infoBySchool.studentCode; //sau khi chon MSSV co the hien thi la ten hoac MSSV, tinh sau
+                $scope.create.infoBySchool.studentCode = student.infoBySchool.studentCode;
                 $scope.create.studentId = student.id;
                 $scope.typing = false;
             };
@@ -498,7 +443,6 @@
                         $scope.create.startDate = '';
                         $scope.create.endDate = '';
                         $scope.create.supervisor = '';
-                        //$scope.typing = false;
                     }, function(error) {
                         $scope.response = error;
                     });
@@ -506,12 +450,9 @@
             };
 
             $scope.showName = function() {
-                //alert(1);
                 if ($scope.create.infoBySchool.studentCode == '') {
-                    //alert(2);
                     $scope.typing = false;
                 } else {
-                    //alert(3);
                     $scope.typing = true;
                     $scope.showNotIntern();
                 }
@@ -529,7 +470,6 @@
                 if (intern.checked == true) {
                     intern.checked = false;
                     $scope.count--;
-                    // alert(v.checked);
                 }
             };
 
@@ -578,7 +518,6 @@
             };
 
             $scope.comfirmDelete = function(id) {
-                console.log(id);
                 $scope.comfirmDeleteId = id;
             }
 
@@ -586,7 +525,6 @@
                 $scope.warningMessage = warning;
                 $scope.warning = true;
                 $timeout(function() {
-                    // 
                     $(".alert").fadeTo(500, 0).slideUp(500, function() {
                         $scope.warning = false;
                         $scope.warningMessage = "";
@@ -606,7 +544,6 @@
                 } else {
                     $scope.danger = true;
                     $timeout(function() {
-                        // 
                         $(".alert").fadeTo(500, 0).slideUp(500, function() {
                             $scope.danger = false;
                             $scope.errorMessage = "";

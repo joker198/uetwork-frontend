@@ -13,9 +13,7 @@ config(['$locationProvider', '$routeProvider', '$stateProvider', '$urlRouterProv
         $locationProvider.html5Mode(false).hashPrefix('');
         $routeProvider
             .when("/login", {
-                // templateUrl: "/main/views/login/login.html",
                 controller: function() {
-
                     window.location.href = 'login.html';
                 }
             }).otherwise({ redirectTo: "/login" });
@@ -53,12 +51,9 @@ config(['$locationProvider', '$routeProvider', '$stateProvider', '$urlRouterProv
                             sessionStorage.setItem('userName', response.data.userName);
                                 sessionStorage.setItem('idAdmin', response.data.id);
                             sessionStorage.setItem("user", JSON.stringify(response.data));
-                            console.log(response.data)
-                            // window.location.href = $rootScope.clientAdd + '/admin';
                             if (response.data.role == 'ADMIN') {
                                 window.location.href = $rootScope.clientAdd + '/admin';
                             } else if(response.data.role == 'LECTURERS'){
-                                // alert(1)
                                 window.location.href = $rootScope.clientAdd + '/lecturers';
                             }
                         }, function(error) {
@@ -75,9 +70,6 @@ config(['$locationProvider', '$routeProvider', '$stateProvider', '$urlRouterProv
                             }
                         })
                 }
-
-                // sessionStorage.setItem("User-Data", "hoangkhanh");
-                // $window.location.href = $rootScope.clientAdd;
             }
             $scope.alertDanger = function(error, danger) {
                 $scope.errorMessage = error;
@@ -91,7 +83,6 @@ config(['$locationProvider', '$routeProvider', '$stateProvider', '$urlRouterProv
                 } else {
                     $scope.danger = true;
                     $timeout(function() {
-                        // 
                         $(".alert").fadeTo(500, 0).slideUp(500, function() {
                             $scope.danger = false;
                             $scope.errorMessage = "";

@@ -9,11 +9,12 @@
     "grunt": "~0.4.2",
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-uglify": "git://github.com/gruntjs/grunt-contrib-uglify.git#harmony",
+    "grunt-contrib-uglify-es": "git://github.com/gruntjs/grunt-contrib-uglify.git#harmony",
     "grunt-contrib-watch": "~0.5.3",
     "jasmine-core": "^2.4.1"
   },
   "scripts": {
-    "start": "http-server -a localhost -p 8000 -d false -i false -c-1 ./app -f /index.html -g"
+    "start": "http-server -a 0.0.0.0 -p 8000 -d false -i false -c-1 ./app -f /index.html -g"
   },
   "dependencies": {
     "grunt-contrib-compress": "^1.4.3",

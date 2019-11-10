@@ -7,18 +7,10 @@
             $rootScope.currentPage = $state.current.name;
 
             $scope.mess = {};
-            // $scope.mess.
-
-            // var date = new Date();
-            // date.setDate(date.getDate() - 1);
-            // date = date.getTime();
-            // $scope.today = date;
-            // console.log(date);
 
             $scope.createInternship = function() {
                 internService.createInternship()
                     .then(function(response) {
-                        console.log(response)
                         $scope.getCurrentInternshipOfInternshipTerm();
                     }, function(error) {
                         if(error.data.message == "Out of date"){
@@ -43,16 +35,6 @@
                     })
             }
 
-            // $scope.getCurrentInternshipOfInternshipTerm = function() {
-            //     internService.getCurrentInternshipOfInternshipTerm()
-            //         .then(function(response) {
-            //             console.log(response);
-            //             $rootScope.internship = response.data;
-            //         }, function(error) {
-            //             console.log(error);
-            //         })
-            // }
-
             $scope.select = function(partnerId, partnerName) {
                 $scope.selectedPartnerId = partnerId;
                 $scope.selectedPartnerName = partnerName;
@@ -67,7 +49,6 @@
                         $rootScope.internId = $cookies.get('internId');
                         $scope.alertSuccess("Select Internship Success", "");
                     }, function(error) {
-                        // alert(error.data.message);
                         console.log(error);
                         if (error.data.message == 'Internship is available!' || error.data.message == 'Cannot choose this partner!' || error.data.message == 'Please fill all your information in profile!') {
                             $scope.alertDanger(error.data.message, "");
@@ -83,10 +64,8 @@
                         angular.forEach($scope.allInternship, function(intern) {
                             $scope.internshipTermIds.push(intern.internshipTerm.id);
                         })
-                        // console.log(Math.max(...$scope.internshipTermIds));
                         $scope.currentInternshipTerm = Math.max(...$scope.internshipTermIds);
                         angular.forEach($scope.allInternship, function(intern) {
-                            // console.log(intern.internshipType);
                             angular.forEach(intern.follows, function(f) {
                                 if (f.status == "SELECTED") {
                                     intern.selected = true;
@@ -99,28 +78,23 @@
                                 intern.internshipType = intern.internshipType.replace('NCKH', 'Tại trường');
                             }
                         })
-                        console.log(response.data);
                     }, function(error) {
                         console.log(error);
                     })
             }
 
             $scope.showIntern = function() {
-                // if($cookies.get('internId']){
                 internService.showIntern($rootScope.internId)
                     .then(function(response) {
-                        console.log(response);
                         $scope.intern = response.data;
                     }, function(error) {
                         convert.log(error);
                     });
-                // }
             };
             $scope.checkComment = function() {
                 internService.checkComment($rootScope.internId)
                     .then(function(response) {
                         $scope.commented = response.data != "";
-                        console.log($scope.commented);
                     }, function(error) {
                         console.log(error);
                     })
@@ -134,7 +108,6 @@
                     };
                     internService.writeComment($scope.request, $scope.intern.partnerId)
                         .then(function(response) {
-                            console.log(response);
                             alert("Commented")
                         }, function(error) {
                             console.log(error);
@@ -161,7 +134,6 @@
                             var workbook = XLSX.read(data, { type: 'binary' });
 
                             var first_sheet_name = workbook.SheetNames[0];
-                            /* DO SOMETHING WITH workbook HERE */
                             var worksheet = workbook.Sheets[first_sheet_name];
                             $rootScope.excel = XLSX.utils.sheet_to_json(worksheet);
 
@@ -173,15 +145,10 @@
                     }
                 }
                 if (xlf.addEventListener) xlf.addEventListener('change', handleFile, false);
-
-                // input_dom_element.addEventListener('change', handleFile, false);
             }
 
             $scope.setExcelTable = function() {
-                // alert(1);
-                // console.log($rootScope.excel);
                 $scope.excelTable = $rootScope.excel;
-                // $rootScope.excelTable =$rootScope.excel  ;
             }
 
             $scope.send = function() {
@@ -197,7 +164,6 @@
                 internService.showAllInternOfPartner($cookies.get('partnerID'))
                     .then(function(response) {
                         $scope.allInternOfPartner = response.data;
-                        console.log(response.data);
                         angular.forEach($scope.allInternOfPartner, function(intern) {
                             infoService.loadStudentInfo(intern.studentId)
                                 .then(function(response) {
@@ -213,7 +179,6 @@
                 $scope.warningMessage = warning;
                 $scope.warning = true;
                 $timeout(function() {
-                    // 
                     $(".alert").fadeTo(500, 0).slideUp(500, function() {
                         $scope.warning = false;
                         $scope.warningMessage = "";

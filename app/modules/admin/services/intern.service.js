@@ -32,7 +32,7 @@
             getAllStudentByInternshipTerm : getAllStudentByInternshipTerm,
             getAllStudentNoLecturersLastInternshipTerm : getAllStudentNoLecturersLastInternshipTerm
         };
-        
+
         function getAllStudentNoLecturersLastInternshipTerm(){
             return $http({
                 url: $rootScope.serverAdd + '/student/internshipTerm/no/lecturers',
@@ -185,7 +185,7 @@
                 method: 'GET'
             })
         }
-        
+
         function getPartner(){
             return $http({
                 url: $rootScope.serverAdd + '/partner',
@@ -200,7 +200,7 @@
                 data: intern
             })
         }
-        
+
         function del(internId, studentId){
             return $http({
                 url: $rootScope.serverAdd + '/intern/' + internId + '/' +studentId,

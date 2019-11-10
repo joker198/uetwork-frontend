@@ -15,7 +15,6 @@
                 } else {
                     $scope.danger = true;
                     $timeout(function() {
-                        // 
                         $(".alert").fadeTo(500, 0).slideUp(500, function() {
                             $scope.danger = false;
                             $scope.errorMessage = "";
@@ -69,7 +68,6 @@
                     loginService.login($scope.request)
                         .then(function(response) {
                             $scope.wait = false;
-                            console.log(response);
                             if (response.data.token != null) {
                                 $cookies.put('User-Data', response.data.token);
                                 $cookies.put('username', response.data.userName);
@@ -104,9 +102,12 @@
                             }
                         })
                 }
-
             };
- // || error.data.messages == 'Missing information!' || error.data.messages == 'Username not match!' || error.data.messages == 'Missing email!' || error.data.messages == 'Wrong vnu email!'
+
+            /* || error.data.messages == 'Missing information!' */
+            /* || error.data.messages == 'Username not match!' */
+            /* || error.data.messages == 'Missing email!' */
+            /* || error.data.messages == 'Wrong vnu email!' */
             $scope.signup = function() {
                 if ($scope.signupInput.emailvnu != null && $scope.signupInput.fullName != null) {
                     $scope.wait = true;
@@ -119,31 +120,25 @@
                             console.log(error);
                             if (error.data.indexOf('Wrong vnu email!') != -1) {
                                 $scope.alertDanger("Wrong vnu email!", "");
-                                // $scope.signupInput = {};
                                 $scope.wait = false;
                             }
                             if (error.data.indexOf('Missing email!') != -1) {
                                 $scope.alertDanger("Missing email!", "");
-                                // $scope.signupInput = {};
                                 $scope.wait = false;
                             }
                             if (error.data.indexOf('Missing information!') != -1) {
                                 $scope.alertDanger("Missing information!", "");
-                                // $scope.signupInput = {};
                                 $scope.wait = false;
                             }
                             if (error.data.indexOf('email existed!') != -1) {
                                 $scope.alertDanger("Email existed!", "");
-                                // $scope.signupInput = {};
                                 $scope.wait = false;
                             } else {
                                 $scope.alertDanger("Error, Please try again!", "");
-                                // $scope.signupInput = {};
                                 $scope.wait = false;
                             }
                         })
                 }
-
             }
 
             $scope.getNotificationMessage = function() {

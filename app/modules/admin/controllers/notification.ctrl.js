@@ -5,7 +5,6 @@
             $scope.getAllNotification = function(){
                 notificationService.getAllNotification()
                 .then(function(response){
-                    console.log(response);
                     $rootScope.AllNotifications = response.data;
                 }, function(error){
                     console.log(error);

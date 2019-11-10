@@ -38,15 +38,11 @@
                 }
                 $scope.getAllMessage = function(page) {
                     $scope.page = page;
-                    // if ($rootScope.messages == undefined) {
-                    //     // $rootScope.messages = [];
-                    // }
                     $rootScope.messages = [];
-                    console.log($rootScope.initPage);
                     if ($rootScope.lastUpdated == undefined) {
                         currentTime = new Date();
                         var curr_date = currentTime.getDate();
-                        var curr_month = currentTime.getMonth() + 1; //Months are zero based
+                        var curr_month = currentTime.getMonth() + 1;
                         var curr_year = currentTime.getFullYear();
                         var curr_hours = currentTime.getHours();
                         var curr_min = currentTime.getMinutes();
@@ -56,7 +52,6 @@
                     }
                     messageService.getAllMessage($rootScope.initPage - 1, 20, $rootScope.lastUpdated)
                         .then(function(response) {
-                            console.log(response);
                             $rootScope.messagesCount = response.data.length;
                             angular.forEach(response.data.content, function(v) {
                                 $rootScope.messages.push(v);
@@ -77,7 +72,6 @@
                                         class: ""
                                     };
                                 }
-                                // console.log(i);                                
                                 if ($scope.page == page) {
                                     $scope.nextPage = {
                                         class: "disabled",
@@ -111,8 +105,6 @@
                     $scope.page = page;
                     studentService.getAllStudent(page - 1, 10)
                         .then(function(response) {
-                            console.log(response);
-                            // $scope.allStudents = response.data;
                             $scope.allStudents = response.data.content;
                             $scope.pages = [];
                             var page = response.data.totalPages;
@@ -128,7 +120,6 @@
                                         class: ""
                                     };
                                 }
-                                // console.log(i);                                
                                 if ($scope.page == page) {
                                     $scope.nextPage = {
                                         class: "disabled",
@@ -161,7 +152,6 @@
                         $scope.receiverName = message.senderName;
                         messageService.getOneMessage(message.id)
                             .then(function(response) {
-                                console.log(response.data);
                                 $rootScope.selectedMessage = response.data;
                             }, function(error) {
                                 content.log(error);
@@ -170,20 +160,16 @@
                         $scope.receiverName = message.senderName;
                         $rootScope.selectedMessage = message;
                     }
-                    console.log($scope.receiverName);
                     if (message.status == 'NEW') {
                         messageService.markMessageAsSeen(message.id)
                             .then(function() {
-                                // $rootScope.messagesCount--;
                                 message.status = "";
-                                // $scope.getNewMessage();
                             });
                     }
                 }
 
                 var handleFileSelect = function(evt) {
                     var file = evt.currentTarget.files[0];
-                    console.log(evt.currentTarget.files);
                     $scope.message.fileName = evt.currentTarget.files[0].name;
                     $scope.message.fileType = evt.currentTarget.files[0].name.split('.').pop();
                     var reader = new FileReader();
@@ -199,22 +185,11 @@
                 $rootScope.markMessageAsSeen = function(messageId) {
                     messageService.markMessageAsSeen(messageId)
                         .then(function() {
-                            // var index = $rootScope.newMessages.findIndex(x => x.id === messageId)
-                            // if (index != -1) {
-                            //     $rootScope.newMessages.splice(index, 1);
-                            //     $rootScope.messagesCount = $rootScope.newMessages.length;
-                            // } else {
-                            //     var index = $rootScope.newMessages.findIndex(x => x.parentId === messageId)
-                            //     if (index != -1) {
-                            //         $rootScope.newMessages.splice(index, 1);
-                            //         $rootScope.messagesCount = $rootScope.newMessages.length;
-                            //     }
-                            // }
+                            //
                         });
                 }
 
                 $scope.getLinkFile = function(attachFileAdd) {
-                    // attachFileAdd = "http://www.pdf995.com/samples/pdf.pdf";
                     $rootScope.modalFileLink = $sce.trustAs($sce.RESOURCE_URL, "https://docs.google.com/gview?url=" + $rootScope.sourceAdd + attachFileAdd + "&embedded=true");
                 }
 
@@ -223,26 +198,20 @@
                 }
 
                 $scope.getLinkDownLoad = function(fileAdd) {
-                    // console.log($rootScope.clientAdd + fileAdd);
                     return $rootScope.sourceAdd + fileAdd;
                 }
 
                 $scope.sendMessage = function() {
                     if ($scope.message.content != undefined) {
                         $scope.message.content = $scope.message.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
-                        // $scope.message.receiverName = receiverId;
-                        console.log($scope.message);
                         messageService.createMessage($scope.message)
                             .then(function() {
                                 $scope.message = {};
                                 new PNotify({
                                     title: 'Gửi tin nhắn thành công!',
-                                    // text: 'That thing that you were trying to do worked!',
                                     type: 'success',
                                     styling: 'bootstrap3'
                                 });
-                                // alert("ok");
-                                // $scope.alertSuccess("Your message has been sent", "");
                             }, function(error) {
                                 console.log(error);
                                 $scope.alertDanger("Error", "");
@@ -256,18 +225,11 @@
                         $scope.reply.content = $scope.reply.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
                         $scope.reply.receiverName = $scope.receiverName;
                         $scope.reply.messageId = $rootScope.selectedMessage.id;
-                        // console.log($scope.reply);
                         messageService.createMessage($scope.reply)
                             .then(function(response) {
-                                console.log(response.data);
                                 $scope.reply = {};
-                                // $scope.alertSuccess("Gửi tin nhắn thành công!", "");
                                 $rootScope.selectedMessage.messages.push(response.data);
                                 $rootScope.selectedMessage.lastUpdated = new Date().getTime();
-                                // alert("ok");
-                                // console.log($rootScope.selectedMessage.message);
-                                // $rootScope.selectedMessage.message.push(response.data);
-                                // location.reload();
                             }, function(error) {
                                 console.log(error);
                                 $scope.alertDanger(error.data.message, "");
@@ -277,7 +239,6 @@
 
 
                 $scope.confirmDelete = function(id) {
-                    console.log(id);
                     $scope.confirmDeleteId = id;
                 }
 
@@ -285,7 +246,6 @@
                     $scope.warningMessage = warning;
                     $scope.warning = true;
                     $timeout(function() {
-                        // 
                         $(".alert").fadeTo(500, 0).slideUp(500, function() {
                             $scope.warning = false;
                             $scope.warningMessage = "";
@@ -305,7 +265,7 @@
                     } else {
                         $scope.danger = true;
                         $timeout(function() {
-                            // 
+                            //
                             $(".alert").fadeTo(500, 0).slideUp(500, function() {
                                 $scope.danger = false;
                                 $scope.errorMessage = "";

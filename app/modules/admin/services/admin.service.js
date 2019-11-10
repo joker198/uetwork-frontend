@@ -15,13 +15,6 @@
             searchUser: searchUser,
             getStudentInformationByUserId: getStudentInformationByUserId
         };
-        // function loginAd(data) {
-        //     return $http({
-        //         url: $rootScope.serverAdd + '/admin/login',
-        //         method: 'POST',
-        //         data: data
-        //     })
-        // }
 
         function getStudentInformationByUserId(userId) {
             return $http({

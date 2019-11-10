@@ -7,7 +7,6 @@
             $scope.getPartnerNameAndIdOfOtherPartner = function() {
                 partnerPostService.getPartnerNameAndIdOfOtherPartner()
                     .then(function(response) {
-                        // console.log(response.data);
                         $scope.nameAndIdOther = response.data;
                     })
             }
@@ -15,7 +14,6 @@
             $scope.getPartnerNameAndIdOfFitPartner = function() {
                 partnerPostService.getPartnerNameAndIdOfFitPartner()
                     .then(function(response) {
-                        // console.log(response.data);
                         $scope.nameAndIdFit = response.data;
                     })
             }
@@ -28,20 +26,14 @@
                         },
                         postTitle: "Recruitment_other"
                     }
-                    console.log($scope.req)
                     partnerPostService.registerPartner($scope.req)
                         .then(function(response) {
                             $scope.alertSuccess('Đăng kí công ty thực tập thành công. ' +
                                 'Hãy chờ thông báo phê duyệt công ty trong mục tin nhắn hoặc kiểm tra trong mục "Thông tin thực tập"', '', true);
-                            // $scope.mess = ;
-                            // $timeout(function() {
-                            //     $('#showModalMess').trigger('click');
-                            // });
                             $scope.getCurrentInternshipOfInternshipTerm();
                             $scope.clearAngucompleteAltInput('findPartner');
                             $scope.checkFollow(0, 'registration', "Recruitment_other");
                         }, function(error) {
-                            console.log(error.data.message);
                             if (error.data.message.indexOf('fill') != -1) {
                                 $scope.alertDanger('Hãy điền đầy đủ thông tin cá nhân trước.', '');
                             } else if (error.data.message.indexOf('NOT_ACCEPTED') != -1) {
@@ -67,20 +59,13 @@
                         },
                         postTitle: "Recruitment"
                     }
-                    console.log($scope.req)
                     partnerPostService.registerPartner($scope.req)
                         .then(function(response) {
                             $scope.alertSuccess('Đăng kí công ty thực tập thành công. ', '', true);
-                            // $scope.mess = ;
-                            // $timeout(function() {
-                            //     $('#showModalMess').trigger('click');
-                            // });
-
                             $scope.getCurrentInternshipOfInternshipTerm();
                             $scope.clearAngucompleteAltInput('findFitPartner');
                             $scope.checkFollow(0, 'registration_fit', "Recruitment");
                         }, function(error) {
-                            console.log(error.data.message);
                             if (error.data.message.indexOf('fill') != -1) {
                                 $scope.alertDanger('Hãy điền đầy đủ thông tin cá nhân trước.', '');
                             } else if (error.data.message.indexOf('NOT_ACCEPTED') != -1) {
@@ -92,7 +77,6 @@
                             } else {
                                 $scope.alertDanger('Chưa đăng ký được, hãy thử lại sau.', '');
                             }
-
                         })
                 }
 
@@ -117,15 +101,10 @@
                         .then(function(response) {
                             $scope.alertSuccess('Đăng kí thông tin công ty thực tập thành công. ' +
                                 'Hãy chờ thông báo phê duyệt công ty trong mục tin nhắn hoặc kiểm tra trong mục "Thông tin thực tập"', '', true);
-                            // $scope.mess = ;
-                            // $timeout(function() {
-                            //     $('#showModalMess').trigger('click');
-                            // });
                             $scope.getCurrentInternshipOfInternshipTerm();
                             $scope.clearAngucompleteAltInput('findPartner');
                             $scope.checkFollow(0, 'registration');
                         }, function(error) {
-                            console.log(error.data.message);
                             if (error.data.message.indexOf('fill') != -1) {
                                 $scope.alertDanger('Hãy điền đầy đủ thông tin cá nhân trước.', '');
                             } else if (error.data.message == "Out of date") {
@@ -141,7 +120,6 @@
             }
 
             $scope.followResearch = function() {
-                // console.log($scope.nameAndIdOfLecturers.selected);
                 if ($scope.nameAndIdOfLecturers.selected != undefined && $scope.nameAndIdOfLecturers.selected != "") {
                     $scope.loading = true;
                     partnerPostService.followResearch($scope.nameAndIdOfLecturers.selected)
@@ -175,7 +153,6 @@
                 $scope.input = {};
                 partnerContactService.loadContact($cookies.get('partnerID'))
                     .then(function(response) {
-                        console.log(response.data)
                         $scope.partnerContacts = response.data;
                     }, function(error) {
                         console.log(error);
@@ -184,28 +161,20 @@
 
             $scope.initTag = function() {
                 let $ = s => [].slice.call(document.querySelectorAll(s));
-
-                // log events as they happen:
                 let t = $('#tags')[0];
                 t.addEventListener('input', log);
                 t.addEventListener('change', log);
 
                 function log(e) {
                     $scope.tags = `${this.value.replace(/,/g,', ')}`;
-                    // alert(`${e.type}`);
                     if (`${e.type}` == 'input') {
-                        // console.log(`${this.value.replace(/,/g,', ')}`);
                         $scope.array = [];
                         $scope.array = `${this.value.replace(/,/g,', ')}`.split(', ');
-                        // console.log(array);
                         var i = $scope.array.length;
                         $scope.lastTag = $scope.array[i - 1];
-                        console.log($scope.lastTag);
                     }
-                    // $('#out')[0].textContent = `${this.value.replace(/,/g,', ')}`;
                 }
 
-                // hook 'em up:
                 $('input[type="tags"]').forEach(tagsInput);
             }
 
@@ -217,43 +186,25 @@
             $scope.loadAllHashtag = function() {
                 partnerPostService.loadAllHashtag()
                     .then(function(response) {
-                        console.log(response);
                         $rootScope.hashtags = response.data;
-                        console.log($scope.hashtags);
                     }, function(error) {
                         console.log(error);
                     });
             }
 
             $scope.showTags = function() {
-                // $scope.tag = $('#tags').val();
                 var array = $scope.listTag.split(',');
-                // var
                 $scope.obj = [];
                 for (var i = 0; i < array.length; i++) {
                     $scope.obj.push({
                         tag: array[i]
                     });
-
                 }
-                // $scope.tags = $scope.tags + "}";
-                // $scope.tags = angular.fromJson($scope.tags);
-                console.log($scope.obj);
-                // var obj = {};
-                // for (var i = 0; i < array.length; i++) {
-                //     var split = array[i].split(':');
-                //     obj[split[0].trim()] = split[1].trim();
-                // }
-
-                // console.log(array);
             }
 
             $rootScope.currentPage = $state.current.url;
             $scope.partnerPost = [];
-            // alert(indexPost);
             $scope.image = false;
-            //crop anh
-            // $scope.pic = false;
             $scope.myImage = '';
             $scope.myCroppedImage = '';
             $scope.input = "";
@@ -277,58 +228,48 @@
                 };
                 partnerPostService.uploadImg($cookies.get('partnerID'), $scope.req)
                     .then(function(data) {
-                        console.log(data);
                         $scope.pic = true;
                         $scope.res = data.data;
                     }, function(error) {
                         console.log(error.toString());
                     });
             }
+
             // convert file to base64
-            $scope.data = {}; //init variable
-            $scope.click = function() { //default function, to be override if browser supports input type='file'
+            $scope.data = {};
+            $scope.click = function() {
                 $scope.data.alert = "Your browser doesn't support HTML5 input type='File'"
             }
 
-            var fileSelect = document.createElement('input'); //input it's not displayed in html, I want to trigger it form other elements
+            var fileSelect = document.createElement('input');
             fileSelect.type = 'file';
 
-            if (fileSelect.disabled) { //check if browser support input type='file' and stop execution of controller
+            if (fileSelect.disabled) {
                 return;
             }
 
-            $scope.click = function() { //activate function to begin input file on click
+            $scope.click = function() {
                 fileSelect.click();
             }
 
-            fileSelect.onchange = function() { //set callback to action after choosing file
+            fileSelect.onchange = function() {
                 var f = fileSelect.files[0],
                     r = new FileReader();
 
-                r.onloadend = function(e) { //callback after files finish loading
-
+                r.onloadend = function(e) {
                     $scope.ima = e.target.result;
                     $scope.$apply();
                 };
-
-                r.readAsDataURL(f); //once defined all callbacks, begin reading the file
+                r.readAsDataURL(f);
 
             };
             $scope.convert = function() {
-                // $scope.encoded = $base64.encode("$scope.input");
-                // console.log($scope.ima);
-                // = ima;
-                // $scope.post.content = "a";
+                //
             };
             $scope.loadPost = function() {
                 partnerPostService.loadPost($cookies.get('partnerID'))
                     .then(function(data) {
                             $scope.partnerPost = data.data;
-                            // console.log($scope.partnerPost);
-                            // angular.forEach($scope.partnerPost, function(v){
-                            //     console.log($filter('date')(v.datePost, "yyyy-MM-dd"));
-                            //     // $filter('date')(v.datePost, "yyyy-MM-dd");
-                            // })
                         },
                         function(error) {
                             console.log(error);
@@ -341,38 +282,6 @@
                 partnerPostService.loadLatestPost(1, 3)
                     .then(function(response) {
                         $scope.slidePost = response.data.content;
-                        // $scope.slider = ''
-                        //     + '<!-- Homepage Slider -->'
-                        //     + '< div class = "homepage-slider" >'
-                        //         + '< div id = "sequence" >'
-                        //             + '<ul class="sequence-canvas">';
-                        //     //         + '< div class = "sequence-pagination-wrapper" >'
-                        //     //             + '< ul class = "sequence-pagination" >'
-                        //     //             + '< li > 1 < /li> < li > 2 < /li> < li > 3 < /li>'
-                        //                 // +< /ul> '
-                        //     //         + '< /div> '
-                        //     //     + '< /div> '
-                        //     // + '< /div>'
-                        //     // + '<!-- End Homepage Slider -->';
-                        // angular.forEach(response.data, function(post){
-                        //     $scope.slider = $scope.slider + ''
-                        //         + '<li class="bg4">'
-                        //             + '<h2 class="title">Cơ hội làm việc dễ dàng</h2>'
-                        //             + '<h3 class="subtitle">Trường Đại học Công nghệ khai giảng năm học 2016-2017</h3>'
-                        //             + '<img class="slide-img" src="img/service-icon/title2.png" alt="Slide 1" />'
-                        //         + '</li>';
-                        // });
-                        // $scope.slider = $scope.slider + ''
-                        //     + '< /ul>'
-                        //         + '< div class = "sequence-pagination-wrapper" >'
-                        //             + '< ul class = "sequence-pagination" >'
-                        //             + '< li > 1 < /li> < li > 2 < /li> < li > 3 < /li>'
-                        //             + '< /ul> '
-                        //         + '< /div> '
-                        //     + '< /div> '
-                        //     + '< /div>'
-                        //     + '<!-- End Homepage Slider -->';
-
                     }, function(error) {
                         console.log(error);
                     })
@@ -381,7 +290,6 @@
             $scope.createAPost = function() {
                 if ($scope.tags != "" && $scope.tags != undefined) {
                     var array = $scope.tags.split(',');
-                    // var
                     $scope.obj = [];
                     for (var i = 0; i < array.length; i++) {
                         $scope.obj.push({
@@ -404,25 +312,15 @@
                 };
                 partnerPostService.createAPost($cookies.get('partnerID'), $scope.request)
                     .then(function(response) {
-                            //console.log(response.data);
-                            // alert("Tạo thành công");
-                            // $scope.loadPost();
                             $window.location.href = $rootScope.clientAdd + '/#/post/' + response.data.id;
                         },
                         function(error) {
                             console.log(error);
                         });
-                // } else {
-                //     alert("Chưa có tag!");
-                // }
-
-
-
             };
 
             $scope.changeTime = function() {
                 $scope.post.startDate = new Date($scope.post.startDate).getTime() / 1000;
-                console.log($scope.post.startDate);
             }
 
             $scope.editAPost = function(id) {
@@ -443,24 +341,19 @@
                 partnerPostService.editAPost(id, $scope.request)
                     .then(function() {
                             alert("Sửa thông tin thành công");
-                            // $scope.showAPost(id);
                             $location.path('/post/' + id);
                         },
                         function(error) {
-                            //console.log("Ko the edit")
+                            console.log(error);
                         })
             };
-            //$rootScope.editPost = [];
+
             $scope.editPost = function(post) {
-                // console.log(post);
                 $rootScope.editPost = post;
-                //$cookies.get(setItem('editPost', post);
             };
 
             $scope.edit = function() {
                 $scope.post = [];
-                // alert(1);
-                // console.log($rootScope.editPost);
                 if ($rootScope.editPost != null) {
                     $scope.post.content = $rootScope.editPost.content;
                     $scope.post.describePost = $rootScope.editPost.describePost;
@@ -479,7 +372,7 @@
                             $scope.loadPost();
                         },
                         function(error) {
-                            //console.log("Ko the delete")
+                            console.log(error);
                         })
             };
 
@@ -489,32 +382,20 @@
             date = date.getTime();
             $scope.today = date;
             $scope.showAPost = function(id) {
-
-                //$cookies.get(setItem('postId',id);
-                //$rootScope.postID=id;
                 partnerPostService.showAPost(id)
                     .then(function(data) {
-                            // alert(1);
-
                             if (data.data == "") {
                                 $location.path('/404');
                             } else {
-                                // console.log(data.data.expiryTime);
                                 $scope.post = data.data;
-
-                                // console.log(date);
                                 if (data.data.expiryTime < date) {
                                     $scope.expiry = true;
                                 } else {
                                     $scope.expiry = false;
                                 }
-                                console.log($scope.expiry);
                             }
-
-                            //$window.location.href = $rootScope.clientAdd + '/#/post/'+id;
                         },
                         function(error) {
-                            // alert(2);
                             $scope.error = error;
                         })
             };
@@ -530,7 +411,7 @@
                         $scope.subs = true;
                         $scope.loading = false;
                     }, function(error) {
-                        // console.log(error);
+                        console.log(error);
                         $scope.loading = false;
                         if (error.data.message == 'Please fill all your information in profile!' || error.data.message == 'Post followed') {
                             $scope.alertDanger(error.data.message, "");
@@ -539,7 +420,7 @@
                                 $rootScope.internship.internshipTerm.startDate + " đến " +
                                 $rootScope.internship.internshipTerm.expiredDate, "");
                         }
-                        
+
                     });
 
             };
@@ -550,8 +431,6 @@
                     $('#close_unfollow').trigger('click');
                 }
                 var followDTO = {
-                    //chỗ này làm thế này vì ở code server check student id, nhưng thực ra là ko cần vì 
-                    // có thể tìm student id thông qua token.
                     studentId: 0
                 }
                 if (postTitle != null) {
@@ -561,16 +440,11 @@
                     .then(function() {
                         $scope.getCurrentInternshipOfInternshipTerm();
                         if (type == 'registration') {
-                            // $scope.inputNewPartner = {};
-                            // $scope.addAttr('readonly', 'inputNewPartner');
-                            // $scope.removeAttr("readonly", "inputNewPartner");
-                            // $scope.getPartnerNameAndId();
                             $window.location.href = $rootScope.clientAdd;
                         }
                         $scope.subs = false;
                         $scope.loading = false;
                         if ($scope.researchPostId != undefined) {
-                            // $('#close_unfollow').trigger('click');
                             $scope.checkFollow($scope.researchPostId);
                         }
                         if (type == 'unregist_internship') {
@@ -583,14 +457,9 @@
                         if (error.data.message == 'Cannot unfollow!') {
                             alert('Cannot unfollow!');
                         }
-                        // if ($scope.researchPostId != undefined) {
-                        //     $('#close_unfollow').trigger('click');
-                        // }
                         $scope.loading = false;
-                        // console.log(error);
                         if (type == 'registration') {
                             $scope.inputNewPartner = {};
-                            // $scope.addAttr('readonly', 'inputNewPartner');
                             $scope.removeAttr("readonly", "inputNewPartner")
                         }
                     });
@@ -610,9 +479,7 @@
                 if (postTitle != null) {
                     $scope.request.postTitle = postTitle;
                 }
-                // if(postId != undefined){
                 $scope.request.postId = postId;
-                // } else {}
 
                 partnerPostService.checkFollow(postId, $scope.request)
                     .then(function(response, t = type) {
@@ -641,8 +508,6 @@
                         $timeout(function() {
                             $scope.$apply();
                         });
-
-                        // console.log($scope.subs);
                     }, function(error) {
                         console.log(error);
                     });
@@ -665,7 +530,6 @@
                 $scope.posts = [];
                 partnerPostService.showFollowedPost($cookies.get('studentId'))
                     .then(function(response) {
-                        // console.log(response.data);
                         $scope.posts = response.data;
                     }, function(error) {
                         console.log(error);
@@ -677,8 +541,6 @@
                     .then(function(response) {
                         console.log(response);
                         if (response.data.content.length != 0) {
-                            //chỗ này lấy ở 1 vì là get bài là research, mà mỗi 1 kì chỉ có 
-                            // 1 bài research, nhưng mà ở trên server lười sửa code get nên làm theo kiểu này
                             $scope.researchPost = response.data.content[0];
                             $scope.researchPostId = $scope.researchPost.id;
                             $scope.checkFollow($scope.researchPostId);
@@ -692,7 +554,6 @@
                 $scope.page = page;
                 partnerPostService.loadLatestPost(page - 1, 9, 'Recruitment')
                     .then(function(response) {
-                        // console.log(response);
                         $scope.allPosts = response.data.content;
                         $scope.pages = [];
                         var page = response.data.totalPages;
@@ -708,7 +569,6 @@
                                     class: ""
                                 };
                             }
-                            // console.log(i);                                
                             if ($scope.page == page) {
                                 $scope.nextPage = {
                                     class: "disabled",
@@ -740,7 +600,6 @@
                 $scope.page = page;
                 partnerPostService.loadLatestPost(page - 1, 2, 'Recruitment_other')
                     .then(function(response) {
-                        // console.log(response);
                         $scope.allPosts = response.data.content;
                         $scope.pages = [];
                         var page = response.data.totalPages;
@@ -756,7 +615,6 @@
                                     class: ""
                                 };
                             }
-                            // console.log(i);                                
                             if ($scope.page == page) {
                                 $scope.nextPage = {
                                     class: "disabled",
@@ -786,7 +644,6 @@
 
             $scope.showLastestPost = function() {
                 if ($stateParams.page) {
-                    // alert($stateParams.page);
                     $scope.activePage = $stateParams.page;
                     partnerPostService.loadLatestPost($stateParams.page - 1, 9)
                         .then(function(response) {
@@ -805,7 +662,6 @@
                                         class: ""
                                     };
                                 }
-                                // console.log(i);                                
                                 if ($stateParams.page == page) {
                                     $scope.nextPage = {
                                         class: "disabled",
@@ -831,7 +687,7 @@
 
                             }
                         }, function(error) {
-                            // console.log(error);
+                            console.log(error);
                         })
                 } else {
                     partnerPostService.loadLatestPost(0, 3)
@@ -860,10 +716,8 @@
                                 class: "disabled",
                                 page: 1
                             };
-                            // console.log($scope.pages);
-                            // console.log(response.data);
                         }, function(error) {
-                            // console.log(error);
+                            console.log(error);
                         })
                 }
             }
@@ -878,7 +732,6 @@
                 $scope.warningMessage = warning;
                 $scope.warning = true;
                 $timeout(function() {
-                    // 
                     $(".alert").fadeTo(500, 0).slideUp(500, function() {
                         $scope.warning = false;
                         $scope.warningMessage = "";
@@ -900,7 +753,6 @@
                 } else {
                     $scope.danger = true;
                     $timeout(function() {
-                        // 
                         $(".alert").fadeTo(500, 0).slideUp(500, function() {
                             $scope.danger = false;
                             $scope.errorMessage = "";
