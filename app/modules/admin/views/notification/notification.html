@@ -53,7 +53,6 @@
                             <a class="cursor" ng-repeat="message in messages" ng-click="showMessage(message)">
                                 <div class="mail_list">
                                     <div class="left">
-                                        <!-- <i class="fa fa-circle"></i> <i class="fa fa-edit"></i> -->
                                     </div>
                                     <div class="right">
                                         <h3>{{message.senderName}} <small>{{message.sendDate | date:'medium'}}</small></h3>
@@ -77,15 +76,6 @@
                             <div class="inbox-body">
                                 <div class="mail_heading row">
                                     <div class="col-md-8">
-                                        <!-- <div class="btn-group">
-                                            <button class="btn btn-sm btn-primary" type="button"><i class="fa fa-reply"></i> Reply</button>
-                                            <button class="btn btn-sm btn-default" type="button" data-placement="top" data-toggle="tooltip" data-original-title="Forward"><i class="fa fa-share"></i></button>
-                                            <button class="btn btn-sm btn-default" type="button" data-placement="top" data-toggle="tooltip" data-original-title="Print"><i class="fa fa-print"></i></button>
-                                            <button class="btn btn-sm btn-default" type="button" data-placement="top" data-toggle="tooltip" data-original-title="Trash"><i class="fa fa-trash-o"></i></button>
-                                        </div> -->
-                                        <!-- <div class="btn-group" ng-if="selectedMessage != null">
-                                            <button class="btn btn-sm btn-primary cursor" type="button" data-toggle="collapse" data-target="#reply_message"><i class="fa fa-reply"></i> Reply</button>
-                                        </div> -->
                                     </div>
                                     <div class="col-md-12">
                                         <h3> {{selectedMessage.title}}</h3>
@@ -142,8 +132,6 @@
                                     </div>
                                     <form id="reply_message" data-parsley-validate class="form-horizontal form-label-left collapse">
                                         <div class="form-group">
-                                            <!-- <label class="control-label col-md-1 col-sm-3 col-xs-12" for="last-name">Nội dung:
-                                        </label> -->
                                             <div class="col-md-12 col-sm-12 col-xs-12">
                                                 <textarea class="form-control col-md-12 col-xs-12" rows="5" ng-model="message.content" placeholder="Content"></textarea>
                                             </div>

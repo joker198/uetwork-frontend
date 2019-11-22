@@ -4,12 +4,6 @@
     </div>
     <div class="title_right">
         <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
-            <!-- <div class="input-group">
-                <input type="text" class="form-control" placeholder="Search for...">
-                <span class="input-group-btn">
-                      <button class="btn btn-default" type="button">Go!</button>
-                    </span>
-            </div> -->
         </div>
     </div>
 </div>
@@ -17,17 +11,13 @@
 <div class="row">
     <div class="col-md-12 col-sm-12 col-xs-12" ng-init="getAllStudentByInternshipTerm()">
         <div class="x_panel">
-            <div class="x_title">
+            <div class="x_title" style="padding:0px;margin:unset;">
                 <ul class="nav navbar-right panel_toolbox">
                     <li class="dropdown">
-                        <a class="dropdown-toggle cursor" data-toggle="dropdown" role="button" aria-expanded="false">Options <i class="fa fa-wrench"></i></a>
-                        <ul class="dropdown-menu" role="menu">
-                            <!-- <li>
-                                <a data-toggle="collapse" data-target="#insert_student" class="cursor"> Thêm sinh viên từ excel </a>
-                            </li>
-                            <li>
-                                <a href="/users_data/example/Student-Data.xlsx" target="_blank" class="cursor"> Download mẫu excel </a>
-                            </li> -->
+                        <button class="dropdown-toggle cursor c-btn c-dropdown-btn" data-toggle="dropdown" role="button" aria-expanded="false">
+                            Options&nbsp;<i class="fa fa-chevron-down" aria-hidden="true"></i>
+                        </button>
+                        <ul class="dropdown-menu" style="top: 34px" role="menu">
                             <li>
                                 <a data-toggle="collapse" data-target="#create_internship" class="cursor"> Tạo internship cho sinh viên </a>
                             </li>
@@ -38,10 +28,8 @@
                     </li>
                 </ul>
                 <div class="input-group">
-                    <!-- <input type="text" class="form-control" placeholder="Số dòng trên trang" ng-model="entry" ng-change="paginate()" style="border-radius:25px; border: 1px solid rgba(221,226,232,.49); box-shadow: inset 0 1px 0 rgba(0,0,0,.075); width: 72%;"> -->
-                    <select class="form-control" style="border-radius:25px; border: 1px solid rgba(221,226,232,.49); box-shadow: inset 0 1px 0 rgba(0,0,0,.075);" ng-change="getAllStudentByInternshipTerm(internTerm)" ng-model="internTerm">
+                    <select class="form-control c-dropdown" ng-change="getAllStudentByInternshipTerm(internTerm)" ng-model="internTerm">
                         <option value="">-- Chọn đợt thực tập --</option>
-                        <!-- <option value="all">Tất cả sinh viên</option> -->
                         <option ng-repeat="internshipTerm in allInternshipTerm | orderBy:'-id'" value="{{internshipTerm}}">
                             Đợt {{internshipTerm.term}} năm {{internshipTerm.year}}
                         </option>

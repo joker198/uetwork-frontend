@@ -15,9 +15,6 @@
 
             <div class="clearfix"></div>
         </div>
-        <!--<li class="dropdown active">-->
-
-            <!-- <a class="dropdown-toggle" data-toggle="dropdown" ng-if="newNoti == false">New Notification <span class="caret"></span></a> -->
             <ul class="dropdown-menu" role="menu">
                 <li ng-repeat="noti in notification">
                     <a href="/#/channel/{{noti.channelId}}">
@@ -25,7 +22,6 @@
                     </a>
                 </li>
             </ul>
-        <!--</li>-->
         <div class="x_content">
 
             <h2>{{company}} has {{count}} Internship</h2>
@@ -71,8 +67,6 @@
                     <th class="column-title">Grade </th>
                     <th class="column-title">Start Date </th>
                     <th class="column-title">End Date </th>
-                    <!-- <th class="column-title no-link last"><span class="nobr">Action</span> -->
-                    <!-- </th> -->
                   </tr>
                 </thead>
                 <tbody>
@@ -98,8 +92,6 @@
                         <th class="column-title">Content </th>
                         <th class="column-title">Rating</th>
                         <th class="column-title">Filter </th>
-                        <!-- <th class="column-title no-link last"><span class="nobr">Action</span> -->
-                        <!-- </th> -->
                     </tr>
                     </thead>
                     <tbody>
@@ -110,8 +102,6 @@
                             <input type="text" ng-model="comment.filter" ng-change="comment.check = true">
                             <button ng-click="changeFilterValue(comment); comment.check = false" ng-if="comment.check">Save change</button>
                         </td>
-                        <!--<td ></td>-->
-                        <!--<input  class="col-md-1 col-xs-1" type="text" ng-model="">-->
                     </tr>
                     </tbody>
                 </table>

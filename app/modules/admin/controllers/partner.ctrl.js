@@ -265,7 +265,7 @@
                             $scope.partnerId = -1
                             $scope.post.partnerContactDTO = $scope.input.partnerContactDTO;
                         } else {
-                            $scope.partnerId = $scope.Partner.id;
+                            $scope.partnerId = ($scope.post.postType == 'Research') ? -1 : $scope.Partner.id;
                             $scope.input.partner = null;
                         }
                         $scope.request = {

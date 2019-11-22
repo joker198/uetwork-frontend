@@ -16,17 +16,12 @@ angular.module("myAdminApp", [
         'lecturers',
         'angular-md5',
         'angucomplete-alt'
-        // 'infinite-scroll'
     ])
     .config(["$locationProvider", "$routeProvider", "$stateProvider", "$urlRouterProvider",
         function($locationProvider, $routeProvider, $stateProvider, $urlRouterProvider) {
             $locationProvider.html5Mode(false).hashPrefix("");
             if (sessionStorage["Admin-Data"] == null) {
-                // $routeProvider
-                //     .when("/login", {
-                //         templateUrl: "/modules/admin/views/loginAdmin/loginAdmin.html",
-                //         controller: "LoginAdCtrl"
-                //     }).otherwise({ redirectTo: "/login" });;
+                //
             } else {
                 $urlRouterProvider.otherwise("/");
                 if (sessionStorage['role'] == 'ADMIN') {

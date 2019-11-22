@@ -6,19 +6,6 @@
         </div>
         <div class="single-post-info">
         </div>
-        <!-- <div class="single-post-image">
-            <img src="../../img/none_pic.PNG" height="200" width="200" ng-if="studentInfo.avatar == null && image == false"  data-toggle="modal" data-target="#choose_img"/>
-            <img ng-src="{{myCroppedImage}}" ng-if="pic == false">
-            <img ng-src="{{clientAdd}}{{studentInfo.avatar}}" ng-if="pic == true" data-toggle="modal" data-target="#choose_img">
-            <div>Select an image file:
-                <input type="file" id="fileInput" accept="image/*" />
-            </div>
-        </div>
-        <div id="crop_img" class="single-post-image" ng-hide="pic == true">
-            <img-crop image="myImage" result-image-format="image/jpeg" result-image-quality="0.2" result-image="myCroppedImage" area-type="square" on-change="pic = false" change-on-fly="true" area-min-size="20">
-            </img-crop>
-            <button ng-click="changeAva()" ng-if="image != false">Submit</button>
-        </div> -->
         <div class="single-post-content">
             <div class="post-coments">
                 <div class="comment-form-wrapper">
@@ -29,59 +16,57 @@
                         <div class="alert alert-danger" ng-if="danger">
                             <strong>{{errorMessage}}</strong>
                         </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-3" for="name">Name:</label>
-                            <div class="col-sm-8">
+                        <div class="form-group row">
+                            <label class="control-label col-sm-2" for="name">Name:</label>
+                            <div class="col-sm-4">
                                 <input type="text" class="form-control" id="name" placeholder="Enter your name" ng-model="studentInfo.fullName" ng-change="changeInfo = true">
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-3" for="addr">Address:</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" id="addr" placeholder="Enter your address" ng-model="studentInfo.address" ng-change="changeInfo = true">
+                            <label class="control-label col-sm-2" for="Desire">Class: </label>
+                            <div class="col-sm-2" style="display: flex;align-items: center;">
+                                K&nbsp;&nbsp;<input type="number" class="form-control" id="Grade" placeholder="Enter your Grade" ng-model="studentInfo.infoBySchool.grade" ng-change="grade = true">
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-3" for="birth">Birthday:</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" id="birth" placeholder="Enter your birthday" ng-model="studentInfo.birthday" ng-change="changeInfo = true">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-3" for="email">Email:</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" id="email" placeholder="Enter your email" ng-model="studentInfo.email" ng-change="changeInfo = true">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-3" for="phone">Phone number:</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" id="phone" placeholder="Enter your phone number" ng-model="studentInfo.phoneNumber" ng-change="changeInfo = true">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-3" for="Skype">Skype:</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" id="Skype" placeholder="Enter your Skype" ng-model="studentInfo.skype" ng-change="changeInfo = true">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-3" for="Desire">Desire:</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" id="Desire" placeholder="Enter your Desire" ng-model="studentInfo.desire" ng-change="changeInfo = true">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-3" for="Desire">Class:</label>
-                            <div class="col-sm-4">
-                                <input type="number" class="form-control" id="Grade" placeholder="Enter your Grade" ng-model="studentInfo.infoBySchool.grade" ng-change="grade = true">
-                            </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-2">
                                 <select class="form-control" ng-model="studentInfo.infoBySchool.studentClass" ng-change="studentClass = true">
                                     <option ng-repeat="class in allStudentClass" value="{{class.studentClass}}">
                                         {{class.studentClass}}
                                     </option>
                                 </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="addr">Address:</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="addr" placeholder="Enter your address" ng-model="studentInfo.address" ng-change="changeInfo = true">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="birth">Birthday:</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="birth" placeholder="Enter your birthday" ng-model="studentInfo.birthday" ng-change="changeInfo = true">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="email">Email:</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="email" placeholder="Enter your email" ng-model="studentInfo.email" ng-change="changeInfo = true">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="phone">Phone number:</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="phone" placeholder="Enter your phone number" ng-model="studentInfo.phoneNumber" ng-change="changeInfo = true">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="Skype">Skype:</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="Skype" placeholder="Enter your Skype" ng-model="studentInfo.skype" ng-change="changeInfo = true">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="Desire">Desire:</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="Desire" placeholder="Enter your Desire" ng-model="studentInfo.desire" ng-change="changeInfo = true">
                             </div>
                         </div>
                         <div class="form-group">

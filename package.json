@@ -17,6 +17,7 @@
     "start": "http-server -a 0.0.0.0 -p 8000 -d false -i false -c-1 ./app -f /index.html -g"
   },
   "dependencies": {
+    "file-saver": "^2.0.2",
     "grunt-contrib-compress": "^1.4.3",
     "http-server": "github:skleeschulte/http-server"
   }
