@@ -19,12 +19,13 @@
 <div class="row" ng-init="getAllFollowByInternshipTerm()">
     <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
-            <div class="x_title">
-                <!-- <h2>Danh sách ứng tuyển thực tập</h2> -->
+            <div class="x_title" style="padding:0px;margin:unset;">
                 <ul class="nav navbar-right panel_toolbox">
                     <li class="dropdown">
-                        <a class="dropdown-toggle cursor" data-toggle="dropdown" role="button" aria-expanded="false">Options <i class="fa fa-wrench"></i></a>
-                        <ul class="dropdown-menu" role="menu">
+                        <button class="dropdown-toggle cursor c-btn c-dropdown-btn" data-toggle="dropdown" role="button" aria-expanded="false">
+                            Options&nbsp;<i class="fa fa-chevron-down" aria-hidden="true"></i>
+                        </button>
+                        <ul class="dropdown-menu" style="top:34px" role="menu">
                             <li>
                                 <a class="cursor" ng-click="exportDataRegistration()"> Tải danh sách đăng kí </a>
                             </li>
@@ -35,14 +36,13 @@
                                 <a data-toggle="modal" data-target="#send_pass_interview_message" class="cursor" ng-click="createListStudentToSendMessage('pass')"> Gửi thông báo trúng tuyển </a>
                             </li>
                             <li>
-                                <a data-toggle="modal" data-target="#send_fail_interview_message" class="cursor" ng-click="createListStudentToSendMessage('fail')"> Gửi thông trượt phỏng vấn </a>
+                                <a data-toggle="modal" data-target="#send_fail_interview_message" class="cursor" ng-click="createListStudentToSendMessage('fail')"> Gửi thông báo trượt phỏng vấn </a>
                             </li>
                         </ul>
                     </li>
                 </ul>
                 <div class="input-group">
-                    <!-- <input type="text" class="form-control" placeholder="Số dòng trên trang" ng-model="entry" ng-change="paginate()" style="border-radius:25px; border: 1px solid rgba(221,226,232,.49); box-shadow: inset 0 1px 0 rgba(0,0,0,.075); width: 72%;"> -->
-                    <select class="form-control" style="border-radius:25px; border: 1px solid rgba(221,226,232,.49); box-shadow: inset 0 1px 0 rgba(0,0,0,.075);" ng-change="changeType(postTitle)" ng-model="postTitle">
+                    <select class="form-control c-dropdown" ng-change="changeType(postTitle)" ng-model="postTitle">
                         <option value="">-- Chọn loại thực tập --</option>
                         <option value="Recruitment">Thực tập đối tác</option>
                         <option value="Recruitment_other">Thực tập công ty ngoài</option>
@@ -51,15 +51,6 @@
                     </select>
                 </div>
                 <div class="clearfix">
-                    <!-- <div class="form-group">
-                        <label class="control-label col-md-4 col-sm-3 col-xs-12">Chọn tên đối tác: </label>
-                        <div class="col-md-4 col-sm-6 col-xs-12">
-                            <select class="form-control" ng-model="partnerId">
-                                <option value="" ng-click="getAllFollows">All</option>
-                                <option value="{{data.partnerId}}" ng-selected="partnerId" ng-repeat="data in allFollows" ng-click="getAllFollowOfPartner(data.partnerId)">{{data.partnerName}}</option>
-                            </select>
-                        </div>
-                    </div> -->
                 </div>
             </div>
             <div class="x_content">
@@ -73,7 +64,6 @@
                     <strong>{{errorMessage}}</strong>
                 </div>
                 <div class="table-responsive" ng-show="postTitle != 'noFollow'">
-                    <!-- <p class="pull-right" ng-if="currentPage != undefined">{{(currentPage * entryLimit) - entryLimit + 1}}-{{currentPage * entryLimit}} trong tổng số {{totalItems}}</p> -->
                     <span class="pull-right"> 
                         <ul class="list-inline">
                           <li class="list-inline-item">Hiển thị:</li>
@@ -103,12 +93,9 @@
                                 <th class="column-title">
                                     <input type="checkbox" ng-checked="selectStudent" class="flat" name="table_records" ng-click="selectAllStudent()">
                                 </th>
-                                <!-- </th> -->
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- <tr class="even pointer" ng-repeat="data in filtered = allFollows | filter : search | -->
-                            <!-- startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit"> -->
                             <tr ng-repeat="data in filtered = allFollows | filter : search | filter: filterPosttitle | startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit | orderBy:'-id'">
                                 <td>{{(currentPage * entryLimit) - entryLimit + 1 + $index}}</td>
                                 <td class=" ">{{data.student.fullName}}</td>
@@ -130,7 +117,6 @@
                     <ul uib-pagination total-items="totalItems" ng-model="currentPage" max-size="noOfPages" items-per-page="entryLimit"></ul>
                 </div>
                 <div class="table-responsive" ng-show="postTitle == 'noFollow'">
-                    <!-- <p class="pull-right" ng-if="currentPage != undefined">{{(currentPage * entryLimit) - entryLimit + 1}}-{{currentPage * entryLimit}} trong tổng số {{totalItems}}</p> -->
                     <span class="pull-right"> 
                         <ul class="list-inline">
                           <li class="list-inline-item">Hiển thị:</li>
@@ -152,12 +138,9 @@
                                 <th class="column-title">Email VNU</th>
                                 <th class="column-title">Email</th>
                                 <th class="column-title">Số điện thoại</th>
-                                <!-- </th> -->
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- <tr class="even pointer" ng-repeat="data in filtered = allFollows | filter : search | -->
-                            <!-- startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit"> -->
                             <tr ng-repeat="student in filterednoFollows = noFollows | filter : search | startFrom:(currentPagenoFollows-1)*entryLimitnoFollows | limitTo:entryLimitnoFollows | orderBy:'-id'">
                                 <td>{{(currentPagenoFollows * entryLimitnoFollows) - entryLimitnoFollows + 1 + $index}}</td>
                                 <td class=" ">{{student.fullName}}</td>

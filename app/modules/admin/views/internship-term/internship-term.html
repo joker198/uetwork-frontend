@@ -2,32 +2,20 @@
     <div class="title_left">
         <h3>Kì thực tập</h3>
     </div>
-    <div class="title_right">
-        <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
-            <!-- <div class="input-group">
-                <input type="text" class="form-control" placeholder="Search for...">
-                <span class="input-group-btn">
-                      <button class="btn btn-default" type="button">Go!</button>
-                    </span>
-            </div> -->
-        </div>
-    </div>
 </div>
 <div class="clearfix"></div>
 <div class="row">
     <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
-            <div class="x_title">
-                <!-- <h2>Châu lục</h2> -->
-                <ul class="nav navbar-right panel_toolbox">
-                    <li class="dropdown">
-                        <a class="dropdown-toggle cursor" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a data-toggle="collapse" data-target="#add_internship_term" class="cursor"> Thêm kì thực tập </a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
+            <div class="x_title" style="height:50px">
+                <div style="width:100%;display:flex">
+                    <div class="col-sm-8"></div>
+                    <div class="col-sm-4 c-add-btn">
+                        <button data-toggle="collapse" data-target="#add_internship_term" class="cursor">
+                            <i class="fa fa-plus"></i>&nbsp;Thêm kì thực tập
+                        </button>
+                    </div>
+                </div>
                 <div class="clearfix"></div>
             </div>
             <div class="x_content">
@@ -77,9 +65,6 @@
                     <table class="table table-striped jambo_table bulk_action">
                         <thead>
                             <tr class="headings">
-                                <!-- <th> -->
-                                <!-- <input type="checkbox" id="check-all" class="flat"> -->
-                                <!-- </th> -->
                                 <th class="column-title">Năm </th>
                                 <th class="column-title">Đợt</th>
                                 <th class="column-title">Ngày bắt đầu</th>
@@ -89,8 +74,6 @@
                                 <th class="column-title">Số bài tuyển dụng</th>
                                 <th>Sửa</th>
                                 <th>Xóa</th>
-                                <!-- <th class="column-title no-link last"><span class="nobr">Action</span> -->
-                                <!-- </th> -->
                             </tr>
                         </thead>
                         <tbody>
@@ -129,14 +112,6 @@
                             </tr>
                         </tbody>
                     </table>
-                    <!-- <div class="col-md-6">
-                        <p class="input-group">
-                            <input type="text" class="form-control" uib-datepicker-popup ng-model="dt" is-open="popup2.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" ng-click="open2()" />
-                            <span class="input-group-btn">
-            <button type="button" class="btn btn-default" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
-          </span>
-                        </p>
-                    </div> -->
                 </div>
                 <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true" id="delete_internship_term">
                     <div class="modal-dialog modal-sm">
@@ -169,17 +144,9 @@
                                 <div class="alert alert-success" ng-if="successdelete_edit">
                                     <strong>{{successMessage}}</strong>
                                 </div>
-                                <!-- <div class="col-md-8 col-sm-8 col-xs-12" ng-if="show_post">
-                                    <div class="col-sm-12">
-                                        <img ng-src="{{post.image}}">
-                                    </div>
-                                    <div class="single-post-content" ng-bind-html="post.content">
-                                    </div>
-                                </div> -->
                                 <table class="table table-striped">
                                     <thead>
                                         <tr>
-                                            <!-- <th>#</th> -->
                                             <th>Tiêu đề</th>
                                             <th>Nội dung</th>
                                             <th>Ngày đăng</th>
@@ -191,7 +158,6 @@
                                     </thead>
                                     <tbody>
                                         <tr ng-repeat="post in allPosts" id="">
-                                            <!-- <th scope="row">{{typeContract.id}}</th> -->
                                             <td id="">{{post.describePost}}</td>
                                             <td class="cursor" id="" ng-bind-html="post.content | limitTo:200" ng-click="showPost(post)"></td>
                                             <td id="">{{post.datePost | date:'medium'}}</td>
@@ -221,10 +187,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
-                                <button type="button" class="btn btn-primary" ng-click="editContract()">Lưu thay đổi</button>
-                            </div> -->
                         </div>
                     </div>
                 </div>

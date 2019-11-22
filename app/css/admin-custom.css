@@ -1,0 +1,91 @@
+.cursor {
+    cursor: pointer;
+}
+.underline{
+   text-decoration:underline;
+}
+.bold {
+    font-weight:bold;
+}
+.NEW {
+    background-color: #dddfe2;
+}
+.angucomplete-dropdown {
+    overflow-y: auto;
+    max-height: 200px;
+    width: 100%;
+}
+.edit-input {
+    border-radius:3px; border: 1px solid #ccc;
+    height: 30px;
+}
+.c-dropdown {
+	border-radius: 5px!important;
+	border: 2px solid #337ab7!important;
+	width: 200px;
+	font-weight: 600;
+	color: #337ab7;
+}
+.c-btn {
+	font-weight: 600;
+	border-radius: 5px;
+	background-color: unset;
+	padding: 6px 12px;
+	border: 2px solid;
+}
+.c-dropdown-btn {
+	color: #337ab7;
+}
+.c-accept-btn {
+    color: #26B99A;
+}
+.c-decline-btn {
+	color: #d43f3a;
+}
+.c-add-btn {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	height: 34px;
+}
+.c-add-btn button {
+	background-color: unset;
+	font-weight: 600;
+	color: #337ab7;
+	padding: 5px;
+	border: 2px solid;
+	border-radius: 5px;
+	margin: unset;
+}
+.c-mail-container {
+	max-height: 300px;
+	overflow-y: scroll;
+	border: unset;
+	margin: unset;
+	min-height: 180px
+}
+.c-mail-container .c-mail-item {
+	display: flex;
+	margin-bottom: 10px;
+	padding: 10px;
+	background-color: #e5e5e5;
+	box-shadow: 3px 3px 3px #ccc;
+	border-radius: 3px;
+}
+.c-mail-container .c-mail-item .c-mail-content {
+	width: calc(100% - 32px);
+    margin: unset;
+    font-weight: 600;
+    color: #31708f;
+}
+.c-mail-container .c-mail-item .c-delete-btn {
+	color: #f7f7f7;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: #ff4646;
+	font-size: medium;
+	border-radius: 3px;
+	width: 32px;
+	height: 32px;
+}

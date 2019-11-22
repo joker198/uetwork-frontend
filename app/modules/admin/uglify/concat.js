@@ -15,7 +15,6 @@ angular.module("myAdminApp", [
         'summernote',
         'lecturers',
         'angular-md5'
-        // 'infinite-scroll'
     ])
     .config(["$locationProvider", "$routeProvider", "$stateProvider", "$urlRouterProvider",
         function($locationProvider, $routeProvider, $stateProvider, $urlRouterProvider) {
@@ -195,7 +194,6 @@ angular.module("myAdminApp", [
         };
     });
 (function() {
-    // var app = angular.module("myApp",[]);
     angular.module('myAdminApp')
         .controller('adminCtrl', ['$scope', '$rootScope', '$location', '$window', 'adminService', 'loginAdService',
             function($scope, $rootScope, $location, $window, adminService, loginAdService) {
@@ -205,7 +203,6 @@ angular.module("myAdminApp", [
                 $rootScope.admin = false;
                 $scope.response = [];
                 $scope.socket = [];
-                // console.log = function(){};
                 $(document).ready(function() {
                     $('.ui-pnotify').remove();
                 });
@@ -216,8 +213,6 @@ angular.module("myAdminApp", [
                         $stateParams.page = 1;
                     }
                     if ($stateParams.page) {
-                        // console.log($rootScope.postType);
-                        // alert($stateParams.page);
                         $scope.activePage = $stateParams.page;
                         adminService.getAllUser($stateParams.page - 1, 15)
                             .then(function(response) {
@@ -235,8 +230,7 @@ angular.module("myAdminApp", [
                                             page: i,
                                             class: ""
                                         };
-                                    }
-                                    // console.log(i);                                
+                                    }                              
                                     if ($stateParams.page == page) {
                                         $scope.nextPage = {
                                             class: "disabled",
@@ -260,9 +254,6 @@ angular.module("myAdminApp", [
                                         };
                                     }
                                 }
-                                // console.log($scope.previousPage);
-                                // console.log($scope.pages);
-                                console.log(response.data);
                             }, function(error) {
                                 console.log(error);
                             })
@@ -278,9 +269,7 @@ angular.module("myAdminApp", [
                     $scope.socket.stomp.connect({}, function() {
                         $scope.socket.stomp.subscribe("/user/" + sessionStorage['username'] + "/**", function(message) {
                             $scope.response = JSON.parse(message.body);
-                            console.log($rootScope.currentPageName);
                             if ($rootScope.currentPageName == '/inbox') {
-                                console.log($rootScope.selectedMessage);
                                 if ($rootScope.selectedMessage != undefined) {
                                     if ($scope.response.parentId == $rootScope.selectedMessage.id) {
                                         $rootScope.selectedMessage.messages.push($scope.response);
@@ -294,10 +283,8 @@ angular.module("myAdminApp", [
                                                 $rootScope.markMessageAsSeen($scope.response.parentId);
                                             }
                                         } else {
-                                            console.log("31");
                                             var index = $rootScope.messages.findIndex(x => x.id === $scope.response.parentId);
                                             if (index != -1) {
-                                                console.log("34");
                                                 $rootScope.messages[index].status = 'NEW';
                                                 if ($rootScope.messages[index].messageType == 'Normal') {
                                                     $rootScope.messages[index].messages.push($scope.response);
@@ -312,7 +299,6 @@ angular.module("myAdminApp", [
                                 } else {
                                     var index = $rootScope.messages.findIndex(x => x.id === $scope.response.parentId);
                                     if (index != -1) {
-                                        console.log("34");
                                         $rootScope.messages[index].status = 'NEW';
                                         if ($rootScope.messages[index].messageType == 'Normal') {
                                             $rootScope.messages[index].messages.push($scope.response);
@@ -326,7 +312,6 @@ angular.module("myAdminApp", [
                             } else {
                                 var index = $rootScope.messages.findIndex(x => x.id === $scope.response.parentId);
                                 if (index != -1) {
-                                    console.log("34");
                                     $rootScope.messages[index].status = 'NEW';
                                     if ($rootScope.messages[index].messageType == 'Normal') {
                                         $rootScope.messages[index].messages.push($scope.response);
@@ -337,7 +322,6 @@ angular.module("myAdminApp", [
                                 }
                                 $rootScope.$apply();
                             }
-                            // $rootScope.$apply();
                         });
                     });
                     $scope.socket.client.onclose = $scope.reconnect;
@@ -355,8 +339,6 @@ angular.module("myAdminApp", [
                     $rootScope.loggedIn = false;
                     $location.path('/admin/login');
                 }
-                // alert($rootScope.loggedIn);
-                console.log(sessionStorage['role']);
                 $scope.logout = function() {
                     loginAdService.logout()
                         .then(function() {
@@ -368,7 +350,6 @@ angular.module("myAdminApp", [
                                 $window.location.href = $rootScope.clientAdd + '/admin';
                             }
                         }, function(error) {
-                            // console.log(error.data);
                             sessionStorage.clear();
                             $window.location.href = $rootScope.clientAdd + '/admin';
                         })
@@ -377,7 +358,6 @@ angular.module("myAdminApp", [
                 $scope.getAllNotification = function() {
                     adminService.getAllNotification()
                         .then(function(response) {
-                            console.log(response);
                             $rootScope.AllNotifications = response.data;
                         }, function(error) {
                             console.log(error);
@@ -421,7 +401,6 @@ angular.module("myAdminApp", [
                 if ($scope.intern.partnerId == 'other') {
                     $scope.intern.partnerId = 0;
                 }
-                console.log($scope.intern);
                 internService.createIntern($scope.intern)
                     .then(function(response) {
                         $scope.alertSuccess("Tạo internship thành công!", "");
@@ -434,7 +413,6 @@ angular.module("myAdminApp", [
 
             $scope.entry = '';
             $scope.paginate = function() {
-                // console.log($scope.entry);
                 if ($scope.entry != '') {
                     if ($scope.entry > $scope.totalItems) {
                         $scope.entryLimit = $scope.totalItems;
@@ -454,7 +432,6 @@ angular.module("myAdminApp", [
             $scope.getAllStudentNoLecturers = function() {
                 internService.getAllStudentNoLecturers()
                     .then(function(response) {
-                        console.log(response.data);
                         $scope.allStudentNoLecturers = response.data;
                         $scope.totalItems = response.data.length;
                         $scope.currentPage = 1;
@@ -478,7 +455,6 @@ angular.module("myAdminApp", [
             $scope.getNameAndIdOfLecturers = function() {
                 internService.getNameAndIdOfLecturers()
                     .then(function(response) {
-                        console.log(response);
                         $scope.nameAndIdOfLecturers = response.data;
                     }, function(error) {
                         console.log(error);
@@ -489,7 +465,6 @@ angular.module("myAdminApp", [
                 alert(1);
                 internService.getNameAndIdOfPartners("true")
                     .then(function(response) {
-                        console.log(response);
                         $scope.nameAndIdPartnersFit = response.data;
                     }, function(error) {
                         console.log(error);
@@ -499,7 +474,6 @@ angular.module("myAdminApp", [
             $scope.getNameAndIdOfPartners = function() {
                 internService.getNameAndIdOfPartners("false")
                     .then(function(response) {
-                        console.log(response);
                         $scope.nameAndIdPartners = response.data;
                     }, function(error) {
                         console.log(error);
@@ -516,9 +490,6 @@ angular.module("myAdminApp", [
             }
 
             $scope.addLecturersStudent = function() {
-                // console.log($scope.listStudent);
-                // console.log($scope.lecturers.lecturersId);
-
                 internService.addLecturersStudent($scope.listStudent, $scope.lecturers.lecturersId)
                     .then(function() {
                         $scope.alertSuccess("Thêm giảng viên thành công!", "");
@@ -547,27 +518,9 @@ angular.module("myAdminApp", [
                         studentName: student.fullName
                     })
                 } else {
-                    // if ()
-                    // function findStudent(st) {
-                    //     return st.id === student.id;
-                    // }
-
-                    // var index = $scope.listStudent.find(findStudent);
-                    // console.log(index);
-                    // index = null;
-                    // // $scope.listStudent.splice(index, 1);
-                    // angular.forEach($scope.listStudent, function(st){
-                    //     if(student.id == st.id){
-                    //         $scope.listStudent.splice(st, 1);
-                    //         $('#' + student.id).remove();
-                    //         break;
-                    //     }
-                    // });
                     for (i = 0; i <= $scope.listStudent.length; i++) {
 
                         if (student.id == $scope.listStudent[i].id) {
-                            console.log(student.id);
-                            console.log($scope.listStudent[i]);
                             var index = $scope.listStudent.indexOf($scope.listStudent[i])
                             $scope.listStudent.splice(index, 1);
                             break;
@@ -598,7 +551,6 @@ angular.module("myAdminApp", [
                 internService.getAllStudentByInternshipTerm($stateParams.internshipTermId)
                 .then(function(response){
                     $scope.allInterns = response.data;
-                        console.log(response);
                     }, function(error) {
                         console.log(error);
                     })
@@ -608,7 +560,6 @@ angular.module("myAdminApp", [
                 internService.getAllInternshipByInternshipTerm($stateParams.internshipTermId)
                     .then(function(response) {
                         $scope.allInterns = response.data;
-                        console.log(response);
                     }, function(error) {
                         console.log(error);
                     })
@@ -647,7 +598,6 @@ angular.module("myAdminApp", [
                             $scope.input.startDate = "";
                             $scope.getAllInternshipTerm();
                         }, function(error) {
-                            // console.log(error);
                             $scope.alertDanger(error.message, "")
                         });
                 }
@@ -670,11 +620,6 @@ angular.module("myAdminApp", [
             };
 
             $scope.editInternshipTerm = function(startDate, endDate, internshipTermId) {
-                // $('#nation_' + nationId).html('<div class="col-md-4 col-sm-4 col-xs-6">' + 
-                //     '<input type="text" name="country" class="form-control col-md-6" ng-model="' + nationName + '" required /></div>');
-                // var internshipTermName = $('#internshipTerm_' + internshipTermId).text();
-                // console.log(startDate);
-                // $('#internshipTerm_' + internshipTermId).val(startDate);
                 startDate = new Date();
                 $('#internshipTerm_' + internshipTermId).val(startDate);
                 var curr_date = startDate.getDate();
@@ -684,12 +629,9 @@ angular.module("myAdminApp", [
             }
 
             $scope.saveEditinternshipTerm = function(internshipTerm) {
-                // console.log(nationId);
-                // console.log(internshipTerm);
                 internService.editInternshipTerm(internshipTerm)
                     .then(function() {
                         $scope.alertSuccess("Sửa kì thực tập thành công!", "");
-                        // $scope.load
                     }, function(error) {
                         $scope.alertDanger(error.data.message, "");
                     })
@@ -698,7 +640,6 @@ angular.module("myAdminApp", [
             $scope.getAllInternshipTerm = function() {
                 internService.getAllInternshipTerm()
                     .then(function(response) {
-                        console.log(response.data);
                         $scope.allInternshipTerm = response.data;
                     }, function(error) {
                         console.log(error);
@@ -733,7 +674,6 @@ angular.module("myAdminApp", [
                 };
                 internService.changeFilterValue($scope.request, data.id)
                     .then(function(response) {
-                        console.log(response)
                     }, function(error) {
                         alert("ko thanh cong");
                         console.log(error);
@@ -748,12 +688,7 @@ angular.module("myAdminApp", [
             };
 
             $scope.searchDate = function(data) {
-                // alert(data);
-                // var myDate=data;
-                // myDate=myDate.split("-");
-                // var newDate=myDate[1]+"/"+myDate[0]+"/"+myDate[2];
-                // // alert(new Date(newDate).getTime());
-                // $scope.search.startDate = new Date(newDate).getTime()
+                //
             };
 
             $scope.showComment = function(partnerid) {
@@ -778,7 +713,6 @@ angular.module("myAdminApp", [
                     .then(function(response) {
                         $scope.allInternOfPartner = response.data;
                         $scope.count = $scope.allInternOfPartner.length;
-                        // console.log(response.data);
                         angular.forEach($scope.allInternOfPartner, function(intern) {
                             if ($scope.company == null) {
                                 $scope.company = intern.company;
@@ -795,14 +729,6 @@ angular.module("myAdminApp", [
                         console.log(error)
                     })
             };
-            // $scope.showAllInternOfpartner = function () {
-            //     internService.showAllInternOfpartner($stateParams.partnerId)
-            //         .then(function (response) {
-            //             console.log(response);
-            //         }, function (error) {
-            //             console.log(error);
-            //         })
-            // };
 
             $scope.showAllIntern_ = function() {
                 if ($scope.showIntern == false || $scope.saveIntern == true) {
@@ -838,7 +764,7 @@ angular.module("myAdminApp", [
                             })
                         },
                         function() {
-
+                            //
                         })
             };
             $scope.getPartner = function() {
@@ -886,7 +812,6 @@ angular.module("myAdminApp", [
                         $scope.create.startDate = '';
                         $scope.create.endDate = '';
                         $scope.create.supervisor = '';
-                        //$scope.typing = false;
                     }, function(error) {
                         $scope.response = error;
                     });
@@ -894,12 +819,9 @@ angular.module("myAdminApp", [
             };
 
             $scope.showName = function() {
-                //alert(1);
                 if ($scope.create.infoBySchool.studentCode == '') {
-                    //alert(2);
                     $scope.typing = false;
                 } else {
-                    //alert(3);
                     $scope.typing = true;
                     $scope.showNotIntern();
                 }
@@ -917,7 +839,6 @@ angular.module("myAdminApp", [
                 if (intern.checked == true) {
                     intern.checked = false;
                     $scope.count--;
-                    // alert(v.checked);
                 }
             };
 
@@ -974,7 +895,6 @@ angular.module("myAdminApp", [
                 $scope.warningMessage = warning;
                 $scope.warning = true;
                 $timeout(function() {
-                    // 
                     $(".alert").fadeTo(500, 0).slideUp(500, function() {
                         $scope.warning = false;
                         $scope.warningMessage = "";
@@ -994,7 +914,6 @@ angular.module("myAdminApp", [
                 } else {
                     $scope.danger = true;
                     $timeout(function() {
-                        // 
                         $(".alert").fadeTo(500, 0).slideUp(500, function() {
                             $scope.danger = false;
                             $scope.errorMessage = "";
@@ -1037,7 +956,6 @@ angular.module("myAdminApp", [
             $scope.getAllStudentClass = function() {
                 lecturersService.getAllStudentClass()
                     .then(function(response) {
-                        console.log(response);
                         $scope.allStudentClass = response.data;
                     }, function(error) {
                         console.log(error);
@@ -1070,8 +988,6 @@ angular.module("myAdminApp", [
             }
 
             $scope.editStudentClass = function(studentClassId, classNameId) {
-                // $('#nation_' + nationId).html('<div class="col-md-4 col-sm-4 col-xs-6">' + 
-                //     '<input type="text" name="country" class="form-control col-md-6" ng-model="' + nationName + '" required /></div>');
                 var studentClass = $('#studentClass_' + studentClassId).text();
                 $('#studentClass_' + studentClassId).html('<input id="studentClass_value_' + studentClassId + '" value="' + studentClass + '" style="border-radius:3px; border: 1px solid; width: 50%;"/>');
                 var className = $('#className_' + studentClassId).text();
@@ -1084,16 +1000,13 @@ angular.module("myAdminApp", [
             }
 
             $scope.saveEditStudentClass = function(studentClassId) {
-                // console.log(nationId);
                 var studentClass = $('#studentClass_value_' + studentClassId).val();
                 var className = $('#className_value_' + studentClassId).val();
-                // console.log(v);
                 $scope.request = {
                     id: studentClassId,
                     studentClass: studentClass,
                     className: className
                 }
-                console.log($scope.request);
                 lecturersService.editStudentCLass($scope.request)
                     .then(function() {
                         $('#save_edit_studentClass_' + studentClassId).hide();
@@ -1101,7 +1014,6 @@ angular.module("myAdminApp", [
                         $('#edit_studentClass_' + studentClassId).show();
                         $('#className_' + studentClassId).html(className);
                         $scope.alertSuccess('Sửa tên lớp thành công!', ''); //dang vuong o cho hien alert success
-                        // $scope.getA();
                     }, function(error) {
                         console.log(error);
                         $scope.alertDanger(error.data.message, '');
@@ -1135,31 +1047,24 @@ angular.module("myAdminApp", [
                     }
                 }
                 if (xlf.addEventListener) xlf.addEventListener('change', handleFile, false);
-
-                // input_dom_element.addEventListener('change', handleFile, false);
             }
 
             $scope.setExcelTable = function() {
-                // alert(1);
-                console.log($rootScope.excel);
                 $scope.excelTable = $rootScope.excel;
                 angular.forEach($scope.excelTable, function(lecturers) {
                         lecturers.userName = lecturers.emailvnu.replace(/(?:@vnu.edu.vn|@gmail.com)/g, '');
                     })
-                    // $rootScope.excelTable =$rootScope.excel  ;
             }
 
             $scope.send = function() {
                 $scope.errorCount = 0;
                 lecturersService.createLecturersFromExcel($scope.excelTable)
                     .then(function(response) {
-                        console.log(response);
                         $scope.excelTable = null;
                         angular.forEach(response.data, function(lecturers) {
                             if (lecturers.status == "userNameExisted") {
                                 $('#' + lecturers.userName).css('background-color', '#f0ad4e');
                                 $scope.errorCount++;
-                                console.log(lecturers.userName);
                             } else {
                                 var index = response.data.indexOf(lecturers)
                                 response.data.splice(index, 1);
@@ -1179,7 +1084,6 @@ angular.module("myAdminApp", [
             }
 
             $scope.paginate = function() {
-                // console.log($scope.entry);
                 if ($scope.entry != '') {
                     if ($scope.entry > $scope.totalItems) {
                         $scope.entryLimit = $scope.totalItems;
@@ -1196,7 +1100,6 @@ angular.module("myAdminApp", [
             $scope.getAllLecturers = function() {
                 lecturersService.getAllLecturers()
                     .then(function(response) {
-                        console.log(response);
                         $scope.allLecturers = response.data;
                         $scope.totalItems = response.data.length;
                         $scope.currentPage = 1;
@@ -1236,7 +1139,6 @@ angular.module("myAdminApp", [
             $scope.createLecturers = function() {
                 $scope.lecturers.role = "LECTURERS";
                 $scope.lecturers.password = md5.createHash($scope.lecturers.password || '');
-                console.log($scope.lecturers);
                 lecturersService.createLecturers($scope.lecturers)
                     .then(function(response) {
                         $scope.alertSuccess("Thêm giảng viên thành công!", "");
@@ -1258,9 +1160,8 @@ angular.module("myAdminApp", [
                 $('#close_modal_delete_lecturers').trigger('click');
                 lecturersService.deleteLecturers(lecturersId)
                     .then(function() {
-                        // $('#close_modal_delete_lecturers').trigger('click');
                         $scope.alertSuccess("Xóa giảng viên thành công", ""),
-                            $scope.getAllLecturers();
+                        $scope.getAllLecturers();
                     }, function(error) {
                         $scope.alertDanger(error.data.message, "");
                     })
@@ -1292,7 +1193,6 @@ angular.module("myAdminApp", [
                 var emailVNU = $('#emailVNU_value_' + lecturersId).val();
                 var subject = $('#subject_value_' + lecturersId).val();
                 var phoneNumber = $('#phoneNumber_value_' + lecturersId).val();
-                // console.log(v);
                 $scope.request = {
                         id: lecturersId,
                         fullName: fullName,
@@ -1301,7 +1201,6 @@ angular.module("myAdminApp", [
                         subject: subject,
                         phoneNumber: phoneNumber
                     }
-                    // console.log($scope.request);
                 lecturersService.editLecturers($scope.request)
                     .then(function() {
                         $('#edit_lecturers_' + lecturersId).show();
@@ -1312,7 +1211,6 @@ angular.module("myAdminApp", [
                         $('#subject_' + lecturersId).html(subject);
                         $('#phoneNumber_' + lecturersId).html(phoneNumber);
                         $scope.alertSuccess('Sửa Giảng viên thành công!', '');
-                        // $scope.getAllContinent();
                     }, function(error) {
                         console.log(error);
                         $scope.alertDanger(error.data.message, '');
@@ -1331,7 +1229,6 @@ angular.module("myAdminApp", [
                 } else {
                     $scope.danger = true;
                     $timeout(function() {
-                        // 
                         $(".alert").fadeTo(500, 0).slideUp(500, function() {
                             $scope.danger = false;
                             $scope.errorMessage = "";
@@ -1370,19 +1267,14 @@ angular.module("myAdminApp", [
             function($scope, loginAdService, $location, $rootScope, $window, md5) {
                 $rootScope.loggedIn = false;
                 $rootScope.admin = true;
-                //console.log(1);
                 $scope.loginAd = function() {
                     $scope.request = {
                         userName: $scope.loginAd.username,
                         password: md5.createHash($scope.loginAd.password || '')
                     };
-                    // $scope.loginAd.password = md5.createHash($scope.loginAd.password || '');
-                    // console.log(md5.createHash($scope.loginAd.password || ''));
 
                     loginAdService.loginAd($scope.request)
                         .then(function(response) {
-                            console.log(response);
-
                             if (response.data.token != null) {
                                 sessionStorage.setItem('Admin-Data', response.data.token);
                                 sessionStorage.setItem('username', response.data.userName);
@@ -1392,17 +1284,13 @@ angular.module("myAdminApp", [
                                     sessionStorage.setItem('lecturersId', response.data.lecturers.id);
                                 }
                             }
-                            //alert($rootScope.loggedIn)
-                            // $location.path('/');
                             if (response.data.role == 'ADMIN') {
                                 window.location.href = $rootScope.clientAdd + '/admin';
                             } else if(response.data.role == 'LECTURERS'){
 
                                 window.location.href = $rootScope.clientAdd + '/lecturers';
                             }
-                            // window.location.href = 'admin.html';
                         }, function(error) {
-                            //console.log(error);
                             alert('dang nhap khong thanh cong');
                         })
                 };
@@ -1450,9 +1338,6 @@ angular.module("myAdminApp", [
                 }
                 $scope.getAllMessage = function(page) {
                     $scope.page = page;
-                    // if ($rootScope.messages == undefined) {
-                    //     // $rootScope.messages = [];
-                    // }
                     $rootScope.messages = [];
                     console.log($rootScope.initPage);
                     if ($rootScope.lastUpdated == undefined) {
@@ -1468,7 +1353,6 @@ angular.module("myAdminApp", [
                     }
                     messageService.getAllMessage($rootScope.initPage - 1, 20, $rootScope.lastUpdated)
                         .then(function(response) {
-                            console.log(response);
                             $rootScope.messagesCount = response.data.length;
                             angular.forEach(response.data.content, function(v) {
                                 $rootScope.messages.push(v);
@@ -1488,8 +1372,7 @@ angular.module("myAdminApp", [
                                         page: i,
                                         class: ""
                                     };
-                                }
-                                // console.log(i);                                
+                                }                              
                                 if ($scope.page == page) {
                                     $scope.nextPage = {
                                         class: "disabled",
@@ -1523,8 +1406,6 @@ angular.module("myAdminApp", [
                     $scope.page = page;
                     studentService.getAllStudent(page - 1, 10)
                         .then(function(response) {
-                            console.log(response);
-                            // $scope.allStudents = response.data;
                             $scope.allStudents = response.data.content;
                             $scope.pages = [];
                             var page = response.data.totalPages;
@@ -1539,8 +1420,7 @@ angular.module("myAdminApp", [
                                         page: i,
                                         class: ""
                                     };
-                                }
-                                // console.log(i);                                
+                                }                           
                                 if ($scope.page == page) {
                                     $scope.nextPage = {
                                         class: "disabled",
@@ -1573,7 +1453,6 @@ angular.module("myAdminApp", [
                         $scope.receiverName = message.senderName;
                         messageService.getOneMessage(message.id)
                             .then(function(response) {
-                                console.log(response.data);
                                 $rootScope.selectedMessage = response.data;
                             }, function(error) {
                                 content.log(error);
@@ -1586,16 +1465,13 @@ angular.module("myAdminApp", [
                     if (message.status == 'NEW') {
                         messageService.markMessageAsSeen(message.id)
                             .then(function() {
-                                // $rootScope.messagesCount--;
                                 message.status = "";
-                                // $scope.getNewMessage();
                             });
                     }
                 }
 
                 var handleFileSelect = function(evt) {
                     var file = evt.currentTarget.files[0];
-                    console.log(evt.currentTarget.files);
                     $scope.message.fileName = evt.currentTarget.files[0].name;
                     $scope.message.fileType = evt.currentTarget.files[0].name.split('.').pop();
                     var reader = new FileReader();
@@ -1611,22 +1487,11 @@ angular.module("myAdminApp", [
                 $rootScope.markMessageAsSeen = function(messageId) {
                     messageService.markMessageAsSeen(messageId)
                         .then(function() {
-                            // var index = $rootScope.newMessages.findIndex(x => x.id === messageId)
-                            // if (index != -1) {
-                            //     $rootScope.newMessages.splice(index, 1);
-                            //     $rootScope.messagesCount = $rootScope.newMessages.length;
-                            // } else {
-                            //     var index = $rootScope.newMessages.findIndex(x => x.parentId === messageId)
-                            //     if (index != -1) {
-                            //         $rootScope.newMessages.splice(index, 1);
-                            //         $rootScope.messagesCount = $rootScope.newMessages.length;
-                            //     }
-                            // }
+                            //
                         });
                 }
 
                 $scope.getLinkFile = function(attachFileAdd) {
-                    // attachFileAdd = "http://www.pdf995.com/samples/pdf.pdf";
                     $rootScope.modalFileLink = $sce.trustAs($sce.RESOURCE_URL, "https://docs.google.com/gview?url=" + $rootScope.clientAdd + attachFileAdd + "&embedded=true");
                 }
 
@@ -1635,26 +1500,20 @@ angular.module("myAdminApp", [
                 }
 
                 $scope.getLinkDownLoad = function(fileAdd) {
-                    // console.log($rootScope.clientAdd + fileAdd);
                     return $rootScope.clientAdd + fileAdd;
                 }
 
                 $scope.sendMessage = function() {
                     if ($scope.message.content != undefined) {
                         $scope.message.content = $scope.message.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
-                        // $scope.message.receiverName = receiverId;
-                        console.log($scope.message);
                         messageService.createMessage($scope.message)
                             .then(function() {
                                 $scope.message = {};
                                 new PNotify({
                                     title: 'Gửi tin nhắn thành công!',
-                                    // text: 'That thing that you were trying to do worked!',
                                     type: 'success',
                                     styling: 'bootstrap3'
                                 });
-                                // alert("ok");
-                                // $scope.alertSuccess("Your message has been sent", "");
                             }, function(error) {
                                 console.log(error);
                                 $scope.alertDanger("Error", "");
@@ -1668,18 +1527,11 @@ angular.module("myAdminApp", [
                         $scope.reply.content = $scope.reply.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
                         $scope.reply.receiverName = $scope.receiverName;
                         $scope.reply.messageId = $rootScope.selectedMessage.id;
-                        // console.log($scope.reply);
                         messageService.createMessage($scope.reply)
                             .then(function(response) {
-                                console.log(response.data);
                                 $scope.reply = {};
-                                // $scope.alertSuccess("Gửi tin nhắn thành công!", "");
                                 $rootScope.selectedMessage.messages.push(response.data);
                                 $rootScope.selectedMessage.lastUpdated = new Date().getTime();
-                                // alert("ok");
-                                // console.log($rootScope.selectedMessage.message);
-                                // $rootScope.selectedMessage.message.push(response.data);
-                                // location.reload();
                             }, function(error) {
                                 console.log(error);
                                 $scope.alertDanger(error.data.message, "");
@@ -1689,7 +1541,6 @@ angular.module("myAdminApp", [
 
 
                 $scope.confirmDelete = function(id) {
-                    console.log(id);
                     $scope.confirmDeleteId = id;
                 }
 
@@ -1697,7 +1548,6 @@ angular.module("myAdminApp", [
                     $scope.warningMessage = warning;
                     $scope.warning = true;
                     $timeout(function() {
-                        // 
                         $(".alert").fadeTo(500, 0).slideUp(500, function() {
                             $scope.warning = false;
                             $scope.warningMessage = "";
@@ -1717,7 +1567,6 @@ angular.module("myAdminApp", [
                     } else {
                         $scope.danger = true;
                         $timeout(function() {
-                            // 
                             $(".alert").fadeTo(500, 0).slideUp(500, function() {
                                 $scope.danger = false;
                                 $scope.errorMessage = "";
@@ -1755,7 +1604,6 @@ angular.module("myAdminApp", [
             $scope.getAllNotification = function(){
                 notificationService.getAllNotification()
                 .then(function(response){
-                    console.log(response);
                     $rootScope.AllNotifications = response.data;
                 }, function(error){
                     console.log(error);
@@ -1774,7 +1622,6 @@ angular.module("myAdminApp", [
                 $scope.partnersRole = [
                     { role: 'VIP_PARTNER' },
                     { role: 'NORMAL_PARTNER' }
-                    // {role:'OTHER'}
                 ];
                 $scope.post = {};
                 $scope.role = $scope.partnersRole[0];
@@ -1784,9 +1631,7 @@ angular.module("myAdminApp", [
                 $scope.search = "";
                 $scope.partner = {};
                 $scope.input = {};
-                // $rootScope.postType = 'Recruitment';
                 $rootScope.currentPageName = $state.current.name;
-                console.log($rootScope.currentPageName);
 
                 $scope.acceptPartner = function (){
                     $scope.listAcceptPartner = [];
@@ -1824,7 +1669,6 @@ angular.module("myAdminApp", [
                 $scope.getAllWaitpartner = function() {
                     partnerService.getAllWaitpartner()
                         .then(function(response) {
-                            console.log(response);
                             $scope.allWaitPartner = response.data;
                             angular.forEach($scope.allWaitPartner, function(partner){
                                 partner.checked = false;
@@ -1850,7 +1694,6 @@ angular.module("myAdminApp", [
 
                 $scope.editPartner = function(partner) {
                     $scope.Partner = partner;
-                    console.log(partner);
                 }
 
                 $scope.editPartnerInfo = function() {
@@ -1881,8 +1724,6 @@ angular.module("myAdminApp", [
                         })
                 }
 
-                // 
-
                 $scope.showFollow = function(follows) {
                     $scope.modelFollows = follows;
                 }
@@ -1890,26 +1731,18 @@ angular.module("myAdminApp", [
                 $scope.getAllFollows = function() {
                     partnerService.getAllFollows()
                         .then(function(response) {
-                            console.log(response.data);
                             $scope.allFollows = response.data;
-                            // angular.forEach($scope.allFollows, function(follow){
-                            //     follow.checked = false;
-                            // });
                         }, function(error) {
                             console.log(error);
                         })
                 }
 
                 $scope.showPartnerContact = function(partner) {
-                    alert(1);
-                    console.log(partner);
                     if (partner != "") {
                         $scope.partnerContacts = JSON.parse(partner);
                     } else {
                         $scope.partnerContacts = null;
                     }
-
-                    // console.log(JSON.parse(continent));
                 }
 
                 $scope.data = {}; //init variable
@@ -1945,30 +1778,20 @@ angular.module("myAdminApp", [
 
                 $scope.showPostModal = function(post) {
                     $scope.modalPost = post;
-                    console.log(post);
                 }
 
                 $scope.editPost = function(post) {
                     $scope.editPostModal = post;
-                    // $scope.ima = $rootScope.clientAdd + post.image;
-                    // $scope.editPostModal.describePost = post.describePost.replace(/<br\s*[\/]?>/g, '\r\n');
                 }
 
                 $scope.saveEditPost = function() {
-                    if ($scope.editIma == false) {
-
-                    } else {
-                        // $scope.request.image = $scope.ima.replace(/^data:image\/(png|jpeg);base64,/, "");
-                    }
                     if ($scope.editPostTimeModal.startDate != undefined) {
                         $scope.request.startDate = new Date($scope.editPostTimeModal.startDate).getTime() / 1000;
                     }
                     if ($scope.editPostTimeModal.expiryTime != undefined) {
                         $scope.request.expiryTime = new Date($scope.editPostTimeModal.expiryTime).getTime();
-                        // console.log($scope.request.expiryTime);
                     }
                     $scope.request.content = $scope.editPostModal.content;
-                    // $scope.request.describePost = $scope.editPostModal.describePost.replace(/(?:\r\n|\r|\n)/g, '<br />');
                     $scope.request.hashtagDTO = $scope.obj;
                     $scope.request.requiredNumber = $scope.editPostModal.requiredNumber;
                     $scope.request.title = $scope.editPostModal.title;
@@ -1977,7 +1800,6 @@ angular.module("myAdminApp", [
                         .then(function(response) {
                             $('#close_modal_edit_post').trigger('click');
                             $scope.alertSuccess("Sửa post thành công", "");
-                            // $scope.loadAllPost();
                         }, function(error) {
                             $('#close_modal_edit_post').trigger('click');
                             $scope.alertDanger("Có lỗi xảy ra, hãy thử lại!", "");
@@ -1989,7 +1811,6 @@ angular.module("myAdminApp", [
                     if ($scope.post.postType != "") {
                         if ($scope.tags != "" && $scope.tags != undefined) {
                             var array = $scope.tags.split(',');
-                            // var
                             $scope.obj = [];
                             for (var i = 0; i < array.length; i++) {
                                 $scope.obj.push({
@@ -2020,33 +1841,24 @@ angular.module("myAdminApp", [
 
                         }
                         $scope.request = {
-                            // image: $scope.ima.replace(/^data:image\/(png|jpeg);base64,/, ""),
                             content: $scope.post.content,
                             datePost: Date.now(),
-                            // describePost: $scope.post.describePost.replace(/(?:\r\n|\r|\n)/g, '<br />'),
                             hashtagDTO: $scope.obj,
                             partnerContactId: $scope.post.partnerContactId,
                             requiredNumber: $scope.post.requiredNumber,
                             title: $scope.post.title,
-                            // startDate: new Date($scope.post.startDate).getTime() / 1000,
                             expiryTime: new Date($scope.post.expiryTime).getTime(),
                             partnerContactDTO: $scope.post.partnerContactDTO,
                             partner: $scope.input.partner,
                             postType: $scope.post.postType
                         };
                         if ($scope.request.postType != undefined && $scope.partnerId != undefined) {
-
-                            console.log($scope.partnerId);
-                            console.log($scope.request);
                             partnerService.createPost($scope.partnerId, $scope.request)
                                 .then(function(response) {
-                                        // $('#close_create_post').trigger('click');
-                                        // alert()
                                         $scope.alertSuccess("Thêm post thành công", "");
                                         $scope.loadAllPost();
                                         $scope.Partner = undefined;
                                         $scope.post = {};
-                                        //console.log(response.data);
                                     },
                                     function(error) {
                                         console.log(error);
@@ -2062,19 +1874,12 @@ angular.module("myAdminApp", [
                     if ($stateParams.internshipTermId) {
                         partnerService.loadAllPostByInternshipTerm($stateParams.internshipTermId)
                             .then(function(response) {
-                                console.log(response);
                                 $scope.allPosts = response.data;
                             }, function(error) {
                                 console.log(error);
                             })
                     }
                 }
-
-                // $scope.changePostTypeAndGetPost = function(postType){
-                //     $scope.postType
-                // }
-
-
 
                 $scope.loadAllPost = function(postType, stateParams) {
                     if (stateParams != undefined) {
@@ -2083,20 +1888,15 @@ angular.module("myAdminApp", [
                     }
                     if ($stateParams.page) {
                         if (postType != undefined) {
-                            // $rootScope.postType = postType;
                             sessionStorage.setItem('postType', postType);
                             $rootScope.postType = postType;
                         }
-                        // sessionStorage.setItem('studentId', response.data.studentId);
                         if (sessionStorage['postType'] == undefined) {
-                            // $rootScope.postType = 'Recruitment';
                             sessionStorage.setItem('postType', 'Recruitment');
                         }
                         if ($rootScope.postType == undefined) {
                             $rootScope.postType = sessionStorage['postType'];
                         }
-                        // console.log($rootScope.postType);
-                        // alert($stateParams.page);
                         $scope.activePage = $stateParams.page;
                         partnerService.loadLatestPost($stateParams.page - 1, 15, sessionStorage['postType'])
                             .then(function(response) {
@@ -2114,8 +1914,7 @@ angular.module("myAdminApp", [
                                             page: i,
                                             class: ""
                                         };
-                                    }
-                                    // console.log(i);                                
+                                    }                              
                                     if ($stateParams.page == page) {
                                         $scope.nextPage = {
                                             class: "disabled",
@@ -2139,9 +1938,6 @@ angular.module("myAdminApp", [
                                         };
                                     }
                                 }
-                                // console.log($scope.previousPage);
-                                // console.log($scope.pages);
-                                console.log(response.data);
                             }, function(error) {
                                 console.log(error);
                             })
@@ -2151,7 +1947,6 @@ angular.module("myAdminApp", [
                 $scope.selectPartner = function(partner) {
                     if (partner != "" && partner != 'other') {
                         $scope.Partner = JSON.parse(partner);
-                        console.log($scope.Partner);
                     } else if (partner == 'other') {
                         $scope.input = {};
                     } else {
@@ -2160,7 +1955,6 @@ angular.module("myAdminApp", [
                 }
                 $scope.entry = '';
                 $scope.paginate = function() {
-                    // console.log($scope.entry);
                     if ($scope.entry != '') {
                         if ($scope.entry > $scope.totalItems) {
                             $scope.entryLimit = $scope.totalItems;
@@ -2199,7 +1993,6 @@ angular.module("myAdminApp", [
                 $scope.getFitPartner = function() {
                     partnerService.getFitPartner()
                         .then(function(response) {
-                            console.log(response);
                             $scope.fitPartners = response.data;
                             $scope.partners = response.data;
                             $scope.totalItems = response.data.length;
@@ -2223,7 +2016,6 @@ angular.module("myAdminApp", [
                     $scope.loadPartner = true;
                     partnerService.loadAllPartner()
                         .then(function(data) {
-                            console.log(data);
                             $scope.partners = data.data;
                             $scope.totalItems = data.data.length;
                             $scope.currentPage = 1;
@@ -2258,26 +2050,17 @@ angular.module("myAdminApp", [
 
                 $scope.deletePartnerContact = function(contactId) {
                     $('#close_modal_delete_partner_contact').trigger('click');
-                    // console.log($scope.partnerId);
                     partnerService.deletePartnerContact(contactId)
                         .then(function() {
                             $scope.alertSuccess("Xóa liên hệ thành công!", "successdelete_edit");
                             $('#tr_contact_' + contactId).remove();
-                            // console.log($scope.partnerId);
                             $scope.loadAllPartner();
                         }, function(error) {
                             $scope.alertDanger(error.data.message, "danger");
                         })
                 }
-                // contactName_{{contact.id}}
-                // email{{contact.id}}
-                // phone{{contact.id}
-                // skype{{contact.id}}
-                // about{{contact.id}}
+
                 $scope.editContact = function(contactId) {
-                    console.log(contactId);
-                    // $('#contact_' + contactId).html('<div class="col-md-4 col-sm-4 col-xs-6">' + 
-                    //     '<input type="text" name="country" class="form-control col-md-6" ng-model="' + contactName + '" required /></div>');
                     var contactName = $('#contactName_' + contactId).text();
                     $('#contactName_' + contactId).html('<input id="contactName_value_' + contactId + '" value="' + contactName + '" style="border-radius:3px; border: 1px solid;" ng-keydown="editContactEnter($event, ' + contactId + ')"/>');
 
@@ -2290,18 +2073,12 @@ angular.module("myAdminApp", [
                     var skype = $('#skype_' + contactId).text();
                     $('#skype_' + contactId).html('<input id="skype_value_' + contactId + '" value="' + skype + '" style="border-radius:3px; border: 1px solid; width: 70%;" ng-keydown="editContactEnter($event, ' + contactId + ')"/>');
 
-                    // var about = $('#about' + contactId).text();
-                    // $('#about_' + contactId).html('<input id="about_value_' + contactId + '" value="' + about + '" style="border-radius:3px; border: 1px solid;"/>');
-
                     $('#edit_contact_' + contactId).hide();
                     $('#save_edit_contact_' + contactId).show();
                 }
 
                 $scope.editContactEnter = function($event, contactId) {
-                    console.log(contactId);
                     if ($event.keyCode == 13) {
-                        // data.editEmail = data.stt;
-                        console.log(contactId);
                         $('#save_edit_contact_' + contactId).trigger('click');
                     }
                 }
@@ -2311,14 +2088,12 @@ angular.module("myAdminApp", [
                     var email = $('#email_value_' + contactId).val();
                     var phone = $('#phone_value_' + contactId).val();
                     var skype = $('#skype_value_' + contactId).val();
-                    // console.log(v);
                     $scope.request = {
                         contactName: contactName,
                         email: email,
                         phone: phone,
                         skype: skype
                     }
-                    // console.log($scope.request);
                     partnerService.editPartnerContact(contactId, $scope.request)
                         .then(function() {
                             $('#edit_contact_' + contactId).show();
@@ -2328,7 +2103,6 @@ angular.module("myAdminApp", [
                             $('#phone_' + contactId).html(phone);
                             $('#skype_' + contactId).html(skype);
                             $scope.alertSuccess('Sửa liên hệ thành công!', 'successdelete_edit');
-                            // $scope.getAllContinent();
                         }, function(error) {
                             console.log(error);
                             $scope.alertDanger(error.data.message, 'danger');
@@ -2336,13 +2110,11 @@ angular.module("myAdminApp", [
                 }
 
                 $scope.confirmDelete = function(id, name) {
-                    console.log(id);
                     $scope.confirmDeleteId = id;
                     $scope.confirmDeleteName = name;
                 }
 
                 $scope.createPartner = function() {
-                    // console.log($scope.role);
                     $scope.request = {
                         userName: $scope.partner.userName,
                         password: md5.createHash($scope.partner.password || ''),
@@ -2350,13 +2122,11 @@ angular.module("myAdminApp", [
                     };
                     $scope.partner.password = md5.createHash($scope.partner.password || '');
                     $scope.partner.role = $scope.role.role;
-                    console.log($scope.partner);
                     partnerService.createPartner($scope.partner)
                         .then(function(data) {
                             $scope.partner = {};
                             $scope.alertSuccess("Tạo đối tác thành công!", "")
                             $scope.loadAllPartner();
-                            // $scope.loadAllPartner();
                         }, function(error) {
                             $scope.alertDanger("Có lỗi khi tạo đối tác, hãy reload trang và thử lại!", "")
                             $scope.error = error;
@@ -2386,12 +2156,9 @@ angular.module("myAdminApp", [
                 $scope.showPartner = function(data) {
                     $rootScope.partner = data;
                     $location.path('/admin/partner/' + data.partnerId);
-                    // console.log($rootScope.partner);
                 };
 
                 $scope.setPartnerInfo = function() {
-                    // alert(1);
-                    // console.log($rootScope.partner);
                     $scope.partnerData = [];
                     $scope.partnerData.partnerName = $rootScope.partner.partnerName;
                     if ($rootScope.partner.status == "A") {
@@ -2399,10 +2166,8 @@ angular.module("myAdminApp", [
                     } else {
                         $scope.partnerData.status = false;
                     }
-                    // $scope.partnerData.status = $rootScope.partner.status;
                     $scope.partnerData.userId = $rootScope.partner.userId;
                     $scope.partnerData.partnerId = $rootScope.partner.partnerId;
-                    // delete $rootScope.partner;
                 };
 
                 $scope.changeStatus = function(userId) {
@@ -2430,7 +2195,6 @@ angular.module("myAdminApp", [
                     $scope.partnerName = partnerName;
                     partnerService.loadPartnerContact(partnerId)
                         .then(function(response) {
-                            console.log(response.data);
                             $scope.partnerContacts = response.data;
                         }, function(error) {
                             console.log(error);
@@ -2438,22 +2202,17 @@ angular.module("myAdminApp", [
                 };
 
                 $scope.loadAllPartnerPost = function(partnerId) {
-                    // if(partnerId != '')
-
                     $scope.allPartnerPost = [];
                     partnerService.loadAllPartnerPost(partnerId)
                         .then(function(response) {
                             $scope.show_post = false;
                             $scope.allPartnerPost = response.data;
                             angular.forEach($scope.allPartnerPost, function(post) {
-                                // console.log(post.id);
                                 partnerService.getFollowOfPost(post.id)
                                     .then(function(respone) {
                                         post.follow = respone.data.length;
-                                        // console.log(respone.data.length);
                                     })
                             });
-                            // console.log($scope.allPost);
                         }, function(error) {
                             console.log(error);
                         })
@@ -2473,7 +2232,6 @@ angular.module("myAdminApp", [
                     } else {
                         partnerService.loadPartner($stateParams.partnerId)
                             .then(function(respone) {
-                                console.log(respone.data);
                                 $scope.partnerData = [];
                                 $scope.partnerData.partnerName = respone.data.partnerName;
                                 if (respone.data.status == "A") {
@@ -2481,7 +2239,6 @@ angular.module("myAdminApp", [
                                 } else {
                                     $scope.partnerData.status = false;
                                 }
-                                // $scope.partnerData.status = $rootScope.partner.status;
                                 $scope.partnerData.userId = respone.data.userId;
                                 $scope.partnerData.partnerId = respone.data.partnerId;
                             })
@@ -2492,7 +2249,6 @@ angular.module("myAdminApp", [
                     $scope.warningMessage = warning;
                     $scope.warning = true;
                     $timeout(function() {
-                        // 
                         $(".alert").fadeTo(500, 0).slideUp(500, function() {
                             $scope.warning = false;
                             $scope.warningMessage = "";
@@ -2512,7 +2268,6 @@ angular.module("myAdminApp", [
                     } else {
                         $scope.danger = true;
                         $timeout(function() {
-                            // 
                             $(".alert").fadeTo(500, 0).slideUp(500, function() {
                                 $scope.danger = false;
                                 $scope.errorMessage = "";
@@ -2551,9 +2306,7 @@ angular.module("myAdminApp", [
 
             function(lecturersService, internService, $scope, studentService, messageService, $timeout, $location, $rootScope,
                 filterFilter, $stateParams, orderBy, $state, partnerService, $compile) {
-                // alert(1);
                 $rootScope.currentPageName = $state.current.name;
-                console.log($rootScope.currentPage);
                 $scope.st = {};
                 $scope.st.infoBySchool = {};
                 $scope.st.infoBySchool.studentClass = "";
@@ -2566,8 +2319,6 @@ angular.module("myAdminApp", [
                 $scope.postTitle = "";
                 $scope.type = null;
                 $scope.downloadTypeLecturers = "";
-                // $scope.type = {};
-                // $scope.type.lecturers = null;
                 $scope.new = function(type) {
                     var count = 0;
                     $scope.currentPage = 1;
@@ -2617,7 +2368,6 @@ angular.module("myAdminApp", [
                     $scope.currentPage = 1;
                     var count = 0;
                     if (postType != 'noFollow' && postType != "") {
-                        // $scope.totalItems = filterFilter($scope.allFollows, { postTitle: $scope.postTitle }).length;
                         angular.forEach($scope.allFollows, function(v) {
                             if (v.postTitle == postType) {
                                 count++;
@@ -2643,9 +2393,7 @@ angular.module("myAdminApp", [
                 }
 
                 $scope.emptyOrNull = function(item) {
-
                     if ($scope.type == "true") {
-
                         return (item.lecturers === null)
                     } else {
                         return !(item.lecturers === null)
@@ -2655,7 +2403,7 @@ angular.module("myAdminApp", [
                 $scope.getCountStudentNoFollow = function() {
                     studentService.getCountStudentNoFollow()
                         .then(function(response) {
-                            console.log(response.data);
+                            //
                         }, function(error) {
                             console.log(error);
                         })
@@ -2664,7 +2412,6 @@ angular.module("myAdminApp", [
                 $scope.getStudentNoInternshipTerm = function() {
                     studentService.getStudentNoInternshipTerm()
                         .then(function(response) {
-                            console.log(response);
                             $scope.noFollows = response.data;
                             $scope.totalItemsnoFollows = response.data.length;
                             $scope.currentPagenoFollows = 1;
@@ -2702,7 +2449,6 @@ angular.module("myAdminApp", [
                             $('#delete_student').trigger('click');
                             $('#close_modal_delete_intern').trigger('click');
                             $scope.alertSuccess("Xóa internship thành công!", "");
-                            // $scope.getAllStudentByInternshipTerm();
                             $('.internship_' + studentId).text("");
                         }, function(error) {
                             $scope.alertDanger(error.data.message, "danger_edit");
@@ -2716,7 +2462,6 @@ angular.module("myAdminApp", [
                     if ($scope.intern.partnerNotFitId != 'other') {
                         $scope.intern.partnerId = $scope.intern.partnerNotFitId;
                     }
-                    console.log($scope.intern);
                     internService.createIntern($scope.intern)
                         .then(function(response) {
                             $scope.alertSuccess("Tạo internship thành công!", "");
@@ -2732,7 +2477,6 @@ angular.module("myAdminApp", [
 
                 $scope.entry = '';
                 $scope.paginate = function() {
-                    // console.log($scope.entry);
                     if ($scope.entry != '') {
                         if ($scope.entry > $scope.totalItems) {
                             $scope.entryLimit = $scope.totalItems;
@@ -2750,7 +2494,6 @@ angular.module("myAdminApp", [
                 }
                 $scope.entrynoFollows = '';
                 $scope.paginatenoFollows = function() {
-                    // console.log($scope.entry);
                     if ($scope.entrynoFollows != '') {
                         if ($scope.entrynoFollows > $scope.totalItemsnoFollows) {
                             $scope.entryLimitnoFollows = $scope.totalItemsnoFollows;
@@ -2770,7 +2513,6 @@ angular.module("myAdminApp", [
                 $scope.getAllStudentNoLecturers = function() {
                     internService.getAllStudentNoLecturers()
                         .then(function(response) {
-                            console.log(response.data);
                             $scope.propertyName = '-infoBySchool.studentClass';
                             $scope.reverse = true;
                             $scope.allStudentNoLecturers = response.data;
@@ -2797,7 +2539,6 @@ angular.module("myAdminApp", [
                 $scope.getAllStudentNoLecturersLastInternshipTerm = function() {
                     internService.getAllStudentNoLecturersLastInternshipTerm()
                         .then(function(response) {
-                            console.log(response.data);
                             $scope.propertyName = '-infoBySchool.studentClass';
                             $scope.reverse = true;
                             $scope.allStudentNoLecturers = response.data;
@@ -2824,7 +2565,6 @@ angular.module("myAdminApp", [
                 $scope.getNameAndIdOfLecturers = function() {
                     internService.getNameAndIdOfLecturers()
                         .then(function(response) {
-                            console.log(response);
                             $scope.nameAndIdOfLecturers = response.data;
                         }, function(error) {
                             console.log(error);
@@ -2834,7 +2574,6 @@ angular.module("myAdminApp", [
                 $scope.getNameAndIdOfPartnersFit = function() {
                     internService.getNameAndIdOfPartners("true")
                         .then(function(response) {
-                            console.log(response);
                             $scope.nameAndIdPartnersFit = response.data;
                         }, function(error) {
                             console.log(error);
@@ -2844,7 +2583,6 @@ angular.module("myAdminApp", [
                 $scope.getNameAndIdOfPartners = function() {
                     internService.getNameAndIdOfPartners("false")
                         .then(function(response) {
-                            console.log(response);
                             $scope.nameAndIdPartners = response.data;
                         }, function(error) {
                             console.log(error);
@@ -2854,10 +2592,8 @@ angular.module("myAdminApp", [
                 $scope.saveScore = function(id) {
                     var diem = $('#input_diem_' + id).val();
                     if (!isNaN(diem)) {
-                        console.log($('#input_diem_' + id).val());
                         var index = $scope.allStudents.findIndex(x => x.id === id);
                         if (index != -1) {
-                            console.log($scope.allStudents[index].internship.id)
                             studentService.addScore($scope.allStudents[index].internship.id, diem)
                                 .then(function() {
                                     $('#diem_thuc_tap_' + id).html(diem);
@@ -2897,7 +2633,6 @@ angular.module("myAdminApp", [
                 $scope.getInternOfLecturers = function() {
                     internService.getInternOfLecturers($rootScope.lecturersId)
                         .then(function(response) {
-                            console.log(response.data)
                             $scope.allStudents = response.data;
                         }, function(error) {
                             console.log(error);
@@ -2905,9 +2640,6 @@ angular.module("myAdminApp", [
                 }
 
                 $scope.addLecturersStudent = function() {
-                    // console.log($scope.listStudent);
-                    // console.log($scope.lecturers.lecturersId);
-
                     internService.addLecturersStudent($scope.listStudent, $scope.lecturers.lecturersId)
                         .then(function() {
                             $scope.alertSuccess("Thêm giảng viên thành công!", "");
@@ -2939,12 +2671,6 @@ angular.module("myAdminApp", [
                     } else {
                         var index = $scope.listStudent.findIndex(x => x.id === student.id)
                         $scope.listStudent.splice(index, 1);
-                        // for (i = 0; i <= $scope.listStudent.length; i++) {
-                        //     if (student.id == $scope.listStudent[i].id) {
-                        //         $scope.listStudent.splice(i, 1);
-                        //         break;
-                        //     }
-                        // }
 
                     }
                 }
@@ -2965,13 +2691,11 @@ angular.module("myAdminApp", [
                             })
                         }
                     });
-                    console.log($scope.listStudent);
                 }
 
                 $scope.getAllInternshipTerm = function() {
                     internService.getAllInternshipTerm()
                         .then(function(response) {
-                            console.log(response.data);
                             $scope.allInternshipTerm = response.data;
                             $rootScope.lastInternshipTermId = $scope.allInternshipTerm[$scope.allInternshipTerm.length - 1].id;
                         }, function(error) {
@@ -2982,7 +2706,6 @@ angular.module("myAdminApp", [
                 $scope.getAllPost = function() {
                     partnerService.loadAllPostByInternshipTerm(1)
                         .then(function(response) {
-                            console.log(response);
                             $scope.allposts = response.data;
                         })
                 }
@@ -2992,8 +2715,6 @@ angular.module("myAdminApp", [
                 }
 
                 $scope.asd = function() {
-                    console.log($scope.listStudent);
-                    console.log($scope.postId);
                     angular.forEach($scope.listStudent, function(student) {
                         studentService.addFollow(student.emailVNU, $scope.postId)
                             .then(function() {
@@ -3008,12 +2729,9 @@ angular.module("myAdminApp", [
                     if ($stateParams.internshipTermId == undefined && lastInternshipTerm == undefined) {
                         internService.getAllInternshipTerm()
                             .then(function(response) {
-                                console.log(response.data);
                                 $scope.allInternshipTerm = response.data;
                                 length = $scope.allInternshipTerm.length - 1;
                                 $scope.lastInternTermId = $scope.allInternshipTerm[length].id;
-                                // $scope.allInternshipTerm[length].checked = true;
-                                console.log($scope.lastInternTermId);
                                 internService.getAllStudentByInternshipTerm($scope.lastInternTermId)
                                     .then(function(response) {
                                         $scope.allStudents = response.data;
@@ -3068,7 +2786,6 @@ angular.module("myAdminApp", [
                                         $scope.noOfPages = Math.ceil($scope.totalItems / $scope.entryLimit);
                                         $scope.currentPage = 1;
                                     }, true);
-                                    console.log(response);
                                 }, function(error) {
                                     console.log(error);
                                 })
@@ -3078,7 +2795,6 @@ angular.module("myAdminApp", [
                         internService.getAllStudentByInternshipTerm($stateParams.internshipTermId)
                             .then(function(response) {
                                 $scope.allStudents = response.data;
-                                console.log(response);
                             }, function(error) {
                                 console.log(error);
                             })
@@ -3090,7 +2806,6 @@ angular.module("myAdminApp", [
                     internService.getAllInternshipByInternshipTerm($stateParams.internshipTermId)
                         .then(function(response) {
                             $scope.allInterns = response.data;
-                            console.log(response);
                         }, function(error) {
                             console.log(error);
                         })
@@ -3115,7 +2830,7 @@ angular.module("myAdminApp", [
                 };
 
                 $scope.alertDate = function() {
-                    console.log($scope.input.startDate);
+                    //
                 }
 
                 $scope.createInternshipTerm = function() {
@@ -3129,7 +2844,6 @@ angular.module("myAdminApp", [
                                 $scope.input.startDate = "";
                                 $scope.getAllInternshipTerm();
                             }, function(error) {
-                                // console.log(error);
                                 $scope.alertDanger(error.message, "")
                             });
                     }
@@ -3152,11 +2866,6 @@ angular.module("myAdminApp", [
                 };
 
                 $scope.editInternshipTerm = function(startDate, endDate, internshipTermId) {
-                    // $('#nation_' + nationId).html('<div class="col-md-4 col-sm-4 col-xs-6">' + 
-                    //     '<input type="text" name="country" class="form-control col-md-6" ng-model="' + nationName + '" required /></div>');
-                    // var internshipTermName = $('#internshipTerm_' + internshipTermId).text();
-                    // console.log(startDate);
-                    // $('#internshipTerm_' + internshipTermId).val(startDate);
                     startDate = new Date();
                     $('#internshipTerm_' + internshipTermId).val(startDate);
                     var curr_date = startDate.getDate();
@@ -3166,12 +2875,9 @@ angular.module("myAdminApp", [
                 }
 
                 $scope.saveEditinternshipTerm = function(internshipTerm) {
-                    // console.log(nationId);
-                    // console.log(internshipTerm);
                     internService.editInternshipTerm(internshipTerm)
                         .then(function() {
                             $scope.alertSuccess("Sửa kì thực tập thành công!", "");
-                            // $scope.load
                         }, function(error) {
                             $scope.alertDanger(error.data.message, "");
                         })
@@ -3219,8 +2925,6 @@ angular.module("myAdminApp", [
                         }
                     }
                     if (xlf.addEventListener) xlf.addEventListener('change', handleFile, false);
-
-                    // input_dom_element.addEventListener('change', handleFile, false);
                 }
 
                 $scope.convertStudent2 = function() {
@@ -3247,13 +2951,9 @@ angular.module("myAdminApp", [
                         }
                     }
                     if (xlf.addEventListener) xlf.addEventListener('change', handleFile, false);
-
-                    // input_dom_element.addEventListener('change', handleFile, false);
                 }
 
                 $scope.checkStudent = function() {
-                    console.log(635);
-                    // console.log($rootScope.excelStudent1);
                     $scope.student1 = $rootScope.excelStudent1;
                     $scope.student2 = $rootScope.excelStudent2;
                     var stt = 1;
@@ -3273,24 +2973,12 @@ angular.module("myAdminApp", [
                         }
                     })
                     angular.forEach($scope.student2, function(student2) {
-                        // angular.forEach($rootScope.excelStudent1, function(student1){
-                        // console.log(student2);
                         student2.stt = stt;
                         var index = $scope.student1.findIndex(x => x.fullName === student2.fullName)
                         if (index != -1) {
                             student2.checked = true;
                             $scope.student1[index].checked = true;
                         }
-                        // for (i = 0; i <= $scope.student1.length; i++) {
-                        //     if ($scope.student1[i] != undefined && student2 != undefined) {
-                        //         if ($scope.student1[i].fullName.toLowerCase().indexOf(student2.fullName.toLowerCase()) != -1) {
-                        //             student2.checked = true;
-                        //             break;
-                        //         }
-                        //     } else if($scope.student1[i] == undefined){
-                        //         console.log(i);
-                        //     }
-                        // }
                         stt++;
                     });
 
@@ -3302,7 +2990,6 @@ angular.module("myAdminApp", [
                     });
                     angular.forEach($scope.student1, function(student) {
                         if (student.checked != true) {
-                            // console.log(student.stt + "-" + student.fullName);
                             $('#student_1_' + student.stt).css('background-color', '#f0ad4e');
                         }
                     });
@@ -3325,12 +3012,6 @@ angular.module("myAdminApp", [
                                 var first_sheet_name = workbook.SheetNames[0];
                                 /* DO SOMETHING WITH workbook HERE */
                                 var worksheet = workbook.Sheets[first_sheet_name];
-                                // STT}}</td>
-                                // class}}</td>
-                                // studentCode}}</
-                                // emailvnu}}</td>
-                                // lecturers}}</td
-                                // lecturersEmail}
                                 worksheet['A1'].w = "stt";
                                 worksheet['B1'].w = "fullName";
                                 worksheet['C1'].w = "class";
@@ -3343,8 +3024,6 @@ angular.module("myAdminApp", [
                         }
                     }
                     if (xlf.addEventListener) xlf.addEventListener('change', handleFile, false);
-
-                    // input_dom_element.addEventListener('change', handleFile, false);
                 }
 
                 $scope.editEmail = function($event, data) {
@@ -3359,14 +3038,11 @@ angular.module("myAdminApp", [
                 }
 
                 $scope.checkData = function() {
-                    // alert(1);
-                    console.log($rootScope.excel);
                     if ($scope.noLecturers == undefined) {
                         $scope.noLecturers = $rootScope.excel;
                     }
                     if ($scope.error != undefined) {
                         if ($scope.errors.length != 0) {
-                            console.log($scope.errors);
                             angular.forEach($scope.errors, function(v) {
                                 $('#email_' + v.stt).css('background-color', '');
                                 $('#lecturers_email_' + v.stt).css('background-color', '');
@@ -3422,7 +3098,6 @@ angular.module("myAdminApp", [
                 $scope.getAllStudentClass = function() {
                     studentService.getAllStudentClass()
                         .then(function(response) {
-                            console.log(response);
                             $scope.allStudentClass = response.data;
                         }, function(error) {
                             console.log(error);
@@ -3433,9 +3108,6 @@ angular.module("myAdminApp", [
                     if (downloadType == "") {
                         $scope.st.infoBySchool.studentClass = "";
                     }
-                    // if (downloadTypeLecturers == "") {
-                    //     $scope.downloadTypeLecturers = "";
-                    // }
                 }
 
                 $scope.changedownload = function(downloadType) {
@@ -3445,10 +3117,7 @@ angular.module("myAdminApp", [
                 }
 
                 $scope.exportDataNoLecturers = function() {
-                    // $scope.exportDataExcel = $scope.allContract;
                     var count = 0;
-                    console.log($scope.allStudents.length);
-                    // alasql('SELECT * INTO XLSX("xlsx.xlsx",{headers:true}) FROM ?', [$scope.exportDataExcel]);
                     var wb = {};
                     wb.Sheets = {};
                     wb.SheetNames = [];
@@ -3464,7 +3133,6 @@ angular.module("myAdminApp", [
                     wscols[7] = { wpx: 200 };
                     var ws = { '!ref': "A1:H" + ($scope.allStudents.length + 1) };
                     ws['!cols'] = wscols;
-                    // ws['A1'] = { h: "test", r: "<t>test</t>", t: "s", v: "test", w: "test" }
                     var i = 2;
                     ws['A1'] = {
                         h: "STT",
@@ -3672,7 +3340,6 @@ angular.module("myAdminApp", [
                                 i++;
                                 count++;
                                 stt++;
-                                // console.log(excel);
                             }
                         } else if ($scope.downloadTypeLecturers == "noLecturers") {
                             if (student.infoBySchool.studentClass.toLowerCase().indexOf($scope.st.infoBySchool.studentClass.toLowerCase()) != -1 || $scope.st.infoBySchool.studentClass == "") {
@@ -3771,7 +3438,6 @@ angular.module("myAdminApp", [
                                     i++;
                                     count++;
                                     stt++;
-                                    // console.log(excel);
                                 }
                             }
                         } else if ($scope.downloadTypeLecturers == "lecturers") {
@@ -3900,7 +3566,6 @@ angular.module("myAdminApp", [
                                     count++;
                                     stt++;
                                 }
-                                // console.log(excel);
                             }
                         }
 
@@ -3930,11 +3595,7 @@ angular.module("myAdminApp", [
                 };
 
                 $scope.exportDataRegistration = function() {
-                    console.log($scope.allFollows);
-                    // $scope.exportDataExcel = $scope.allContract;
                     var count = 0;
-                    // console.log($scope.exportDataExcel);
-                    // alasql('SELECT * INTO XLSX("xlsx.xlsx",{headers:true}) FROM ?', [$scope.exportDataExcel]);
                     var wb = {};
                     wb.Sheets = {};
                     wb.SheetNames = [];
@@ -3950,7 +3611,6 @@ angular.module("myAdminApp", [
                     wscols[6] = { wpx: 150 };
                     var ws = { '!ref': "A1:H" + ($scope.allFollows.length + 1) };
                     ws['!cols'] = wscols;
-                    // ws['A1'] = { h: "test", r: "<t>test</t>", t: "s", v: "test", w: "test" }
                     var i = 2;
                     ws['A1'] = {
                         h: "Student Name",
@@ -4146,7 +3806,6 @@ angular.module("myAdminApp", [
                                     }
                                     i++;
                                     count++;
-                                    // console.log(excel);
                                 }
                             }
                         } else if (follow.partnerName.toLowerCase().indexOf($scope.search.toLowerCase()) != -1 || $scope.search == "") {
@@ -4284,7 +3943,6 @@ angular.module("myAdminApp", [
                             }
                             i++;
                             count++;
-                            // console.log(excel);
                         }
 
                     });
@@ -4334,8 +3992,6 @@ angular.module("myAdminApp", [
                         $scope.message.title = "Thông báo được nhận thực tập";
                         $scope.message.content = "Chúc mừng bạn có thể chọn " + $scope.partnerName + "để làm thực tập";
                     }
-
-                    console.log($scope.listStudent);
                 }
 
                 $scope.createFailInterviewMessage = function() {
@@ -4354,7 +4010,6 @@ angular.module("myAdminApp", [
                             $scope.alertDanger(error.data.message, "");
                             $('#close_send_fail_interview_message').trigger('click');
                         })
-                    // console.log($scope.listStudent);
                 }
 
                 $scope.sendMessage = function() {
@@ -4370,7 +4025,6 @@ angular.module("myAdminApp", [
                         }, function(error) {
                             console.log(error);
                         })
-                    // console.log($scope.listStudent);
                 }
 
                 $scope.selectStudent = false;
@@ -4405,12 +4059,11 @@ angular.module("myAdminApp", [
                             $rootScope.listStudentOfLecturers.push(student);
                         }
                     })
-                    console.log($rootScope.listStudentOfLecturers);
                 }
 
                 $scope.checkChecked = function() {
                     angular.forEach($scope.allFollows, function(follow) {
-                        console.log(follow.studentName + follow.checked);
+                        //
                     });
                 }
 
@@ -4433,64 +4086,13 @@ angular.module("myAdminApp", [
                                 $scope.noOfPages = Math.ceil($scope.totalItems / $scope.entryLimit);
                                 $scope.currentPage = 1;
                             }, true);
-                            // angular.forEach($scope.allFollows, function(follow){
-                            //     follow.checked = false;
-                            // });
                         }, function(error) {
                             console.log(error);
                         })
                 }
 
-
-                // function locdau(str) {
-                //     str = str.toLowerCase();
-                //     str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
-                //     str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
-                //     str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
-                //     str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
-                //     str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
-                //     str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
-                //     str = str.replace(/đ/g, "d");
-                //     return str;
-                // }
-
-                // $scope.getUserNameAndEmailVnu = function() {
-                //     studentService.getUserNameAndEmailVnu(1)
-                //         .then(function(response) {
-                //             // console.log(response.data);
-                //             console.log(response.data);
-
-                //             angular.forEach(response.data, function(user) {
-                //                 userName = locdau(user.userName);
-                //                 var array = userName.split(' ');
-                //                 var first = "";
-                //                 var mid = "";
-                //                 var last = "";
-                //                 // console.log(array);
-                //                 // var
-                //                 for (var i = array.length - 1; i >= 0; i--) {
-                //                     // console.log(array[i]);
-                //                     if (i == (array.length - 1)) {
-                //                         first = array[i];
-                //                     } else if (i == 0) {
-
-                //                         mid = array[i].split('')[0];
-                //                     } else {
-                //                         last = last + array[i].split('')[0];
-                //                     }
-                //                 }
-                //                 userName = first + mid + last + '_' + user.studentCode;
-                //                 console.log(userName);
-                //             })
-
-                //         })
-                // }
-
                 $scope.getStudentByStudentCode = function() {
-                    // if (isNaN($scope.search)){
                     $scope.search = {};
-                    // } else {
-                    // $scope.search.studentCode = 020;
                     studentService.getStudentByStudentCode($scope.search)
                         .then(function(response) {
                             $scope.allStudents = response.data;
@@ -4498,7 +4100,6 @@ angular.module("myAdminApp", [
                             console.log(error);
                             $scope.alertWarning("Không tìm có kết quả!", "");
                         })
-                    // }
                 }
 
                 $scope.deleteStudent = function(studentId) {
@@ -4514,7 +4115,6 @@ angular.module("myAdminApp", [
                 }
 
                 $scope.confirmDelete = function(id, name, internId) {
-                    console.log(id);
                     $scope.confirmDeleteId = id;
                     $scope.confirmDeleteInternId = internId;
                     $scope.confirmDeleteName = name;
@@ -4523,8 +4123,6 @@ angular.module("myAdminApp", [
                     $scope.page = page;
                     studentService.getAllStudent(page - 1, 20)
                         .then(function(response) {
-                            console.log(response);
-                            // $scope.allStudents = response.data;
                             $scope.allStudents = response.data.content;
                             $scope.pages = [];
                             var page = response.data.totalPages;
@@ -4539,8 +4137,7 @@ angular.module("myAdminApp", [
                                         page: i,
                                         class: ""
                                     };
-                                }
-                                // console.log(i);                                
+                                }                             
                                 if ($scope.page == page) {
                                     $scope.nextPage = {
                                         class: "disabled",
@@ -4571,7 +4168,6 @@ angular.module("myAdminApp", [
 
 
                 $scope.saveOne = function() {
-                    // console.log(data);
                     $scope.req = {
                         studentCode: $scope.student.studentCode,
                         major: $scope.student.major,
@@ -4584,29 +4180,17 @@ angular.module("myAdminApp", [
                     };
                     studentService.saveData($scope.req, $scope.student.id)
                         .then(function(response) {
-                            // console.log(response);
-                            // console.log($scope.req);
-                            // $window.location.href = $rootScope.clientAdd + '/admin.html#/student';
-                            //arr.checked = false;
-                            // data.checked = false;
                             $('#close_modal_edit').trigger('click');
                             $scope.alertSuccess("Chỉnh sửa thông tin sinh viên thành công!", "");
                         }, function(error) {
-                            // alert("sua thong tin khong thanh cong");
                             $scope.alertDanger("Chỉnh sửa thông tin không thành công!", "danger");
                             console.log(error);
-                            //$scope.error = error;
                         })
                 };
 
                 $scope.saveData_ = function() {
-                    //alert(id);
                     angular.forEach($scope.response, function(arr) {
-                        //alert(arr.id);
-                        //alert(arr.checked);
                         if (arr.checked == true) {
-                            //alert(arr.studentCode);
-                            //alert(arr.checked);
                             studentService.saveData(arr, arr.id)
                                 .then(function() {
                                     arr.checked = false;
@@ -4622,9 +4206,6 @@ angular.module("myAdminApp", [
                 function showInput_(data, id) {
                     $('.' + data + '_' + id).after('<input type="text" value="' + data + '" ng-blur="hideInput(' + data + ',' + id + ')" ' +
                         'id="input_' + data + '_' + id + '">');
-                    //$('#'+data+'_'+id).remove();
-                } //khi du lieu null thi chua tu sinh ra id, doc den day thi nghi tiep ... da doc den day, va da nghi ra :))
-                //dung truong id chu ko phai la id la value
                 $scope.hideInput = function(data, id) {
                     $('#input_' + data + '_' + id).remove();
                 };
@@ -4634,14 +4215,12 @@ angular.module("myAdminApp", [
                     } else
                     if (v.checked == true) {
                         v.checked = false;
-                        // alert(v.checked);
                     }
                 };
                 $scope.onChange = function(id) {
                     angular.forEach($scope.response, function(v) {
                         if (v.id == id && v.checked != true) {
                             v.checked = true;
-                            //$('#checkBox_'+id).after('<p ng-click="'+saveData_+'">Luu</p>');
                         }
                     });
                 };
@@ -4672,17 +4251,7 @@ angular.module("myAdminApp", [
                     })
                 };
                 $scope.edit = function(data) {
-                    // console.log(data);
                     $scope.student = data;
-                    // if (data.status == "A") {
-                    //     $scope.student.status = true;
-                    // } else {
-                    //     $scope.student.status = false;
-                    // }
-                    // $location.path('/admin/student/edit');
-
-                    // console.log(data);
-                    // alert(data);
                 };
 
 
@@ -4694,7 +4263,6 @@ angular.module("myAdminApp", [
                             } else {
                                 $scope.student.status = true;
                             }
-                            // alert("user status changed");
                             $scope.alertSuccess("Chuyển trạng thái thành công!", "successdelete_edit");
                         }, function(error) {
                             $scope.alertDanger("Có lỗi xảy ra, hãy reload lại trang và thử lại!", "danger");
@@ -4719,26 +4287,15 @@ angular.module("myAdminApp", [
                                 /* DO SOMETHING WITH workbook HERE */
                                 var worksheet = workbook.Sheets[first_sheet_name];
                                 $rootScope.excel = XLSX.utils.sheet_to_json(worksheet);
-
-                                if ($rootScope.excel) {
-                                    // console.log($rootScope.excel);
-
-                                    //$scope.setExcelTable();
-                                    // console.log(XLSX.utils.sheet_to_json(worksheet));
-                                }
                             };
                             reader.readAsBinaryString(f);
                         }
                         $scope.setExcelTable();
                     }
                     if (xlf.addEventListener) xlf.addEventListener('change', handleFile, false);
-
-                    // input_dom_element.addEventListener('change', handleFile, false);
                 }
 
                 $scope.setExcelTable = function() {
-                    // alert(1);
-                    // console.log($rootScope.excel);
                     $scope.excelTable = $rootScope.excel;
                     angular.forEach($scope.excelTable, function(student) {
                         student.emailvnu = student.emailvnu.replace(/(?:@vnu.edu.vn|@gmail.com)/g, '');
@@ -4750,7 +4307,6 @@ angular.module("myAdminApp", [
                     $scope.warningMessage = warning;
                     $scope.warning = true;
                     $timeout(function() {
-                        // 
                         $(".alert").fadeTo(500, 0).slideUp(500, function() {
                             $scope.warning = false;
                             $scope.warningMessage = "";
@@ -4770,7 +4326,6 @@ angular.module("myAdminApp", [
                     } else {
                         $scope.danger = true;
                         $timeout(function() {
-                            // 
                             $(".alert").fadeTo(500, 0).slideUp(500, function() {
                                 $scope.danger = false;
                                 $scope.errorMessage = "";
@@ -4815,13 +4370,6 @@ angular.module("myAdminApp", [
              logout: logout,
              getAllUser: getAllUser
          };
-         // function loginAd(data) {
-         //     return $http({
-         //         url: $rootScope.serverAdd + '/admin/login',
-         //         method: 'POST',
-         //         data: data
-         //     })
-         // }
          function getAllNotification() {
              return $http({
                  url: $rootScope.serverAdd + '/notification/all/admin',
@@ -4871,7 +4419,6 @@ angular.module('services').factory('httpRequestInterceptor', function ($rootScop
 angular.module('services').config(function ($httpProvider) {
     $httpProvider.interceptors.push('httpRequestInterceptor');
 });
-//http://stackoverflow.com/questions/29944997/angularjs-http-custom-header-for-all-requests
 
  (function(){
     'use strict';

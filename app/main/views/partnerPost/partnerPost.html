@@ -11,7 +11,6 @@
             <ul>
                 <li class="dropdown active button-right" style="list-style-type: none;">
                     <a class="dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
-                    <!-- <a class="dropdown-toggle" data-toggle="dropdown" ng-if="newNoti == false">New Notification <span class="caret"></span></a> -->
                     <ul class="dropdown-menu" role="menu">
                         <li class="cursor">
                             <a ng-click="deleteAPost(post.id)" confirmation-needed="Really Delete?">
@@ -28,10 +27,8 @@
             </ul>
         </div>
         <div class="single-post-info">
-            <!-- <i class="glyphicon glyphicon-time"></i>{{post.datePost}}<a href="#" title="Show Comments"><i class="glyphicon glyphicon-comment"></i>11</a> -->
         </div>
         <div class="single-post-info" ng-bind-html="post.content | limitTo:300">
-            <!--<p>{{post.content | limitTo:50}}</p>-->
         </div>
     </div>
 </div>

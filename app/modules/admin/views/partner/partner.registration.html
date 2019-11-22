@@ -3,14 +3,6 @@
         <h3>Danh sách sinh viên {{internshipName}}</h3>
     </div>
     <div class="title_right">
-        <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
-            <!-- <div class="input-group">
-                <input type="text" class="form-control" placeholder="Search for...">
-                <span class="input-group-btn">
-                      <button class="btn btn-default" type="button">Go!</button>
-                    </span>
-            </div> -->
-        </div>
     </div>
 </div>
 <div class="clearfix"></div>
@@ -18,20 +10,19 @@
     <div class="col-md-12 col-sm-12 col-xs-12" ng-init="getAllWaitpartner()">
         <div class="x_panel">
             <div class="x_title">
-                <ul class="nav navbar-right panel_toolbox">
-                    <li class="dropdown">
-                        <a class="dropdown-toggle cursor" data-toggle="dropdown" role="button" aria-expanded="false">Options <i class="fa fa-wrench"></i></a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li>
-                                <a ng-click="acceptPartner()" class="cursor"> Chấp nhận công ty </a>
-                            </li>
-                            <li>
-                                <a class="cursor" ng-click="notAcceptPartner()"> Không chấp nhận </a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-                <div class="clearfix"></div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <!---->
+                    </div>
+                    <div class="col-sm-6" style="display:flex;justify-content:flex-end;">
+                        <button ng-click="acceptPartner()" class="cursor c-btn c-accept-btn">
+                            <i class="fa fa-check" aria-hidden="true"></i>&nbsp;Chấp nhận công ty
+                        </button>
+                        <button ng-click="notAcceptPartner()" class="cursor c-btn c-decline-btn">
+                            <i class="fa fa-times" aria-hidden="true"></i>&nbsp;Không chấp nhận
+                        </button>
+                    </div>
+                </div>
             </div>
             <div class="x_content">
                 <div class="alert alert-warning" ng-if="warning">
@@ -67,8 +58,6 @@
                                 <th class="column-title">Email</th>
                                 <th class="column-title">Số điện thoại</th>
                                 <th class="column-title"></th>
-                                <!-- <th class="column-title no-link last"><span class="nobr">Action</span> -->
-                                <!-- </th> -->
                             </tr>
                         </thead>
                         <tbody>
@@ -79,12 +68,6 @@
                                 <td class=" ">{{partner.address}}</td>
                                 <td class=" ">{{partner.email}}</td>
                                 <td class=" ">{{partner.phone}}</td>
-                                <!-- <td ng-if="data.status == 'A' || data.status == true">
-                                    Active
-                                </td>
-                                <td ng-if="data.status == 'D' || data.status == false">
-                                    Deactive
-                                </td> -->
                                 <td class="a-center ">
                                     <input type="checkbox" id="checkbox_{{student.id}}" class="flat" name="table_records" ng-click="partner.checked = !partner.checked; addPartner(partner);" ng-checked="partner.checked">
                                 </td>

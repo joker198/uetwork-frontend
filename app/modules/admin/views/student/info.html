@@ -2,21 +2,15 @@
     <table class="table table-striped jambo_table bulk_action">
         <thead>
             <tr class="headings">
-                <!-- <th> -->
-                <!-- <input type="checkbox" id="check-all" class="flat"> -->
-                <!-- </th> -->
                 <th class="column-title">Sinh viên </th>
                 <th class="column-title">Email vnu </th>
                 <th class="column-title">Giảng viên hướng dẫn</th>
                 <th class="column-title">Hình thức thực tập</th>
                 <th class="column-title">Tên công ty/Tên thầy NCKH</th>
-                <!-- <th class="column-title">Sửa </th> -->
                 <th class="column-title">Xóa </th>
                 <th class="column-title">
                     <input type="checkbox" class="flat" name="table_records" ng-click="selectAllStudent()">
                 </th>
-                <!-- <th class="column-title no-link last"><span class="nobr">Action</span> -->
-                <!-- </th> -->
             </tr>
         </thead>
         <tbody>
@@ -26,11 +20,6 @@
                 <td class=" ">{{intern.lecturers.fullName}}</td>
                 <td class=" ">{{intern.internship.internshipType}}</td>
                 <td class=" ">{{intern.internship.partnerName}}</td>
-                <!-- <td class=" ">
-                                    <a data-toggle="modal" data-target="#edit_partnerInfo" ng-click="editPartner(partner)">
-                                        <i class="fa fa-edit cursor"></i>
-                                    </a>
-                                </td> -->
                 <td class=" "><a class="cursor" data-toggle="modal" data-target="#delete_intern" ng-click="comfirmDelete(intern.internship.id)"><i class="fa fa-trash"></i></a></td>
                 <td class="a-center ">
                     <input type="checkbox" class="flat" name="table_records" ng-click="intern.checked = !intern.checked" ng-checked="intern.checked">

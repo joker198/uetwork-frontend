@@ -11,17 +11,15 @@
 <div class="row">
     <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
-            <div class="x_title">
-                <!-- <h2>Châu lục</h2> -->
-                <ul class="nav navbar-right panel_toolbox">
-                    <li class="dropdown">
-                        <a class="dropdown-toggle cursor" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a data-toggle="collapse" data-target="#add_student_class" class="cursor"> Thêm lớp khóa học </a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
+            <div class="x_title" style="height:50px">
+                <div style="width:100%;display:flex">
+                    <div class="col-sm-8"></div>
+                    <div class="col-sm-4" style="display:flex;justify-content:flex-end;">
+                        <strong data-toggle="collapse" data-target="#add_student_class" class="cursor" style="padding:8px;border:2px solid;border-radius:4px">
+                            <i class="fa fa-plus"></i>&nbsp;Thêm lớp khóa học
+                        </strong>
+                    </div>
+                </div>
                 <div class="clearfix"></div>
             </div>
             <div class="x_content">
@@ -59,15 +57,10 @@
                     <table class="table table-striped jambo_table bulk_action">
                         <thead>
                             <tr class="headings">
-                                <!-- <th> -->
-                                <!-- <input type="checkbox" id="check-all" class="flat"> -->
-                                <!-- </th> -->
                                 <th class="column-title">Lớp khóa học</th>
                                 <th class="column-title">Ngành</th>
                                 <th>Sửa</th>
                                 <th>Xóa</th>
-                                <!-- <th class="column-title no-link last"><span class="nobr">Action</span> -->
-                                <!-- </th> -->
                             </tr>
                         </thead>
                         <tbody>
@@ -84,14 +77,6 @@
                             </tr>
                         </tbody>
                     </table>
-                    <!-- <div class="col-md-6">
-                        <p class="input-group">
-                            <input type="text" class="form-control" uib-datepicker-popup ng-model="dt" is-open="popup2.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" ng-click="open2()" />
-                            <span class="input-group-btn">
-            <button type="button" class="btn btn-default" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
-          </span>
-                        </p>
-                    </div> -->
                 </div>
                 <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true" id="delete_delete_class">
                     <div class="modal-dialog modal-sm">

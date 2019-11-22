@@ -30,9 +30,6 @@
                             <li>
                                 <a ng-click="editScore()" class="cursor"> Sửa điểm thực tập </a>
                             </li>
-                            <!-- <li>
-                                <a data-toggle="modal" data-target="#write_multiple_message" class="cursor" ng-click="multipleMes = true; createListStudent(allStudents)"> Gửi tin nhắn cho sinh viên </a>
-                            </li> -->
                         </ul>
                     </li>
                 </ul>
@@ -53,9 +50,6 @@
                     <table class="table table-striped jambo_table bulk_action">
                         <thead>
                             <tr class="headings">
-                                <!-- <th> -->
-                                <!-- <input type="checkbox" id="check-all" class="flat"> -->
-                                <!-- </th> -->
                                 <th class="column-title">Sinh viên </th>
                                 <th class="column-title">Email vnu </th>
                                 <th class="column-title">Hình thức thực tập</th>
@@ -65,8 +59,6 @@
                                 <th class="column-title">
                                     <input type="checkbox" class="flat" name="table_records" ng-click="selectAllStudent(allStudents)">
                                 </th>
-                                <!-- <th class="column-title no-link last"><span class="nobr">Action</span> -->
-                                <!-- </th> -->
                             </tr>
                         </thead>
                         <tbody>
@@ -88,11 +80,6 @@
                                 <td class=" " id="diem_thuc_tap_{{intern.student.id}}" ng-if="intern.score != null">
                                     {{intern.score}}
                                 </td>
-                                <!-- <td class=" ">
-                                    <a data-toggle="modal" data-target="#edit_partnerInfo" ng-click="editPartner(partner)">
-                                        <i class="fa fa-edit cursor"></i>
-                                    </a>
-                                </td> -->
                                 <td class="a-center ">
                                     <input type="checkbox" class="flat" name="table_records" ng-click="intern.checked = !intern.checked" ng-checked="intern.checked">
                                 </td>
@@ -100,23 +87,6 @@
                         </tbody>
                     </table>
                 </div>
-                <!-- end partner contact -->
-                <!-- delete intern -->
-                <!-- <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true" id="delete_intern">
-                    <div class="modal-dialog modal-sm">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" id="close_modal_delete_intern"><span aria-hidden="true">×</span>
-                                </button>
-                                <h4 class="modal-title" id="myModalLabel">Bạn có chắc muốn xóa internship này</h4>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
-                                <button type="button" class="btn btn-primary" ng-click="deleteIntern(comfirmDeleteId)">Xóa</button>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
                 <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" id="view_file_report">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
@@ -148,9 +118,6 @@
                                     <div class="form-group">
                                         <label class="control-label col-md-1 col-sm-3 col-xs-12" for="first-name">Tới:
                                         </label>
-                                        <!-- <div class="col-md-10 col-sm-10 col-xs-12">
-                                            <input style="border-radius: 2px;" type="text" class="form-control col-md-12 col-xs-12" rows="5" ng-model="message.receiverName">
-                                        </div> -->
                                         <div class="col-md-11 col-sm-12 col-xs-12">
                                             <label class="btn btn-default" ng-repeat="student in listStudentOfLecturers">
                                                 {{student.fullName}}
@@ -164,12 +131,6 @@
                                             <input style="border-radius: 2px;" type="text" class="form-control col-md-12 col-xs-12" rows="5" ng-model="message.title">
                                         </div>
                                     </div>
-                                    <!-- <div class="form-group">
-                                            <label class="control-label col-md-1 col-sm-3 col-xs-12" ></i> <b>File:</b></label>
-                                            <div class="col-md-10 col-sm-10 col-xs-12">
-                                            <input class="form-control col-md-12 col-xs-12" rows="5" id="baocao" type="file" placeholder="" accept=".doc, .docx">
-                                            </div>
-                                        </div> -->
                                     <div class="form-group">
                                         <label class="control-label col-md-1 col-sm-3 col-xs-12" for="last-name">Nội dung:
                                         </label>
@@ -180,7 +141,6 @@
                                 </form>
                             </div>
                             <div class="modal-footer">
-                                <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button> -->
                                 <button type="button" class="btn btn-primary" ng-click="sendMessage()">Gửi</button>
                             </div>
                         </div>

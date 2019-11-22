@@ -20,11 +20,13 @@
 <div class="row">
     <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
-            <div class="x_title">
+            <div class="x_title" style="padding:0px;margin:unset;">
                 <ul class="nav navbar-right panel_toolbox">
                     <li class="dropdown">
-                        <a class="dropdown-toggle cursor" data-toggle="dropdown" role="button" aria-expanded="false">Options <i class="fa fa-wrench"></i></a>
-                        <ul class="dropdown-menu" role="menu">
+                        <button class="dropdown-toggle cursor c-btn c-dropdown-btn" data-toggle="dropdown" role="button" aria-expanded="false">
+                            Options&nbsp;<i class="fa fa-chevron-down" aria-hidden="true"></i>
+                        </button>
+                        <ul class="dropdown-menu" style="top: 34px" role="menu">
                             <li><a data-toggle="collapse" data-target="#create_partner" class="cursor"> Thêm Đối Tác </a>
                             </li>
                             <li><a data-toggle="collapse" data-target="#create_partner_contact" class="cursor"> Thêm Liên hệ cho đối tác </a>
@@ -32,9 +34,6 @@
                         </ul>
                     </li>
                 </ul>
-                <!-- <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Số dòng trên trang" ng-model="entry" ng-change="paginate()" style="border-radius:25px; border: 1px solid rgba(221,226,232,.49); box-shadow: inset 0 1px 0 rgba(0,0,0,.075); width: 72%;">
-                </div> -->
                 <div class="clearfix"></div>
             </div>
             <div class="x_content">
@@ -147,7 +146,6 @@
                                     {{partner.partnerName}}
                                 </option>
                             </select>
-                            <!-- <p ng-if="input.continentId >= 0" ng-init="init()">{{input.continentId}}</p> -->
                         </div>
                     </div>
                     <div class="form-group">
@@ -227,18 +225,16 @@
                                 </td>
                                 <td class=" ">
                                     <a data-toggle="modal" class="cursor" data-target="#show_partner_post" ng-click="loadAllPartnerPost(partner.id)">
-                                        <!-- <i class="fa fa-edit cursor"></i> -->
                                         Chi tiết
                                     </a>
                                 </td>
                                 <td class=" ">
                                     <a data-toggle="modal" class="cursor" data-target="#show_partner_internship" ng-click="">
-                                        <!-- <i class="fa fa-edit cursor"></i> -->
                                         Chi tiết
                                     </a>
                                 </td>
                                 <td class=" ">
-                                    <a class=" ">{{partner.status}}</a>
+                                    <a class=" ">{{partner.status == 1 ? "Đang chờ" : (partner.status == 2 ? "Đã chấp nhận" : "Đã từ chối")}}</a>
                                 </td>
                                 <td class=" ">
                                     <a data-toggle="modal" data-target="#edit_partnerInfo" ng-click="editPartner(partner)">

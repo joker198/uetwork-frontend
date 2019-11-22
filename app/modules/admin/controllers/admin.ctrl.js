@@ -1,5 +1,4 @@
 (function() {
-    // var app = angular.module("myApp",[]);
     angular.module('myAdminApp')
         .controller('adminCtrl', ['$scope', '$rootScope', '$location', '$window', 'adminService',
             'loginAdService', 'filterFilter', '$http', '$timeout', 'md5', '$state', '$stateParams',
