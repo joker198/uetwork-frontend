@@ -1,7 +1,7 @@
 <div class="page-title" ng-init="getAllStudentByInternshipTerm()">
-    <!-- <div class="title_right" ng-init="getNameAndIdOfLecturers()">
+    <div class="title_right" ng-init="getNameAndIdOfLecturers()">
         {{ nameAndIdOfLecturers.statusText }}
-    </div> -->
+    </div>
 </div>
 <div class="clearfix"></div>
 <div class="row" ng-init="">
@@ -212,7 +212,7 @@
                                 <td class=" ">{{student.student.infoBySchool.studentName}}</td>
                                 <td class=" ">{{student.student.infoBySchool.studentCode}}</td>
                                 <td class=" ">{{student.student.infoBySchool.emailvnu}}</td>
-                                <td class=" ">{{student.student.infoBySchool.grade}}{{student.student.infoBySchool.studentClass}}</td>
+                                <td class=" ">{{student.student.infoBySchool.grade}} {{student.student.infoBySchool.studentClass}}</td>
                                 <td class=" " id="lecturers_{{student.id}}">
                                     <p ng-show="student.edit == false">{{student.lecturers.fullName}}</p>
                                     <angucomplete-alt id="findLecturers_{{student.id}}" placeholder="{{student.lecturers.fullName}}" pause="100" selected-object="student.selectedLecturers" local-data="nameAndIdOfLecturers" search-fields="lecturersName" title-field="lecturersName" minlength="1" input-class="form-control edit-input" ng-show="student.edit == true" />
