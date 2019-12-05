@@ -89,3 +89,45 @@
 	width: 32px;
 	height: 32px;
 }
+.c-select-box {
+	padding: 8px 15px;
+    background-color: unset;
+    font-weight: 600;
+	height: 35px;
+	max-width: 200px;
+	margin-left: 5px;
+	margin-right: 5px;
+	box-shadow: 0px 0px 5px grey!important;
+}
+.c-simple-btn {
+	border: none;
+	background-color:#26B99A;
+	padding:8px 15px;
+	font-weight: 600;
+	color: #fff;
+}
+.c-d-flex {
+	display: flex;
+}
+.c-vertical-center {
+	align-items: center;
+}
+.c-text-larger {
+	font-size: larger;
+}
+.check-btn {
+	border: none;
+	background-color: unset;
+	margin: unset;
+	padding: 5px 15px;
+	font-weight: 600;
+}
+.check-btn.active {
+	color: #1abb9c;
+}
+.check-btn.remove {
+	color: #f74642;
+}
+.d-none {
+	display: none;
+}

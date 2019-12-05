@@ -9,6 +9,7 @@
                 $rootScope.currentPageName = $state.current.name;
                 $scope.st = {};
                 $scope.st.infoBySchool = {};
+                $scope.st.infoBySchool.lectureName = "";
                 $scope.st.infoBySchool.studentClass = "";
                 $scope.studentInfoBySchool = [];
                 $scope.entry = '';
@@ -163,8 +164,6 @@
                             }, true);
                         })
                 }
-
-
 
                 $scope.removeLecturers = function(studentId) {
                     studentService.removeLecturers(studentId)
@@ -1292,12 +1291,17 @@
                         w: "Công ty đã trúng"
                     };
                     var stt = 1;
+                    console.log($scope.st.infoBySchool.lectureName);
+                    console.log($scope.allStudents);
+                    let chosenStudentClass = $scope.st.infoBySchool.studentClass;
                     angular.forEach($scope.allStudents, function(student) {
-                        if (student.student.infoBySchool.studentClass == null) {
-                            student.student.infoBySchool.studentClass = "";
+                        let studentClass = student.student.infoBySchool.studentClass;
+                        if (studentClass == null) {
+                            studentClass = "";
                         }
+                        let indexStudentClass = studentClass.toLowerCase().indexOf(chosenStudentClass.toLowerCase());
                         if ($scope.downloadTypeLecturers == "") {
-                            if (student.student.infoBySchool.studentClass.toLowerCase().indexOf($scope.st.infoBySchool.studentClass.toLowerCase()) != -1 || $scope.st.infoBySchool.studentClass == "") {
+                            if ( indexStudentClass != -1 || chosenStudentClass == "") {
                                 ws['A' + i] = {
                                     h: stt,
                                     r: stt,
@@ -1324,18 +1328,18 @@
                                         }
                                     }
                                 };
-                                if (student.student.infoBySchool.studentClass == null) {
-                                    student.student.infoBySchool.studentClass = "";
+                                if (studentClass == null) {
+                                    studentClass = "";
                                 }
                                 if (student.student.infoBySchool.grade == null) {
                                     student.student.infoBySchool.grade = "";
                                 }
                                 ws['C' + i] = {
-                                    h: student.student.infoBySchool.grade + student.student.infoBySchool.studentClass,
-                                    r: student.student.infoBySchool.grade + student.student.infoBySchool.studentClass,
+                                    h: student.student.infoBySchool.grade + studentClass,
+                                    r: student.student.infoBySchool.grade + studentClass,
                                     t: "s",
-                                    v: student.student.infoBySchool.grade + student.student.infoBySchool.studentClass,
-                                    w: student.student.infoBySchool.grade + student.student.infoBySchool.studentClass,
+                                    v: student.student.infoBySchool.grade + studentClass,
+                                    w: student.student.infoBySchool.grade + studentClass,
                                     s: {
                                         alignment: {
                                             wrapText: true,
@@ -1432,7 +1436,6 @@
                                     };
                                 }
                                 if (student.follows != null && student.follows != undefined) {
-                                    // student.follows.forEach
                                     var pName = " ";
                                     angular.forEach(student.follows, function(follow) {
                                         if (follow.status == "PASS") {
@@ -1454,13 +1457,12 @@
                                         }
                                     };
                                 }
-
                                 i++;
                                 count++;
                                 stt++;
                             }
                         } else if ($scope.downloadTypeLecturers == "noLecturers") {
-                            if (student.student.infoBySchool.studentClass.toLowerCase().indexOf($scope.st.infoBySchool.studentClass.toLowerCase()) != -1 || $scope.st.infoBySchool.studentClass == "") {
+                            if ( indexStudentClass != -1 || chosenStudentClass == "") {
                                 if (student.lecturers == null) {
                                     ws['A' + i] = {
                                         h: stt,
@@ -1488,18 +1490,18 @@
                                             }
                                         }
                                     };
-                                    if (student.student.infoBySchool.studentClass == null) {
-                                        student.student.infoBySchool.studentClass = "";
+                                    if (studentClass == null) {
+                                        studentClass = "";
                                     }
                                     if (student.student.infoBySchool.grade == null) {
                                         student.student.infoBySchool.grade = "";
                                     }
                                     ws['C' + i] = {
-                                        h: student.student.infoBySchool.grade + student.student.infoBySchool.studentClass,
-                                        r: student.student.infoBySchool.grade + student.student.infoBySchool.studentClass,
+                                        h: student.student.infoBySchool.grade + studentClass,
+                                        r: student.student.infoBySchool.grade + studentClass,
                                         t: "s",
-                                        v: student.student.infoBySchool.grade + student.student.infoBySchool.studentClass,
-                                        w: student.student.infoBySchool.grade + student.student.infoBySchool.studentClass,
+                                        v: student.student.infoBySchool.grade + studentClass,
+                                        w: student.student.infoBySchool.grade + studentClass,
                                         s: {
                                             alignment: {
                                                 wrapText: true,
@@ -1507,7 +1509,6 @@
                                             }
                                         }
                                     };
-
                                     ws['D' + i] = {
                                         h: student.student.infoBySchool.emailvnu,
                                         r: student.student.infoBySchool.emailvnu,
@@ -1594,8 +1595,8 @@
                                     stt++;
                                 }
                             }
-                        } else if ($scope.downloadTypeLecturers == "lecturers") {
-                            if (student.student.infoBySchool.studentClass.toLowerCase().indexOf($scope.st.infoBySchool.studentClass.toLowerCase()) != -1 || $scope.st.infoBySchool.studentClass == "") {
+                        } else if ($scope.downloadTypeLecturers == "hasLecturers") {
+                            if ( indexStudentClass != -1|| chosenStudentClass == "" ) {
                                 if (student.lecturers != null) {
                                     ws['A' + i] = {
                                         h: stt,
@@ -1623,18 +1624,18 @@
                                             }
                                         }
                                     };
-                                    if (student.student.infoBySchool.studentClass == null) {
-                                        student.student.infoBySchool.studentClass = "";
+                                    if (studentClass == null) {
+                                        studentClass = "";
                                     }
                                     if (student.student.infoBySchool.grade == null) {
                                         student.student.infoBySchool.grade = "";
                                     }
                                     ws['C' + i] = {
-                                        h: student.student.infoBySchool.grade + student.student.infoBySchool.studentClass,
-                                        r: student.student.infoBySchool.grade + student.student.infoBySchool.studentClass,
+                                        h: student.student.infoBySchool.grade + studentClass,
+                                        r: student.student.infoBySchool.grade + studentClass,
                                         t: "s",
-                                        v: student.student.infoBySchool.grade + student.student.infoBySchool.studentClass,
-                                        w: student.student.infoBySchool.grade + student.student.infoBySchool.studentClass,
+                                        v: student.student.infoBySchool.grade + studentClass,
+                                        w: student.student.infoBySchool.grade + studentClass,
                                         s: {
                                             alignment: {
                                                 wrapText: true,
@@ -1773,13 +1774,13 @@
                     if (count == 0) {
                         $scope.alertWarning("Tên lớp không trùng!", 5000);
                     } else {
-                        if ($scope.st.infoBySchool.studentClass == "") {
+                        if (chosenStudentClass == "") {
                             saveAs(new Blob([s2ab(wbout)], { type: "" }), "Student List - All.xlsx")
                         } else {
-                            saveAs(new Blob([s2ab(wbout)], { type: "" }), "Registration List - " + $scope.st.infoBySchool.studentClass + ".xlsx");
+                            saveAs(new Blob([s2ab(wbout)], { type: "" }), "Registration List - " + chosenStudentClass + ".xlsx");
                         }
                         $scope.alertSuccess("Xuất danh sách thành công!", "");
-                        $scope.st.infoBySchool.studentClass = "";
+                        chosenStudentClass = "";
                     }
                 };
 
@@ -2360,8 +2361,6 @@
                     }
                 };
 
-
-
                 $scope.createListStudentToSendMessage = function(status) {
                     $scope.listStudent = [];
                     angular.forEach($scope.allFollows, function(follow) {
@@ -2546,6 +2545,7 @@
                     $scope.confirmDeleteInternId = internId;
                     $scope.confirmDeleteName = name;
                 }
+
                 $scope.getAllStudent = function(page) {
                     $scope.page = page;
                     studentService.getAllStudent(page - 1, 20)
@@ -2591,8 +2591,6 @@
                             }
                         })
                 }
-
-
 
                 $scope.saveOne = function() {
                     $scope.req = {

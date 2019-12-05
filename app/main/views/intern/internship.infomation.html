@@ -1,15 +1,13 @@
 <div class="section blog-posts-wrapper">
     <div class="container">
-        <div class="row" ng-init="getCurrentInternshipOfInternshipTerm()">
-            <div class="col-md-8 col-sm-8">
+        <div class="row" style="display: flex;justify-content: center;" ng-init="getCurrentInternshipOfInternshipTerm()">
+            <div class="col-md-12">
                 <div class="blog-post">
                     <div class="post-title">
                     </div>
                     <div class="post-summary">
                         <h3>
                             Thực tập chuyên ngành đợt {{internship.internshipTerm.term}} năm {{internship.internshipTerm.year}}
-                            
-
                             <button ng-click="createInternship()" ng-if="internship.id == 0" class="btn pull-right">Đăng ký</button>
                             <button data-toggle="modal" data-target="#unregist_internship" ng-if="internship.id != 0" class="btn pull-right">Hủy đăng ký</button>
                         </h3>
@@ -57,7 +55,6 @@
                     <thead>
                         <tr>
                             <th>Tên đơn vị đã đăng ký </th>
-                            <!-- <th>Post</th> -->
                             <th>Trạng thái</th>
                             <th></th>
                         </tr>
@@ -65,7 +62,6 @@
                     <tbody>
                         <tr ng-repeat="follow in internship.follows">
                             <th>{{follow.partnerName}}</th>
-                            <!-- <td><a href="/#/post/{{follow.postId}}">{{follow.postTitle}}</a></td> -->
                             <th>{{follow.status}}</th>
                             <th>
                                 <button class="btn" ng-click="unfollow(follow.postId, 'unregist_internship', postTitle, $index)">Hủy đăng ký</button>

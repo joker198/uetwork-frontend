@@ -13,11 +13,6 @@
                     <li><a ui-sref=".inbox">Inbox <span ng-if="messagesCount != 0">({{messagesCount}})</span></a></li>
                     <li ng-if="username == 'tu58' || username == 'nam_58' || username == 'khanhnh_58'"><a ui-sref=".write-message">Write Message</a></li>
                 </ul>
-                <!-- <h4>Activity</h4> -->
-                <!-- <ul> -->
-                <!-- <li><a href="#">Job Enroll</a></li> -->
-                <!-- <li><a href="#">Job Interest</a></li> -->
-                <!-- </ul> -->
             </div>
             <div ui-view></div>
             <!-- End Sidebar -->
@@ -32,7 +27,6 @@
                 <div style="text-align: center;" ng-if="modalFileLink != undefined && modalFileLink != null">
                     <iframe src="{{modalFileLink}}" style="width:100%; height:85vh;" frameborder="0"></iframe>
                 </div>
-                <!-- {{modalFileLink}} -->
             </div>
         </div>
     </div>

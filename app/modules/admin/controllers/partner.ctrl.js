@@ -2,9 +2,9 @@
     "use strict";
     var app = angular.module("partner", []);
     angular.module('partner')
-        .controller('partnerCtrl', ['filterFilter', '$window', '$scope', 'partnerService', 'studentService', '$location', '$rootScope',
+        .controller('partnerCtrl', ['filterFilter', '$window', '$scope', 'partnerService', 'studentService', 'internService', '$location', '$rootScope',
             '$timeout', '$stateParams', 'messageService', 'md5', '$state',
-            function(filterFilter, $window, $scope, partnerService, studentService, $location, $rootScope, $timeout, $stateParams, messageService, md5, $state) {
+            function(filterFilter, $window, $scope, partnerService, studentService, internService, $location, $rootScope, $timeout, $stateParams, messageService, md5, $state) {
                 $rootScope.currentPageName = $state.current.name;
                 $scope.loadPartner = true;
                 $scope.partnersRole = [
@@ -20,6 +20,96 @@
                 $scope.partner = {};
                 $scope.input = {};
                 $rootScope.currentPageName = $state.current.name;
+
+                $scope.createRecruitList = function() {
+                    let listPartners = [];
+                    let checkBoxs = document.querySelectorAll('.checkbox-item');
+                    angular.forEach(checkBoxs, function (checkBox) {
+                        if (checkBox.checked) {
+                            listPartners.push(checkBox.getAttribute('data-id'));
+                        }
+                    });
+                    if (listPartners.length == 0) {
+                        return true;
+                    }
+                    partnerService.createRecruitList({
+                        internshipTerm: document.querySelector('#internship-term').value,
+                        partnerIds: listPartners
+                    }).then(function (response) {
+                        $scope.partners = response.data;
+                    }, function (error) {
+                        console.log(error);
+                    });
+                }
+
+                $scope.getValidTerms = function () {
+                    partnerService.getValidTerms()
+                        .then(function (response) {
+                            $scope.internshipTerms = response.data;
+                            $scope.isTstartDate = $scope.timeToDate();
+                            $scope.isTendDate = $scope.timeToDate($scope.internshipTerms[0].endDate);
+                        }, function (error) {
+                            console.log(error);
+                        });
+                }
+
+                $scope.updateDateRange = function () {
+                    let index = document.querySelector('#is-term').selectedIndex;
+                    $scope.isTendDate = $scope.timeToDate($scope.internshipTerms[index-1].endDate);
+                }
+
+                $scope.timeToDate = function (time = null) {
+                    let date;
+                    if (time === null) {
+                        date = new Date();
+                    } else {
+                        date = new Date(time);
+                    }
+                    let day = date.getDate();
+                    day = day < 10 ? `0${day}` : day;
+                    let month = date.getMonth() + 1;
+                    month = month < 10 ? `0${month}` : month;
+                    let year = date.getFullYear();
+                    return `${year}-${month}-${day}`;
+                }
+
+                $scope.getWaitRecruitPartner = function (termId) {
+                    partnerService.getWaitRecruitPartner(termId)
+                        .then(function (response){
+                            $scope.partners = response.data;
+                        },function (error) {
+                            console.log(error);
+                        });
+                }
+                $scope.getAcceptedRecruitPartner = function () {
+                    let termId = document.querySelector('#is-term').value;
+                    partnerService.getAcceptedRecruitPartner(termId)
+                        .then(function (response) {
+                            $scope.partners = response.data;
+                        }, function (error) {
+                            console.log(error);
+                        });
+                }
+
+                $scope.check = function(id) {
+                    document.querySelector('.partner-'+id).checked = true;
+                    document.querySelector('#active-'+id).classList.add('d-none');
+                    document.querySelector('#remove-'+id).classList.remove('d-none');
+                }
+                $scope.uncheck = function(id) {
+                    document.querySelector('.partner-'+id).checked = false;
+                    document.querySelector('#active-'+id).classList.remove('d-none');
+                    document.querySelector('#remove-'+id).classList.add('d-none');
+                }
+                $scope.getIntershipTerm = function()
+                {
+                    internService.getAllInternshipTerm()
+                        .then(function (respone) {
+                            $scope.internshipTerms = respone.data;
+                        }, function (error) {
+                            console.log(error);
+                        });
+                }
 
                 $scope.acceptPartner = function() {
                     $scope.listAcceptPartner = [];

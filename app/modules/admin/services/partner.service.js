@@ -33,9 +33,48 @@
             getAllWaitpartner: getAllWaitpartner,
             acceptPartner: acceptPartner,
             findPartnerByContactID: findPartnerByContactID,
-            findPartnerByPostID: findPartnerByPostID
+            findPartnerByPostID: findPartnerByPostID,
+            createRecruitList: createRecruitList,
+            getAcceptedPartner: getAcceptedPartner,
+            getWaitRecruitPartner: getWaitRecruitPartner,
+            getValidTerms: getValidTerms,
+            getAcceptedRecruitPartner: getAcceptedRecruitPartner
         };
 
+        function createRecruitList(recruitListInfo) {
+            return $http({
+                url: $rootScope.serverAdd + "/partner-term",
+                method: 'POST',
+                data: recruitListInfo
+            });
+        }
+        function getWaitRecruitPartner(termId) {
+            return $http({
+                url: $rootScope.serverAdd + "/pit/"+termId+"/waits",
+                method: 'GET'
+            });
+        }
+        function getValidTerms() {
+            return $http({
+                url: $rootScope.serverAdd + "/validTerms",
+                method: 'GET'
+            });
+        }
+
+        function getAcceptedRecruitPartner(termId) {
+            return $http({
+                url: $rootScope.serverAdd + "/pit/"+termId+"/partners",
+                method: 'GET'
+            });
+        }
+
+        function getAcceptedPartner()
+        {
+            return $http({
+                url: $rootScope.serverAdd + "/partner/accepted",
+                method: 'GET'
+            });
+        }
         function findPartnerByPostID(postId) {
             return $http({
                 url: $rootScope.serverAdd + "/post/get/partner/" + postId,

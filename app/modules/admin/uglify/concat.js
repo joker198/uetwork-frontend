@@ -146,6 +146,11 @@ angular.module("myAdminApp", [
                             url: "/post/:postId",
                             templateUrl: "modules/admin/views/partner/post.html",
                             controller: "partnerCtrl"
+                        })
+                        .state("/recruit-list/create", {
+                            url:"/recruit-list/create",
+                            templateUrl: "modules/admin/views/internship-term/create-recruit-list.html",
+                            controller: "partnerCtrl"
                         });
                 } else if (sessionStorage['role'] == 'LECTURERS') {
                     $stateProvider

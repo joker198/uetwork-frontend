@@ -63,10 +63,22 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Chọn kỳ thực tập: <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                        <select class="form-control" id="is-term" ng-init="getValidTerms()" ng-model="termId" ng-change="updateDateRange()">
+                            <option value="">Chọn kỳ thực tập</option>
+                            <option ng-repeat="internshipTerm in internshipTerms" value="{{internshipTerm.id}}">
+                                {{'Kỳ '+internshipTerm.term+' Năm '+internshipTerm.year}}
+                            </option>
+                        </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Ngày hết hạn đăng kí:
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input type="date" name="last-name" class="form-control col-md-7 col-xs-12" ng-model="post.expiryTime">
+                            <input type="date" name="last-name" class="form-control col-md-7 col-xs-12" min="{{isTstartDate}}" max="{{isTendDate}}" ng-model="post.expiryTime">
                         </div>
                     </div>
                     <div class="form-group">
@@ -79,11 +91,12 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group" ng-if="post.postType == 'Recruitment'">
+                    <div class="form-group" ng-if="post.postType == 'Recruitment'" ng-init="getAcceptedRecruitPartner()">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Tên đối tác:</label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                            <select class="form-control" ng-model="post.partner" ng-change="selectPartner(post.partner)">
-                                <option ng-repeat="partner in fitPartners" value="{{partner}}">
+                            <select class="form-control" ng-model="partner" ng-change="selectPartner(partner)">
+                                <option value="">Chọn đối tác</option>
+                                <option ng-repeat="partner in partners" value="{{partner}}">
                                     {{partner.partnerName}}
                                 </option>
                             </select>

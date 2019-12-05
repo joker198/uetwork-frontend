@@ -22,8 +22,12 @@
                                 <input type="text" class="form-control" id="name" placeholder="Enter your name" ng-model="studentInfo.fullName" ng-change="changeInfo = true">
                             </div>
                             <label class="control-label col-sm-2" for="Desire">Class: </label>
-                            <div class="col-sm-2" style="display: flex;align-items: center;">
-                                K&nbsp;&nbsp;<input type="number" class="form-control" id="Grade" placeholder="Enter your Grade" ng-model="studentInfo.infoBySchool.grade" ng-change="grade = true">
+                            <div class="col-sm-2" style="display: flex;align-items: center;"  ng-init="getGradeLevels()">
+                                <select class="form-control" name="" id="Grade" ng-model="studentInfo.infoBySchool.grade" ng-change="grade = true">
+                                    <option value="{{gradeLevel.code}}" ng-repeat="gradeLevel in gradeLevels">
+                                        {{gradeLevel.shortName}}
+                                    </option>
+                                </select>
                             </div>
                             <div class="col-sm-2">
                                 <select class="form-control" ng-model="studentInfo.infoBySchool.studentClass" ng-change="studentClass = true">

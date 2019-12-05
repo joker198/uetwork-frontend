@@ -38,13 +38,6 @@ module.exports = function(grunt) {
                         return destPath.replace('.js', '.min.js');
                     }
                 }),
-                // files: {
-                //     src: 'app/main/test/concat.js', // source files mask
-                //     dest: 'app/main/test/', // destination folder
-                //     expand: true, // allow dynamic building
-                //     flatten: true, // remove all unnecessary nesting
-                //     ext: '.min.js' // replace .js to .min.js
-                // },
                 options: {
                     mangle: false
                 }
@@ -56,7 +49,6 @@ module.exports = function(grunt) {
                     mode: 'gzip'
                 },
                 expand: true,
-                // cwd: 'assets/',
                 src: ['app/main/uglify/concat.min.js'],
                 dest: '',
                 ext: '.min.js.gz'

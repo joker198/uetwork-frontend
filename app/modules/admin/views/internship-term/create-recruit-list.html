@@ -1,0 +1,54 @@
+<div ng-if="currentPageName == '/recruit-list/create' " ng-init="getFitPartner()"></div>
+<div class="row">
+	<div class="col-sm-12" style="padding-bottom: 15px">
+		<h1>
+			Tạo danh sách doanh nghiệp tuyển thực tập sinh
+		</h1>
+	</div>
+	<div class="col-sm-12 c-d-flex c-vertical-center c-text-larger" style="padding-bottom:15px" ng-init="getValidTerms()">
+		<label for="">Chọn kỳ thực tập: </label>
+		<select class="form-control c-select-box" id="internship-term" ng-change="getWaitRecruitPartner(term)" ng-model="term">
+			<option value="">Chọn kỳ thực tập</option>
+			<option ng-repeat="internshipTerm in internshipTerms" value="{{internshipTerm.id}}">
+				{{'Kỳ '+internshipTerm.term+' Năm '+internshipTerm.year}}
+			</option>
+		</select>
+	</div>
+	<div class="row">
+		<div class="alert alert-success" ng-if="success">
+			<strong>{{successMessage}}</strong>
+		</div>
+		<div class="alert alert-danger" ng-if="danger">
+			<strong>{{errorMessage}}</strong>
+		</div>
+	</div>
+	<table class="table table-striped jambo_table bulk_action">
+		<thead>
+			<tr class="headings">
+				<th class="column-title">Số thứ tự</th>
+				<th class="column-title">Tên đối tác </th>
+				<th class="column-title">Chọn</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr class="even pointer partner-{{$index}}" ng-repeat="partner in filtered = partners | filter : search |
+				startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit | orderBy:'-id'">
+				<td class="a-center" >{{(currentPage * entryLimit) - entryLimit + 1 + $index}}</td>
+				<td class=" ">{{partner.partnerName}}</td>
+				<td class="a-center">
+					<input type="checkbox" class="checkbox-item d-none partner-{{ partner.id }}" data-id="{{partner.id}}"data-key="{{$index}}">
+					<button class="check-btn active" id="active-{{partner.id}}" ng-click="check(partner.id)">
+						<i class="fa fa-check-circle"></i> Chọn
+					</button>
+					<button class="check-btn remove d-none" id="remove-{{partner.id}}" ng-click="uncheck(partner.id)">
+						<i class="fa fa-times-circle"></i> Bỏ chọn
+					</button>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<div class="col-sm-12" style="padding-bottom: 15px;display: flex;justify-content: flex-end;">
+		<button class="btn btn-success" ng-click="createRecruitList()">Create</button>
+	</div>
+	<ul uib-pagination total-items="totalItems" ng-model="currentPage" max-size="noOfPages" items-per-page="entryLimit"></ul>
+</div>
