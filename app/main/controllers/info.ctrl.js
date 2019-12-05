@@ -28,6 +28,14 @@
             };
             angular.element(document.querySelector('#fileInput')).on('change', handleFileSelect);
 
+            $scope.getGradeLevels = function () {
+                infoService.getGradeLevels()
+                    .then(function (response) {
+                        $scope.gradeLevels = response.data;
+                    }, function (error) {
+                        console.log(error);
+                    });
+            }
             $scope.getAllStudentClass = function() {
                 infoService.getAllStudentClass()
                     .then(function(response) {
@@ -82,7 +90,7 @@
                     infoService.getStudentInfo()
                         .then(function(response) {
                             $rootScope.studentInfo = response.data;
-                            $rootScope.studentInfo.infoBySchool.grade = parseInt($rootScope.studentInfo.infoBySchool.grade);
+                            $rootScope.studentInfo.infoBySchool.grade = $rootScope.studentInfo.infoBySchool.grade;
                         })
                 }
             }

@@ -17,9 +17,17 @@
             createPassInterviewLink: createPassInterviewLink,
             changePass: changePass,
             getAllStudentClass: getAllStudentClass,
-            editInfoBySchool: editInfoBySchool
+            editInfoBySchool: editInfoBySchool,
+            getGradeLevels: getGradeLevels
         };
         
+        function getGradeLevels()
+        {
+            return $http({
+                url: $rootScope.serverAdd + '/grade-levels',
+                method: 'GET'
+            });
+        }
         function editInfoBySchool(data) {
             return $http({
                 url: $rootScope.serverAdd + '/infoBySchool/class',

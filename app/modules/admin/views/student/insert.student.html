@@ -7,16 +7,13 @@
                 <div class="clearfix"></div>
             </div>
             <div class="x_content">
-                <!-- <p class="text-muted font-13 m-b-30"> -->
                 <input type="file" name="xlfile" id="xlf" ng-init="convert()">
                 <button ng-click="setExcelTable()">Show Student List </button>
                 <button ng-click="send()">Upload </button>
-                <!-- </p> -->
                 <table id="datatable" class="table table-striped " ng-if="excelTable != null">
                     <thead>
                         <tr>
                             <th>full name</th>
-                            <!-- <th>birthday</th> -->
                             <th>student code</th>
                             <th>major</th>
                             <th>student class</th>
@@ -25,7 +22,6 @@
                             <th>gpa</th>
                             <th>graduation year</th>
                             <th>email vnu</th>
-                            <!-- <th>Status</th> -->
                             <th>
                                 <input type="checkbox" ng-click="selectAll()">
                             </th>

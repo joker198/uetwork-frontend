@@ -12,8 +12,6 @@
                             <option value="searchDescription">Post describtion</option>
                             <option value="searchContent">Post content</option>
                         </select>
-                        <!--<select class="form-control" ng-model="role" ng-options="partner.role for partner in partners">-->
-                        <!--</select>-->
                     </div>
                 </div>
             </div>
@@ -32,7 +30,6 @@
                 </form>
             </div>
         </div>
-        <!--ng-if="search.data == 'searchDescription'"-->
         <div class="row service-wrapper-row"  ng-repeat="data in searchResponses" ng-if="search.data != 'searchPartner'">
             <div class="col-sm-4">
                 <div class="service-image">
@@ -58,9 +55,6 @@
 
         <div class="row service-wrapper-row" ng-if="result == false">
             <div class="col-sm-4">
-                <!-- <div class="service-image"> -->
-                    
-                <!-- </div> -->
             </div>
             <div class="col-sm-6">
                 No Result
@@ -68,38 +62,3 @@
         </div>
     </div>
 </div>
-
-<!--<div class="section"  ng-if="search.data == 'searchPartner'">-->
-    <!--<div class="container" >-->
-        <!--<div class="row service-wrapper-row"  ng-repeat="data in searchResponses">-->
-            <!--<div class="col-sm-4">-->
-                <!--<div class="service-image">-->
-                    <!--<img src="img/services1.jpg" alt="Service Name">-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--<div class="col-sm-8">-->
-                <!--<h3>{{data.partnerName}}</h3>-->
-            <!--</div>-->
-        <!--</div>-->
-        <!---->
-    <!--</div>-->
-<!--</div>-->
-
-<!--<div class="section"  ng-if="search.data == 'searchContent'">-->
-    <!--<div class="container" >-->
-        <!--<div class="row service-wrapper-row"  ng-repeat="data in searchResponses">-->
-            <!--<div class="col-sm-4">-->
-                <!--<div class="service-image">-->
-                    <!--<img ng-src="{{data.image}}" alt="Service Name">-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--<div class="col-sm-8">-->
-                <!--<a href="/#/post/{{data.id}}"><h3>{{data.describePost}}</h3></a>-->
-                <!--<p>-->
-                    <!--{{data.content}} -->
-                <!--</p>-->
-            <!--</div>-->
-        <!--</div>-->
-        <!---->
-    <!--</div>-->
-<!--</div>-->

@@ -262,9 +262,6 @@
                     <table class="table table-striped jambo_table bulk_action" id="tableExcel">
                         <thead>
                             <tr class="headings">
-                                <!-- <th> -->
-                                <!-- <input type="checkbox" id="check-all" class="flat"> -->
-                                <!-- </th> -->
                                 <th class="column-title">#</th>
                                 <th class="column-title">Họ và Tên</th>
                                 <th class="column-title">MSSV</th>
@@ -281,7 +278,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- <tr class="even pointer" ng-repeat="contract in filtered = allContract | filter : search | -->
                             <!-- startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit"> -->
                             <tr ng-repeat="internship in filtered = allStudents | filter : search |
                                 startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit | orderBy:'-id'">
@@ -293,12 +289,6 @@
                                 <td class=" " id="lecturers_{{internship.id}}">{{internship.lecturers.fullName}}</td>
                                 <td class="internship_{{internship.id}}">{{internship.internshipType}}</td>
                                 <td class="internship_{{internship.id}}">{{internship.partnerName}}</td>
-                                <!-- <td ng-if="data.status == 'A' || data.status == true">
-                                    Active
-                                </td>
-                                <td ng-if="data.status == 'D' || data.status == false">
-                                    Deactive
-                                </td> -->
                                 <td class="cursor ">
                                     <a data-toggle="modal" data-target="#edit_student" class="" ng-click="edit(internship.student.infoBySchool)">
                                         <i class="fa fa-edit"></i>
@@ -309,6 +299,9 @@
                                 </td>
                                 <td class="a-center ">
                                     <input type="checkbox" id="checkbox_{{internship.id}}" class="flat" name="table_records" ng-click="internship.checked = !internship.checked; addStudent(internship);" ng-checked="internship.checked">
+                                </td>
+                                <td>
+                                    <button data-toggle="modal" data-target="#delete_student"><i class="fa fa-paperclip"></i> hello</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -378,23 +371,6 @@
                                             <input type="text" class="form-control col-md-7 col-xs-12" ng-model="student.diploma">
                                         </div>
                                     </div>
-                                    <!-- <div class="form-group">
-                                        <label class="control-label col-md-4 col-sm-4 col-xs-12" for="last-name">Trạng thái: </label>
-                                        <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <input type="text" class="form-control col-md-7 col-xs-12" ng-model="student.st">
-                                        </div>
-                                    </div> -->
-                                    <!-- <div class="form-group">
-                                        <label class="control-label col-md-4 col-sm-4 col-xs-12">Status</label>
-                                        <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <p>
-                                                Active:
-                                                <input type="radio" class="flat" name="gender" disabled="disabled" id="genderM" ng-value="true" ng-model="student.status" /> Deactive:
-                                                <input type="radio" class="flat" name="gender" disabled="disabled" id="genderF" ng-value="false" ng-model="student.status" /> {{studentData.userId}}
-                                                <button type="submit" class="btn btn-success" ng-click="changeStatus(student.userId)">Đổi trạng thái</button>
-                                            </p>
-                                        </div>
-                                    </div> -->
                                 </form>
                             </div>
                             <div class="modal-footer">

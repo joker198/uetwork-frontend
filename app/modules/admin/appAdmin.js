@@ -35,6 +35,11 @@ angular.module("myAdminApp", [
                                 }
                             }
                         })
+                        .state("/recruit-list/create", {
+                            url:"/recruit-list/create",
+                            templateUrl: "modules/admin/views/internship-term/create-recruit-list.html",
+                            controller: "partnerCtrl"
+                        })
                         .state("/user/page=:page", {
                             url: "/user/page=:page",
                             views: {
