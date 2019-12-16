@@ -1,11 +1,11 @@
-<div class="col-sm-8">
+<div class="col-sm-8" ng-init="edit()">
     <div class="blog-post blog-single-post">
         <div class="single-post-title">
-            <h3>Write Post </h3>
+            <h3>Edit Post </h3>
         </div>
         <div class="single-post-info" ng-init="initTag()">
         </div>
-        <div class="single-post-content" ng-init="post.content = ''">
+        <div class="single-post-content">
             <div class="post-coments">
                 <div class="comment-form-wrapper">
                     <form class="form-horizontal">
@@ -54,10 +54,8 @@
                                 </select>
                                 <br>
                                 <button class="btn btn-left" ng-click="click()">Click to select image</button>
-                                <button type="Save" class="btn btn-right button-right" ng-click="createAPost()" ng-if="edit_post == false && post.content != '' && post.describePost != ''">
-                                    Save
-                                </button>
-                                <button type="Save" class="btn btn-right button-right" ng-click="editAPost(post.id)" ng-if="edit_post">
+
+                                <button type="Save" class="btn btn-right button-right" ng-click="editAPost(post.id)">
                                     Save edit
                                 </button>
                             </div>
@@ -67,7 +65,7 @@
                         </div>
                         <br>
                         <div class="form-group">
-                            <summernote height="500 " ng-model="post.content "></summernote>
+                            <summernote height="500" ng-model="post.content"></summernote>
                         </div>
                         <div class="loading-spiner-holder " data-loading>
                             <div class="loading-spiner ">
@@ -83,4 +81,3 @@
         </div>
     </div>
 </div>
-<div ng-if="editPost != null " ng-init="edit()"> </div>

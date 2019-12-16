@@ -13,8 +13,31 @@
             getAllUser: getAllUser,
             changePassword: changePassword,
             searchUser: searchUser,
-            getStudentInformationByUserId: getStudentInformationByUserId
+            getStudentInformationByUserId: getStudentInformationByUserId,
+            getGradeLevel: getGradeLevel,
+            createGradeLevel: createGradeLevel,
+            deleteGradeLevel: deleteGradeLevel
         };
+
+        function getGradeLevel() {
+            return $http({
+                url: $rootScope.serverAdd + '/grade-levels',
+                method: 'GET'
+            })
+        }
+        function createGradeLevel(data) {
+            return $http({
+                url: $rootScope.serverAdd + '/grade-levels',
+                method: 'POST',
+                data: data 
+            })
+        }
+        function deleteGradeLevel(gradeLevelId) {
+            return $http({
+                url: $rootScope.serverAdd + '/grade-levels/' + gradeLevelId,
+                method: 'DELETE'
+            })
+        }
 
         function getStudentInformationByUserId(userId) {
             return $http({

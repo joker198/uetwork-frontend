@@ -85,15 +85,17 @@
                                 </li>
                                 <li ng-if="role == 'ADMIN'"><a><i class="fa fa-group"></i> Partner <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
-                                        <li  ng-class="{active : currentPageName == '/recruit-list/create'}"><a href="#/recruit-list/create" ng-click="reloadState('/recruit-list/create', $event)">Create recuitment list</a></li>
+                                        <li  ng-class="{active : currentPageName == '/recruit-list'}"><a href="#/recruit-list" ng-click="reloadState('/recruit-list', $event)">Danh sách doanh nghiệp thực tập</a></li>
+                                        <li  ng-class="{active : currentPageName == '/recruit-list/create'}"><a href="#/recruit-list/create" ng-click="reloadState('/recruit-list/create', $event)">Tạo danh sách doanh nghiệp thực tập</a></li>
                                         <li  ng-class="{active : currentPageName == '/fit-partner'}"><a href="#/fit-partner" ng-click="reloadState('/fit-partner', $event)">FIT Partner</a></li>
                                         <li  ng-class="{active : currentPageName == '/other-partner'}"><a href="#/other-partner" ng-click="reloadState('/other-partner', $event)">Other Partner</a></li>
                                     </ul>
                                 </li>
                                 <li ng-if="role == 'ADMIN'"><a><i class="fa fa-university"></i> VNU <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
-                                        <li  ng-class="{active : currentPageName == '/lecturers'}"><a href="#/lecturers" ng-click="reloadState('/lecturers', $event)">Lecturers</a></li>
-                                        <li  ng-class="{active : currentPageName == '/class'}"><a href="#/class" ng-click="reloadState('/class', $event)">Class</a></li>
+                                        <li  ng-class="{active : currentPageName == '/lecturers'}"><a href="#/lecturers" ng-click="reloadState('/lecturers', $event)">Giảng viên</a></li>
+                                        <li  ng-class="{active : currentPageName == '/grade-level'}"><a href="#/grade-level" ng-click="reloadState('/grade-level', $event)">Khóa</a></li>
+                                        <li  ng-class="{active : currentPageName == '/class'}"><a href="#/class" ng-click="reloadState('/class', $event)">Lớp</a></li>
                                     </ul>
                                 </li>
                                 <li ng-if="role == 'ADMIN'" ng-class="{active : currentPageName == '/user'}" ng-click="reloadState('/user', $event)"><a href="#/user/page=1"><i class="fa fa-user"></i> User</a></li>

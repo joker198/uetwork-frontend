@@ -1,0 +1,39 @@
+<div ng-if="currentPageName == '/recruit-list' " ng-init="recruitPartnerByTerm()"></div>
+<div class="row">
+	<div class="col-sm-12">
+		<h1>
+			 Danh sách doanh nghiệp tuyển thực tập sinh
+		</h1>
+	</div>
+	<div class="col-sm-12 c-d-flex c-vertical-center c-text-larger" style="padding-bottom:15px">
+		<label for="">Chọn kỳ thực tập: </label>
+		<select class="form-control c-select-box" id="internship-term" ng-change="selectedPartners(term)" ng-model="term">
+			<option value="">Chọn kỳ thực tập</option>
+			<option ng-repeat="internshipTerm in internshipTerms" value="{{internshipTerm.id}}">
+				{{'Kỳ '+internshipTerm.term+' Năm '+internshipTerm.year}}
+			</option>
+		</select>
+	</div>
+	<table class="table table-striped jambo_table bulk_action">
+		<thead>
+			<tr class="headings">
+				<th class="column-title text-center">Stt</th>
+				<th class="column-title text-center">Tên đối tác</th>
+				<th class="column-title text-center">Số lượng thực tập sinh</th>
+				<th class="column-title text-center">Xuất danh sách sinh viên</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="(key, followList) in followsByPartner">
+				<td class="text-center">{{$index+1}}</td>
+				<td class="text-center" >{{key.split("_")[1]}}</td>
+				<td class="text-center">{{followList.length}}</td>
+				<td class="text-center">
+					<button class="c-btn" ng-click="getIntershipsByPartner(key)">
+						<i class="fa fa-cloud-download"></i> Download
+					</button>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

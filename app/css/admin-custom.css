@@ -112,8 +112,23 @@
 .c-vertical-center {
 	align-items: center;
 }
+.justify-content-center {
+	justify-content: center;
+}
+.justify-content-end {
+	justify-content: flex-end;
+}
 .c-text-larger {
 	font-size: larger;
+}
+.c-toggle {
+	font-size: large;
+	padding: 10px 10px 0px 10px;
+	color: #a94442; 
+}
+.create-toggle-form {
+    padding: 15px;
+    max-width: 100%!important;
 }
 .check-btn {
 	border: none;

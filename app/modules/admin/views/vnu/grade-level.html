@@ -1,0 +1,82 @@
+<div class="row" ng-init="getGradeLevel()">
+	<div class="col-sm-8">
+		<h1>Khóa học</h1>
+	</div>
+	<div class="col-sm-4 c-d-flex justify-content-end" style="padding: 15px 0px;">
+		<button data-toggle="modal" data-target="#create-grade-level" class="btn btn-primary">
+			<strong><i class="fa fa-plus-square-o"></i> Thêm</strong>
+		</button>
+	</div>
+</div>
+<div>
+	<ul uib-pagination total-items="totalItems" ng-model="currentPage" max-size="noOfPages" items-per-page="entryLimit"></ul>
+	<table class="table">
+		<thead>
+			<tr>
+				<th class="text-center">Stt</th>
+				<th class="text-center">Mã khóa học</th>
+				<th class="text-center">Tên viết tắt</th>
+				<th class="text-center">Xóa</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="(key, gradeLevel) in gradeLevels">
+				<td class="text-center">{{$index + 1}}</td>
+				<td class="text-center">{{gradeLevel.code}}</td>
+				<td class="text-center">{{gradeLevel.shortName}}</td>
+				<td class="text-center">
+					<button class="btn" data-toggle="modal" data-target="#delete-confirm" ng-click="confirmDeleteGradeLevel(gradeLevel.id, gradeLevel.shortName)">
+						<i class="fa fa-trash"></i>
+					</button>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<ul uib-pagination total-items="totalItems" ng-model="currentPage" max-size="noOfPages" items-per-page="entryLimit"></ul>
+</div>
+<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="delete-confirm">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+        	<div class="c-d-flex justify-content-end">
+        		<i class="c-toggle fa fa-remove" id="x-del-grade-level" data-dismiss="modal"></i>
+        	</div>
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Bạn có chắc muốn xóa khóa {{shortName}}</h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-danger" ng-click="deleteGradeLevel(delGradeLevelId)">Xóa</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade " tabindex="-1" role="dialog" aria-hidden="true" id="create-grade-level">
+    <div class="modal-dialog">
+        <div class="modal-content create-toggle-form">
+        	<div class="row">
+        		<div class="col-sm-8">
+        			<h2>
+		        		<strong>Thêm khóa học</strong>
+		        	</h2>
+        		</div>
+        		<div class="col-sm-4 c-d-flex justify-content-end">
+	        		<i class="c-toggle fa fa-times-circle" id="create-grade-level" data-dismiss="modal"></i>
+	        	</div>
+        	</div>
+        	<hr>
+        	<form>
+			<div class="form-group" id="">
+				<label for="code">Mã khóa học</label>
+				<input type="text" name="code" class="form-control" placeholder="QH-2016-I/CQ" required ng-model="gradelevel.code">
+			</div>
+			<div class="form-group">
+				<label for="short_name">Tên viết tắt</label>
+				<input type="text" name="short_name" class="form-control" placeholder="K61" required ng-model="gradelevel.short_name">
+			</div>
+			<div class="form-group c-d-flex justify-content-end">
+        		<button type="submit" class="btn" ng-click="createGradeLevel()">Thêm</button>
+        	</div>
+		</form>
+        </div>
+    </div>
+</div>

@@ -88,14 +88,12 @@
                             </tr>
                         </table>
                     </form>
-                    <!-- <p ng-repeat="error in errors">{{error.error}}</p> -->
                     <div class="alert alert-success" ng-if="errors.length == 0">
                         <strong>Dữ liệu đúng, có thể tải lên</strong>
                     </div>
                     <table class="table table-striped" ng-if="excelScoreCheck == true && errors.length != 0 && excelScore != null">
                         <thead>
                             <tr class="headings">
-                                <!-- <th class="column-title">#</th> -->
                                 <th class="column-title">STT</th>
                                 <th class="column-title">Mã SV</th>
                                 <th class="column-title">Họ và tên</th>
@@ -109,11 +107,9 @@
                         </thead>
                         <tbody>
                             <tr ng-repeat="data in excelScore" id="excel_score_{{data.stt}}" ng-init="data.editStudentCode = data.stt; data.editScore = data.stt" ng-if="data.check == false">
-                                <!-- <td class=" ">{{$index+1}}</td> -->
                                 <td class=" " ng-click="removeData($index)">{{data.stt}}</td>
                                 <td class=" " id="studentCode_{{data.stt}}" ng-click="data.editStudentCode = data.editStudentCode">
                                     <p class="cursor" ng-if="data.editStudentCode == data.stt">{{data.studentCode}}</p>
-                                    <!-- <input type="number" ng-if="data.editStudentCode != data.stt" id="studentCode_value_{{data.stt}}" ng-model="data.studentCode" style="border-radius:3px; border: 1px solid; width: 100%;" ng-keydown="editStudentCode($event, data)" /> -->
                                 </td>
                                 <td class=" ">{{data.fullName}}</td>
                                 <td class=" ">{{data.birthday}}</td>
@@ -121,7 +117,6 @@
                                 <td class=" ">{{data.lecturersName}}</td>
                                 <td class=" " id="score_{{data.stt}}" ng-click="data.editScore = data.editScore">
                                     <p class="cursor" ng-if="data.editScore == data.stt">{{data.score}}</p>
-                                    <!-- <input type="number" ng-if="data.editScore != data.stt" id="score_value_{{data.stt}}" ng-model="data.score" style="border-radius:3px; border: 1px solid; width: 100%;" ng-keydown="editScore($event, data)" /> -->
                                 </td>
                                 <td class=" " id="message_{{data.stt}}">
                                     <a ng-show="data.message != null">
@@ -132,10 +127,6 @@
                                 <td class=" ">
                                     <li class="fa fa-circle red"></li>
                                 </td>
-                                <!-- <td class=" " id="lecturers_email_{{data.stt}}" ng-click="data.editLecturers = data.editLecturers + 1;">
-                                    <p ng-if="data.editLecturers == data.stt">{{data.lecturersEmail}}</p>
-                                    <input ng-if="data.editLecturers != data.stt" id="email_value_{{data.stt}}" ng-model="data.lecturersEmail" style="border-radius:3px; border: 1px solid; width: 100%;" ng-keydown="editLecturers($event, data)" />
-                                </td> -->
                             </tr>
                         </tbody>
                     </table>
@@ -162,9 +153,6 @@
                     <table class="table table-striped jambo_table bulk_action" id="tableExcel">
                         <thead>
                             <tr class="headings">
-                                <!-- <th> -->
-                                <!-- <input type="checkbox" id="check-all" class="flat"> -->
-                                <!-- </th> -->
                                 <th class="column-title">#</th>
                                 <th class="column-title">Họ và Tên</th>
                                 <th class="column-title">MSSV</th>
@@ -173,46 +161,22 @@
                                 <th class="column-title">Giảng viên hướng dẫn</th>
                                 <th class="column-title">Nơi thực tập</th>
                                 <th class="column-title">Điểm</th>
-                                <!-- <th class="column-title">Sửa</th> -->
-                                <!-- <th class="column-title">Xóa</th> -->
-                                <!-- <th class="column-title no-link last"><span class="nobr"></span></th> -->
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- <tr class="even pointer" ng-repeat="contract in filtered = allContract | filter : search | -->
-                            <!-- startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit"> -->
                             <tr ng-repeat="student in filtered = allStudents | filter : search  | filter : {show:true}  |
                                 startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit | orderBy:'-id'" ng-init="student.edit = false">
                                 <td class=" ">{{(currentPage * entryLimit) - entryLimit + 1 + $index}}</td>
                                 <td class=" ">{{student.student.infoBySchool.studentName}}</td>
                                 <td class=" ">{{student.student.infoBySchool.studentCode}}</td>
                                 <td class=" ">{{student.student.infoBySchool.emailvnu}}</td>
-                                <td class=" ">{{student.student.infoBySchool.grade}}{{student.student.infoBySchool.studentClass}}</td>
+                                <td class=" ">{{student.student.infoBySchool.grade}}-{{student.student.infoBySchool.studentClass}}</td>
                                 <td class=" " id="lecturers_{{student.id}}">
                                     <p ng-show="student.edit == false">{{student.lecturers.fullName}}</p>
                                     <angucomplete-alt id="findLecturers_{{student.id}}" placeholder="{{student.lecturers.fullName}}" pause="100" selected-object="student.selectedLecturers" local-data="nameAndIdOfLecturers" search-fields="lecturersName" title-field="lecturersName" minlength="1" input-class="form-control edit-input" ng-show="student.edit == true" />
                                 </td>
                                 <td class="internship_{{student.id}}">{{student.partnerName}}</td>
                                 <td class="internship_{{student.id}}">{{student.score}}</td>
-                                <!-- <td ng-if="data.status == 'A' || data.status == true">
-                                    Active
-                                </td>
-                                <td ng-if="data.status == 'D' || data.status == false">
-                                    Deactive
-                                </td> -->
-                                <!-- <td class="cursor ">
-                                    <a ng-show="student.edit == false" ng-click="student.edit = true; editLecturerOfStudent(student)">
-                                        <i class="fa fa-edit"></i>
-                                    </a>
-                                    <button ng-show="student.edit == true" type="button" class="btn btn-default btn-xs" ng-click="student.edit = false; clearAngucompleteAltInput('findLecturers_' + student.id)">Hủy</button>
-                                    <button ng-show="student.edit == true" id="save_edit_contact_{{contact.id}}" type="button" class="btn btn-success btn-xs" ng-click="editLecturersStudent(student)">Xác nhận</button>
-                                </td> -->
-                                <!-- <td class=" " ng-click="confirmDelete(student.id, student.infoBySchool.studentName, student.internship.id)">
-                                    <a class="cursor" data-toggle="modal" data-target="#delete_student"><i class="fa fa-trash"></i></a>
-                                </td>
-                                <td class="a-center ">
-                                    <input type="checkbox" id="checkbox_{{student.id}}" class="flat" name="table_records" ng-click="student.checked = !student.checked; addStudent(student);" ng-checked="student.checked">
-                                </td> -->
                             </tr>
                         </tbody>
                     </table>

@@ -108,10 +108,6 @@ angular.module('myApp', [
                                 templateUrl: 'main/views/home/logo.html',
                                 controller: 'mainCtrl'
                             },
-                            // 'all-posts': {
-                            //     templateUrl: 'main/views/partnerPost/post.all.html',
-                            //     controller: 'partnerPostCtrl'
-                            // },
                             'comment': {
                                 templateUrl: 'main/views/home/comment.html',
                                 controller: 'mainCtrl'
@@ -208,16 +204,6 @@ angular.module('myApp', [
                         templateUrl: '/main/views/search/search.html',
                         controller: 'SearchCtrl'
                     });
-                    // .state('/all-posts', {
-                    //     url: '/all-posts',
-                    //     templateUrl: '/main/views/partnerPost/post.all.html',
-                    //     controller: 'partnerPostCtrl'
-                    // })
-                    // .state('/all-posts/page=:page', {
-                    //     url: '/all-posts/page=:page',
-                    //     templateUrl: '/main/views/partnerPost/post.all.html',
-                    //     controller: 'partnerPostCtrl'
-                    // });
             }
             if ($cookies.get('role') == "VIP_PARTNER") {
                 $urlRouterProvider.otherwise('/partner/info');

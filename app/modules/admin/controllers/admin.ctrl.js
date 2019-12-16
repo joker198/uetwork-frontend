@@ -54,7 +54,39 @@
                     }
                 }
 
+                $scope.getGradeLevel = function() {
+                    adminService.getGradeLevel()
+                        .then(function (response) {
+                            $scope.gradeLevels = response.data;
+                        }, function (error) {
+                            console.log(error);
+                        });
+                }
 
+                $scope.createGradeLevel = function() {
+                    adminService.createGradeLevel($scope.gradelevel)
+                        .then(function (response) {
+                            $scope.gradelevel.code = "";
+                            $scope.gradelevel.short_name = "";
+                            $scope.gradeLevels = response.data;
+                            $('#create-grade-level').trigger('click');
+                        }, function (error) {
+                            console.log(error);
+                        });
+                }
+                $scope.confirmDeleteGradeLevel = function(gradeLevelId, shortName) {
+                    $scope.delGradeLevelId = gradeLevelId;
+                    $scope.shortName = shortName;
+                }
+                $scope.deleteGradeLevel = function(gradeLevelId) {
+                    adminService.deleteGradeLevel(gradeLevelId)
+                        .then(function (response) {
+                            $scope.gradeLevels = response.data;
+                            $('#x-del-grade-level').trigger('click');
+                        }, function (error) {
+                            console.log(error);
+                        })
+                }
 
                 $scope.redirectToSearchUser = function() {
                     if ($scope.input.userName != undefined && $scope.input.userName != null && $scope.input.userName != "") {

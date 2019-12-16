@@ -299,7 +299,7 @@
                     }
                 }
                 $scope.request = {
-                    image: $scope.ima.replace(/^data:image\/(png|jpeg);base64,/, ""),
+                    // image: $scope.ima.replace(/^data:image\/(png|jpeg);base64,/, ""),
                     content: $scope.post.content,
                     datePost: Date.now(),
                     describePost: $scope.post.describePost,
@@ -322,22 +322,36 @@
             $scope.changeTime = function() {
                 $scope.post.startDate = new Date($scope.post.startDate).getTime() / 1000;
             }
+            // need to use
+            // $scope.editAPost = function(id) {
+            //     if ($scope.ima.indexOf("data:image") == -1) {
+            //         $scope.request = {
+            //             image: $scope.ima,
+            //             content: $scope.post.content,
+            //             describePost: $scope.post.describePost
+            //         };
+            //     } else {
+            //         $scope.request = {
+            //             image: $scope.ima.replace(/^data:image\/(png|jpeg);base64,/, ""),
+            //             content: $scope.post.content,
+            //             describePost: $scope.post.describePost
+            //         };
+            //     }
+            //     partnerPostService.editAPost(id, $scope.request)
+            //         .then(function() {
+            //                 alert("Sửa thông tin thành công");
+            //                 $location.path('/post/' + id);
+            //             },
+            //             function(error) {
+            //                 console.log(error);
+            //             })
+            // };
 
             $scope.editAPost = function(id) {
-                if ($scope.ima.indexOf("data:image") == -1) {
-                    $scope.request = {
-                        image: $scope.ima,
-                        content: $scope.post.content,
-                        describePost: $scope.post.describePost
-                    };
-                } else {
-                    $scope.request = {
-                        image: $scope.ima.replace(/^data:image\/(png|jpeg);base64,/, ""),
-                        content: $scope.post.content,
-                        describePost: $scope.post.describePost
-                    };
-                }
-
+                $scope.request = {
+                    content: $scope.post.content,
+                    describePost: $scope.post.describePost
+                };
                 partnerPostService.editAPost(id, $scope.request)
                     .then(function() {
                             alert("Sửa thông tin thành công");
@@ -347,7 +361,6 @@
                             console.log(error);
                         })
             };
-
             $scope.editPost = function(post) {
                 $rootScope.editPost = post;
             };
@@ -355,6 +368,7 @@
             $scope.edit = function() {
                 $scope.post = [];
                 if ($rootScope.editPost != null) {
+                    $scope.post.title = $rootScope.editPost.title;
                     $scope.post.content = $rootScope.editPost.content;
                     $scope.post.describePost = $rootScope.editPost.describePost;
                     $scope.ima = $rootScope.clientAdd + $rootScope.editPost.image;
@@ -410,6 +424,8 @@
                     .then(function() {
                         $scope.subs = true;
                         $scope.loading = false;
+                        document.querySelector('#register-research').innerText = "Đã đăng ký"
+                        document.querySelector('#register-research').disabled = true;
                     }, function(error) {
                         console.log(error);
                         $scope.loading = false;
@@ -483,7 +499,8 @@
 
                 partnerPostService.checkFollow(postId, $scope.request)
                     .then(function(response, t = type) {
-                        console.log(postTitle, response.data);
+                        console.log(response);
+                        console.log(t);
                         if (response.data.id == 0) {
                             $scope.subs = false;
                             if (t == 'registration') {
@@ -494,6 +511,10 @@
                             }
                         } else {
                             $scope.subs = true;
+                            if (response.data.postTitle != null && response.data.status != null) {
+                                document.querySelector('#register-research').innerText = "Đã đăng ký"
+                                document.querySelector('#register-research').disabled = true;
+                            }
                             $scope.lecturersName = response.data.lecturersName;
                             if (t == 'registration') {
                                 $scope.subsRegistration = "true";
@@ -539,12 +560,10 @@
             $scope.getResearchPost = function() {
                 partnerPostService.loadLatestPost(0, 1, 'Research')
                     .then(function(response) {
-                        console.log(response);
                         if (response.data.content.length != 0) {
                             $scope.researchPost = response.data.content[0];
                             $scope.researchPostId = $scope.researchPost.id;
                             $scope.checkFollow($scope.researchPostId);
-                            console.log($scope.researchPost);
                         }
                     })
 

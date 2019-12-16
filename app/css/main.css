@@ -2730,3 +2730,30 @@ footer {
     padding-top: 15px;
     padding-left: 15px;
 }
+.base-link {
+    color: #53555c;
+    text-decoration: none!important;
+}
+.research-item {
+    max-height: 180px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 2px 2px 2px grey;
+}
+.d-flex {
+    display: flex!important;
+}
+.align-items-center {
+    align-items: center!important;
+}
+.justify-content-end {
+    justify-content: flex-end!important;
+}
+.p-3 {
+    padding: 15px!important;
+}
+.m-unset {
+    margin: unset;
+}
