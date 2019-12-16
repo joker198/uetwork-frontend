@@ -53,17 +53,27 @@
                         <li><a data-toggle="collapse" data-target="#download_list_student" class="cursor"><i class="fa fa-chevron-up"></i></a>
                         </li>
                     </ul>
-                    <div class="" style="display: flex; align-content: center;">
-                        <select class="form-control c-select-box" ng-model="downloadTypeLecturers" ng-change="changedownloadType(downloadTypeLecturers, 'no')">
+                    <div class="" style="display: flex; align-content: center;" ng-init="getGradeLevel()">
+                        <select class="form-control c-select-box" ng-model="downloadTypeLecturers">
+                        <!-- <select class="form-control c-select-box" ng-model="downloadTypeLecturers" ng-change="changedownloadType(downloadTypeLecturers, 'no')"> -->
                             <option value=""> Tất cả </option>
                             <option value="hasLecturers"> Đã có giảng viên </option>
                             <option value="noLecturers"> Chưa có giảng viên </option>
                         </select>
-                        <select class="form-control c-select-box" ng-model="downloadType" ng-change="changedownloadType('no', downloadType)">
+                        <select class="form-control c-select-box" ng-model="downloadType">
+                       <!--  <select class="form-control c-select-box" ng-model="downloadType" ng-change="changedownloadType('no', downloadType)"> -->
                             <option value=""> Download tất cả </option>
                             <option value="class"> Download theo lớp </option>
-                            <option value="lecturer"> Download theo giảng viên </option>
+                            <option ng-if="downloadTypeLecturers == 'hasLecturers'" value="lecturer"> Download theo giảng viên </option>
                         </select>
+                        <div ng-if="downloadType == 'class'" ng-init="getGradeLevel()">
+                            <select class="form-control c-select-box" ng-model="st.infoBySchool.gradeLevel">
+                                <option value="">-- Chọn khóa học --</option>
+                                <option ng-repeat="gradeLevel in gradeLevels" value="{{gradeLevel.code}}">
+                                    {{gradeLevel.shortName}}
+                                </option>
+                            </select>
+                        </div>
                         <div ng-if="downloadType == 'class'" ng-init="getAllStudentClass()">
                             <select class="form-control c-select-box" ng-model="st.infoBySchool.studentClass">
                                 <option value="">-- Chọn lớp khóa học --</option>
@@ -80,7 +90,7 @@
                                 </option>
                             </select>
                         </div>
-                        <button class="c-simple-btn" ng-click="exportDataNoLecturers()">Download </button>
+                        <button class="c-simple-btn" ng-click="exportExcelRegistration(allStudents)">Download </button>
                     </div>
                     <div class="divider-dashed"></div>
                 </form>

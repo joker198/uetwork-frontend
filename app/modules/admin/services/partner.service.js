@@ -38,9 +38,16 @@
             getAcceptedPartner: getAcceptedPartner,
             getWaitRecruitPartner: getWaitRecruitPartner,
             getValidTerms: getValidTerms,
-            getAcceptedRecruitPartner: getAcceptedRecruitPartner
+            getAcceptedRecruitPartner: getAcceptedRecruitPartner,
+            getPartnerSelected: getPartnerSelected
         };
 
+        function getPartnerSelected(termId) {
+            return $http({
+                url: $rootScope.serverAdd + `/pit/${termId}/selected`,
+                method: 'GET'
+            });
+        }
         function createRecruitList(recruitListInfo) {
             return $http({
                 url: $rootScope.serverAdd + "/partner-term",

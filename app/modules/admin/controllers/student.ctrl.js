@@ -1,10 +1,10 @@
 (function() {
     var app = angular.module("student", []);
     angular.module('student')
-        .controller('studentCtrl', ['lecturersService', 'internService', '$scope', 'studentService', 'messageService',
+        .controller('studentCtrl', ['lecturersService', 'internService', '$scope', 'adminService', 'studentService', 'messageService',
             '$timeout', '$location', '$rootScope', 'filterFilter', '$stateParams', 'orderByFilter', '$state', 'partnerService', '$compile',
             '$sce',
-            function(lecturersService, internService, $scope, studentService, messageService, $timeout, $location, $rootScope,
+            function(lecturersService, internService, $scope, adminService,studentService, messageService, $timeout, $location, $rootScope,
                 filterFilter, $stateParams, orderBy, $state, partnerService, $compile, $sce) {
                 $rootScope.currentPageName = $state.current.name;
                 $scope.st = {};
@@ -1183,13 +1183,240 @@
                     }
                 }
 
-                $scope.exportDataNoLecturers = function() {
-                    var count = 0;
+                $scope.getGradeLevel = function () {
+                    adminService.getGradeLevel()
+                        .then(function (response) {
+                            $scope.gradeLevels = response.data;
+                        }, function (error) {
+                            console.log(error);
+                        });
+                }
+                $scope.getStudentGradeClass = function(gradeCode, studentClass) {
+                    if (gradeCode == null || studentClass == null) {
+                        return "Chưa rõ";
+                    }
+                    for(let index = 0; index < $scope.gradeLevels.length; index++) {
+                        if ($scope.gradeLevels[index].code == gradeCode) {
+                            return `${$scope.gradeLevels[index].shortName}${studentClass}`;
+                        }
+                    }
+                }
+                $scope.exportExcelRegistration = function (students) {
+                    let studentsInfo;
+                    let ws;
+                    let filename;
+                    let gradeLevel = !angular.isUndefined($scope.st.infoBySchool.gradeLevel) ? $scope.st.infoBySchool.gradeLevel : "";
+                    let studentClass = $scope.st.infoBySchool.studentClass;
+                    if ($scope.downloadTypeLecturers == "noLecturers") {
+                        if ($scope.downloadType == 'class' && (gradeLevel === '' || studentClass === '')) {
+                            $scope.alertWarning("Bạn phải chọn khóa và lớp!", 3000);
+                            return false;
+                        }
+                        filename = "Danh sách sinh viên đăng ký chưa được phân giảng viên.xlsx"
+                        studentsInfo = getStudentListNoLecturers(students, gradeLevel, studentClass);
+                        ws = exportStudentListNoLecturers(studentsInfo);
+                    } else if ($scope.downloadTypeLecturers == "hasLecturers") {
+                        if ($scope.downloadType == 'lecturer' && $scope.st.infoBySchool.lectureName === '') {
+                            $scope.alertWarning("Bạn phải chọn giảng viên!", 3000);
+                            return false;
+                        } else if ($scope.downloadType == 'class' && (gradeLevel === '' || studentClass === '')) {
+                            $scope.alertWarning("Bạn phải chọn khóa và lớp!", 3000);
+                            return false;
+                        }
+                        let lecturerName = getLecturerName($scope.st.infoBySchool.lectureName);
+                        filename = "Danh sách sinh viên theo giảng viên "+lecturerName+".xlsx";
+                        studentsInfo = getStudentListWithLecturers(students, gradeLevel, studentClass);
+                        ws = exportStudentListWithLecturers(studentsInfo);
+                    } else {
+                        filename = "Danh sách sinh viên đăng ký thực tập.xlsx";
+                        studentsInfo = getAllStudentList(students, gradeLevel, studentClass);
+                        ws = exportAllStudentList(studentsInfo);
+                    }
                     var wb = {};
                     wb.Sheets = {};
                     wb.SheetNames = [];
+                    wb.Sheets['Student List'] = ws;
+                    wb.SheetNames.push('Student List');
                     var wopts = { bookType: 'xlsx', bookSST: false, type: 'binary' };
-                    var wscols = [];
+                    var wbout = XLSX.write(wb, wopts);
+                    saveAs(new Blob([s2ab(wbout)], { type: "" }), filename);
+                    $scope.alertSuccess("Xuất danh sách thành công!", "");
+                }
+                function getLecturerName(lecturerId) {
+                    for(let index=0; index<$scope.nameAndIdOfLecturers.length; index++) {
+                        let lecturer=$scope.nameAndIdOfLecturers[index];
+                        if (lecturerId == lecturer.lecturersId) {
+                            return lecturer.lecturersName;
+                        }
+                    }
+                    return "Chưa rõ";
+                }
+                function getStudentListWithLecturers(students, gradeLevel, studentClass) {
+                    let legalStudents = [];
+                    let legalStudent;
+                    let count = 0;
+                    angular.forEach(students, function (student) {
+                        if (student.lecturers == null) {
+                            return ;
+                        }
+                        legalStudent = null;
+                        if (gradeLevel !== '' && studentClass !== '') {
+                            if (student.student.infoBySchool.grade == gradeLevel && student.student.infoBySchool.studentClass == studentClass) {
+                                legalStudent = student;
+                                count++;
+                            }
+                        } else if ($scope.st.infoBySchool.lectureName !== '') {
+                            if (student.lecturers.id == $scope.st.infoBySchool.lectureName) {
+                                legalStudent = student;
+                                count++;
+                            }
+                        } else {
+                            legalStudent = student;
+                            count++;
+                        }
+                        if (legalStudent != null) {
+                            let studentInfo = [];
+                            studentInfo['stt']=count;
+                            studentInfo['studentName']=legalStudent.student.fullName==null ? "Chưa rõ" : legalStudent.student.fullName;
+                            let studentClass = $scope.getStudentGradeClass(legalStudent.student.infoBySchool.grade, legalStudent.student.infoBySchool.studentClass);
+                            studentInfo['studentClass']=studentClass;
+                            studentInfo['emailVNU']=legalStudent.student.infoBySchool.emailvnu==null ? "Chưa rõ" : legalStudent.student.infoBySchool.emailvnu;
+                            studentInfo['email']=legalStudent.student.email==null ? "Chưa rõ" : legalStudent.student.email;
+                            studentInfo['phoneNumber']=legalStudent.student.phoneNumber==null ? "Chưa rõ" : legalStudent.student.phoneNumber;
+                            studentInfo['lecturerName']=legalStudent.lecturers.fullName==null ? "Chưa rõ" : legalStudent.lecturers.fullName;
+                            studentInfo['lecturerEmailVNU']=legalStudent.lecturers.emailVNU==null ? "Chưa rõ" : legalStudent.lecturers.emailVNU;
+                            studentInfo['selectedPartner']=legalStudent.partnerName==null ? "Chưa rõ" : legalStudent.partnerName;
+                            let partnerNames = getPartnerFromFollows(legalStudent.follows);
+                            studentInfo['passPartner']=partnerNames;
+                            legalStudents.push(studentInfo);
+                        }
+                    });
+                    return legalStudents;
+                }
+                function getStudentListNoLecturers(students, gradeLevel, studentClass) {
+                    let legalStudents = [];
+                    let legalStudent;
+                    let count = 0;
+                    angular.forEach(students, function (student) {
+                        if (student.lecturers != null) {
+                            return ;
+                        }
+                        legalStudent = null;
+                        if (gradeLevel !== '' && studentClass !== '') {
+                            if (student.student.infoBySchool.grade == gradeLevel && student.student.infoBySchool.studentClass == studentClass) {
+                                legalStudent = student;
+                                count++;
+                            }
+                        } else {
+                            legalStudent = student;
+                            count++;
+                        }
+                        if (legalStudent != null) {
+                            let studentInfo = [];
+                            studentInfo['stt']=count;
+                            studentInfo['studentName']=legalStudent.student.fullName==null ? "Chưa rõ" : legalStudent.student.fullName;
+                            let studentClass = $scope.getStudentGradeClass(legalStudent.student.infoBySchool.grade, legalStudent.student.infoBySchool.studentClass);
+                            studentInfo['studentClass']=studentClass;
+                            studentInfo['emailVNU']=legalStudent.student.infoBySchool.emailvnu==null ? "Chưa rõ" : legalStudent.student.infoBySchool.emailvnu;
+                            studentInfo['email']=legalStudent.student.email==null ? "Chưa rõ" : legalStudent.student.email;
+                            studentInfo['phoneNumber']=legalStudent.student.phoneNumber==null ? "Chưa rõ" : legalStudent.student.phoneNumber;
+                            studentInfo['selectedPartner']=legalStudent.partnerName==null ? "Chưa rõ" : legalStudent.partnerName;
+                            let partnerNames = getPartnerFromFollows(legalStudent.follows);
+                            studentInfo['passPartner']=partnerNames;
+                            legalStudents.push(studentInfo);
+                        }
+                    });
+                    return legalStudents;
+                }
+                function getAllStudentList(students, gradeLevel, studentClass) {
+                    let legalStudents = [];
+                    let legalStudent;
+                    count = 0;
+                    angular.forEach(students, function (student) {
+                        legalStudent = null;
+                        if (gradeLevel !== '' && studentClass !== '') {
+                            if (student.student.infoBySchool.grade == gradeLevel && student.student.infoBySchool.studentClass == studentClass) {
+                                legalStudent = student;
+                                count++;
+                            }
+                        } else {
+                            legalStudent = student;
+                            count++;
+                        }
+                        if (legalStudent != null) {
+                            let studentInfo = [];
+                            studentInfo['stt']=count;
+                            studentInfo['studentName']=student.student.fullName==null ? "Chưa rõ" : student.student.fullName;
+                            let studentClass = $scope.getStudentGradeClass(student.student.infoBySchool.grade, student.student.infoBySchool.studentClass);
+                            studentInfo['studentClass']=studentClass;
+                            studentInfo['emailVNU']=student.student.infoBySchool.emailvnu==null ? "Chưa rõ" : student.student.infoBySchool.emailvnu;
+                            studentInfo['email']=student.student.email==null ? "Chưa rõ" : student.student.email;
+                            studentInfo['phoneNumber']=student.student.phoneNumber==null ? "Chưa rõ" : student.student.phoneNumber;
+                            studentInfo['lecturerName']=student.lecturers==null ? "Chưa rõ" : student.lecturers.fullName;
+                            studentInfo['lecturerEmailVNU']=student.lecturers==null ? "Chưa rõ" : student.lecturers.emailVNU;
+                            studentInfo['selectedPartner']=student.partnerName==null ? "Chưa rõ" : student.partnerName;
+                            let partnerNames = getPartnerFromFollows(student.follows);
+                            studentInfo['passPartner']=partnerNames;
+                            legalStudents.push(studentInfo);
+                        }
+                    })
+                    return legalStudents;
+                }
+                function getPartnerFromFollows(follows) {
+                    if (follows == null || follows == undefined) {
+                        return "Chưa rõ";
+                    }
+                    let partnerNames = "";
+                    angular.forEach(follows, function(follow) {
+                        if (follow.status == "PASS") {
+                            partnerNames += follow.partnerName + ", ";
+                        }
+                    });
+                    return partnerNames;
+                }
+                function exportStudentListWithLecturers(studentsInfo, cols=10) {
+                    let wscols = [];
+                    wscols[1] = { wpx: 150 };
+                    wscols[2] = { wpx: 100 };
+                    wscols[3] = { wpx: 200 };
+                    wscols[4] = { wpx: 200 };
+                    wscols[5] = { wpx: 100 };
+                    wscols[6] = { wpx: 200 };
+                    wscols[7] = { wpx: 200 };
+                    wscols[8] = { wpx: 300 };
+                    wscols[9] = { wpx: 200 };
+                    wscols[10] = { wpx: 300 };
+                    let ws = { '!ref': "A1:J" + (studentsInfo.length + 1) };
+                    ws['!cols'] = wscols;
+                    let i = 2;
+                    ws['A1'] = {h: "STT", r: "STT", t: "s", v: "STT", w: "STT"};
+                    ws['B1'] = {h: "Họ và tên", r: "Họ và tên", t: "s", v: "Họ và tên", w: "Họ và tên"};
+                    ws['C1'] = {h: "Lớp", r: "Lớp", t: "s", v: "Lớp", w: "Lớp"};
+                    ws['D1'] = {h: "VNU email", r: "VNU email", t: "s", v: "VNU email", w: "VNU email"};
+                    ws['E1'] = {h: "Email", r: "Email", t: "s", v: "Email", w: "Email"};
+                    ws['F1'] = {h: "Phone", r: "Phone", t: "s", v: "Phone", w: "Phone"};
+                    ws['G1'] = {h: "Giảng viên", r: "Giảng viên", t: "s", v: "Giảng viên", w: "Giảng viên"};
+                    ws['H1'] = {h: "Email vnu của giảng viên", r: "Email vnu của giảng viên", t: "s", v: "Email vnu của giảng viên", w: "Email vnu của giảng viên"};
+                    ws['I1'] = {h: "Nơi thực tập", r: "Nơi thực tập", t: "s", v: "Nơi thực tập", w: "Nơi thực tập"};
+                    ws['J1'] = {h: "Công ty đã trúng", r: "Công ty đã trúng", t: "s", v: "Công ty đã trúng", w: "Công ty đã trúng"};
+                    let count = 2;
+                    angular.forEach(studentsInfo, function (studentInfo) {
+                        ws[`A${count}`] = {h: studentInfo.stt, r: studentInfo.stt, t: "s", v: studentInfo.stt, w: studentInfo.stt, s: {alignment:{wrapText: true, vertical: "center"}}};
+                        ws[`B${count}`] = {h: studentInfo.studentName, r: studentInfo.studentName, t: "s", v: studentInfo.studentName, w: studentInfo.studentName, s: {alignment:{wrapText: true, vertical: "center"}}};
+                        ws[`C${count}`] = {h: studentInfo.studentClass, r: studentInfo.studentClass, t: "s", v: studentInfo.studentClass, w: studentInfo.studentClass, s: {alignment:{wrapText: true, vertical: "center"}}};
+                        ws[`D${count}`] = {h: studentInfo.emailVNU, r: studentInfo.emailVNU, t: "s", v: studentInfo.emailVNU, w: studentInfo.emailVNU, s: {alignment:{wrapText: true, vertical: "center"}}};
+                        ws[`E${count}`] = {h: studentInfo.email, r: studentInfo.email, t: "s", v: studentInfo.email, w: studentInfo.email, s: {alignment:{wrapText: true, vertical: "center"}}};
+                        ws[`F${count}`] = {h: studentInfo.phoneNumber, r: studentInfo.phoneNumber, t: "s", v: studentInfo.phoneNumber, w: studentInfo.phoneNumber, s: {alignment:{wrapText: true, vertical: "center"}}};
+                        ws[`G${count}`] = {h: studentInfo.lecturerName, r: studentInfo.lecturerName, t: "s", v: studentInfo.lecturerName, w: studentInfo.lecturerName, s: {alignment:{wrapText: true, vertical: "center"}}};
+                        ws[`H${count}`] = {h: studentInfo.lecturerEmailVNU, r: studentInfo.lecturerEmailVNU, t: "s", v: studentInfo.lecturerEmailVNU, w: studentInfo.lecturerEmailVNU, s: {alignment:{wrapText: true, vertical: "center"}}};
+                        ws[`I${count}`] = {h: studentInfo.selectedPartner, r: studentInfo.selectedPartner, t: "s", v: studentInfo.selectedPartner, w: studentInfo.selectedPartner, s: {alignment:{wrapText: true, vertical: "center"}}};
+                        ws[`J${count}`] = {h: studentInfo.passPartner, r: studentInfo.passPartner, t: "s", v: studentInfo.passPartner, w: studentInfo.passPartner, s: {alignment:{wrapText: true, vertical: "center"}}};
+                        count++;
+                    });
+                    return ws;
+                }
+                function exportStudentListNoLecturers(studentsInfo, cols=8) {
+                    let wscols = [];
                     wscols[1] = { wpx: 150 };
                     wscols[2] = { wpx: 100 };
                     wscols[3] = { wpx: 200 };
@@ -1198,1059 +1425,78 @@
                     wscols[6] = { wpx: 200 };
                     wscols[7] = { wpx: 200 };
                     wscols[8] = { wpx: 200 };
-                    wscols[9] = { wpx: 200 };
-                    wscols[10] = { wpx: 200 };
-                    wscols[11] = { wpx: 200 };
-                    wscols[12] = { wpx: 200 };
-                    wscols[13] = { wpx: 200 };
-                    var ws = { '!ref': "A1:J" + ($scope.allStudents.length + 1) };
+                    let ws = { '!ref': "A1:J" + (studentsInfo.length + 1) };
                     ws['!cols'] = wscols;
-                    var i = 2;
-                    ws['A1'] = {
-                        h: "STT",
-                        r: "STT",
-                        t: "s",
-                        v: "STT",
-                        w: "STT"
-                    };
-                    ws['B1'] = {
-                        h: "Họ và tên",
-                        r: "Họ và tên",
-                        t: "s",
-                        v: "Họ và tên",
-                        w: "Họ và tên"
-                    };
-                    ws['C1'] = {
-                        h: "Lớp",
-                        r: "Lớp",
-                        t: "s",
-                        v: "Lớp",
-                        w: "Lớp"
-                    };
-                    ws['D1'] = {
-                        h: "VNU email",
-                        r: "VNU email",
-                        t: "s",
-                        v: "VNU email",
-                        w: "VNU email"
-                    };
-                    ws['D1'] = {
-                        h: "VNU email",
-                        r: "VNU email",
-                        t: "s",
-                        v: "VNU email",
-                        w: "VNU email"
-                    };
-                    ws['D1'] = {
-                        h: "VNU email",
-                        r: "VNU email",
-                        t: "s",
-                        v: "VNU email",
-                        w: "VNU email"
-                    };
-                    ws['E1'] = {
-                        h: "Email",
-                        r: "Email",
-                        t: "s",
-                        v: "Email",
-                        w: "Email"
-                    };
-                    ws['F1'] = {
-                        h: "Phone",
-                        r: "Phone",
-                        t: "s",
-                        v: "Phone",
-                        w: "Phone"
-                    };
-                    ws['G1'] = {
-                        h: "Giảng viên",
-                        r: "Giảng viên",
-                        t: "s",
-                        v: "Giảng viên",
-                        w: "Giảng viên"
-                    };
-                    ws['H1'] = {
-                        h: "Email vnu của giảng viên",
-                        r: "Email vnu của giảng viên",
-                        t: "s",
-                        v: "Email vnu của giảng viên",
-                        w: "Email vnu của giảng viên"
-                    };
-                    ws['I1'] = {
-                        h: "Nơi thực tập",
-                        r: "Nơi thực tập",
-                        t: "s",
-                        v: "Nơi thực tập",
-                        w: "Nơi thực tập"
-                    };
-                    ws['J1'] = {
-                        h: "Công ty đã trúng",
-                        r: "Công ty đã trúng",
-                        t: "s",
-                        v: "Công ty đã trúng",
-                        w: "Công ty đã trúng"
-                    };
-                    var stt = 1;
-                    let chosenStudentClass = $scope.st.infoBySchool.studentClass;
-                    angular.forEach($scope.allStudents, function(student) {
-                        if ($scope.st.infoBySchool.lectureName != "") {
-                            if (student.lecturers != null && student.lecturers.id == $scope.st.infoBySchool.lectureName) {
-                                let studentClass = student.student.infoBySchool.studentClass;
-                                if (studentClass == null) {
-                                    studentClass = "";
-                                }
-                                let indexStudentClass = studentClass.toLowerCase().indexOf(chosenStudentClass.toLowerCase());
-                                if ($scope.downloadTypeLecturers == "") {
-                                    if ( indexStudentClass != -1 || chosenStudentClass == "") {
-                                        ws['A' + i] = {
-                                            h: stt,
-                                            r: stt,
-                                            t: "s",
-                                            v: stt,
-                                            w: stt,
-                                            s: {
-                                                alignment: {
-                                                    wrapText: true,
-                                                    vertical: "center"
-                                                }
-                                            }
-                                        };
-                                        ws['B' + i] = {
-                                            h: student.student.fullName,
-                                            r: student.student.fullName,
-                                            t: "s",
-                                            v: student.student.fullName,
-                                            w: student.student.fullName,
-                                            s: {
-                                                alignment: {
-                                                    wrapText: true,
-                                                    vertical: "center"
-                                                }
-                                            }
-                                        };
-                                        if (studentClass == null) {
-                                            studentClass = "";
-                                        }
-                                        if (student.student.infoBySchool.grade == null) {
-                                            student.student.infoBySchool.grade = "";
-                                        }
-                                        ws['C' + i] = {
-                                            h: student.student.infoBySchool.grade + studentClass,
-                                            r: student.student.infoBySchool.grade + studentClass,
-                                            t: "s",
-                                            v: student.student.infoBySchool.grade + studentClass,
-                                            w: student.student.infoBySchool.grade + studentClass,
-                                            s: {
-                                                alignment: {
-                                                    wrapText: true,
-                                                    vertical: "center"
-                                                }
-                                            }
-                                        };
-    
-                                        ws['D' + i] = {
-                                            h: student.student.infoBySchool.emailvnu,
-                                            r: student.student.infoBySchool.emailvnu,
-                                            t: "s",
-                                            v: student.student.infoBySchool.emailvnu,
-                                            w: student.student.infoBySchool.emailvnu,
-                                            s: {
-                                                alignment: {
-                                                    wrapText: true,
-                                                    vertical: "center"
-                                                }
-                                            }
-                                        };
-                                        if (student.student.email != null) {
-    
-                                            ws['E' + i] = {
-                                                h: student.student.email,
-                                                r: student.student.email,
-                                                t: "s",
-                                                v: student.student.email,
-                                                w: student.student.email,
-                                                s: {
-                                                    alignment: {
-                                                        wrapText: true,
-                                                        vertical: "center"
-                                                    }
-                                                }
-                                            };
-                                        }
-                                        if (student.student.phoneNumber != null) {
-                                            ws['F' + i] = {
-                                                h: student.student.phoneNumber,
-                                                r: student.student.phoneNumber,
-                                                t: "s",
-                                                v: student.student.phoneNumber,
-                                                w: student.student.phoneNumber,
-                                                s: {
-                                                    alignment: {
-                                                        wrapText: true,
-                                                        vertical: "center"
-                                                    }
-                                                }
-                                            };
-                                        }
-                                        if (student.lecturers != null) {
-                                            ws['G' + i] = {
-                                                h: student.lecturers.fullName,
-                                                r: student.lecturers.fullName,
-                                                t: "s",
-                                                v: student.lecturers.fullName,
-                                                w: student.lecturers.fullName,
-                                                s: {
-                                                    alignment: {
-                                                        wrapText: true,
-                                                        vertical: "center"
-                                                    }
-                                                }
-                                            };
-                                            ws['H' + i] = {
-                                                h: student.lecturers.emailVNU,
-                                                r: student.lecturers.emailVNU,
-                                                t: "s",
-                                                v: student.lecturers.emailVNU,
-                                                w: student.lecturers.emailVNU,
-                                                s: {
-                                                    alignment: {
-                                                        wrapText: true,
-                                                        vertical: "center"
-                                                    }
-                                                }
-                                            };
-                                        }
-                                        if (student.partnerName != null) {
-                                            ws['I' + i] = {
-                                                h: student.partnerName,
-                                                r: student.partnerName,
-                                                t: "s",
-                                                v: student.partnerName,
-                                                w: student.partnerName,
-                                                s: {
-                                                    alignment: {
-                                                        wrapText: true,
-                                                        vertical: "center"
-                                                    }
-                                                }
-                                            };
-                                        }
-                                        if (student.follows != null && student.follows != undefined) {
-                                            var pName = " ";
-                                            angular.forEach(student.follows, function(follow) {
-                                                if (follow.status == "PASS") {
-                                                    pName += follow.partnerName + ", ";
-                                                }
-                                            });
-                                            pName = pName.slice(0, -1);
-                                            ws['J' + i] = {
-                                                h: pName,
-                                                r: pName,
-                                                t: "s",
-                                                v: pName,
-                                                w: pName,
-                                                s: {
-                                                    alignment: {
-                                                        wrapText: true,
-                                                        vertical: "center"
-                                                    }
-                                                }
-                                            };
-                                        }
-                                        i++;
-                                        count++;
-                                        stt++;
-                                    }
-                                } else if ($scope.downloadTypeLecturers == "noLecturers") {
-                                    if ( indexStudentClass != -1 || chosenStudentClass == "") {
-                                        if (student.lecturers == null) {
-                                            ws['A' + i] = {
-                                                h: stt,
-                                                r: stt,
-                                                t: "s",
-                                                v: stt,
-                                                w: stt,
-                                                s: {
-                                                    alignment: {
-                                                        wrapText: true,
-                                                        vertical: "center"
-                                                    }
-                                                }
-                                            };
-                                            ws['B' + i] = {
-                                                h: student.student.fullName,
-                                                r: student.student.fullName,
-                                                t: "s",
-                                                v: student.student.fullName,
-                                                w: student.student.fullName,
-                                                s: {
-                                                    alignment: {
-                                                        wrapText: true,
-                                                        vertical: "center"
-                                                    }
-                                                }
-                                            };
-                                            if (studentClass == null) {
-                                                studentClass = "";
-                                            }
-                                            if (student.student.infoBySchool.grade == null) {
-                                                student.student.infoBySchool.grade = "";
-                                            }
-                                            ws['C' + i] = {
-                                                h: student.student.infoBySchool.grade + studentClass,
-                                                r: student.student.infoBySchool.grade + studentClass,
-                                                t: "s",
-                                                v: student.student.infoBySchool.grade + studentClass,
-                                                w: student.student.infoBySchool.grade + studentClass,
-                                                s: {
-                                                    alignment: {
-                                                        wrapText: true,
-                                                        vertical: "center"
-                                                    }
-                                                }
-                                            };
-                                            ws['D' + i] = {
-                                                h: student.student.infoBySchool.emailvnu,
-                                                r: student.student.infoBySchool.emailvnu,
-                                                t: "s",
-                                                v: student.student.infoBySchool.emailvnu,
-                                                w: student.student.infoBySchool.emailvnu,
-                                                s: {
-                                                    alignment: {
-                                                        wrapText: true,
-                                                        vertical: "center"
-                                                    }
-                                                }
-                                            };
-                                            if (student.email != null) {
-    
-                                                ws['E' + i] = {
-                                                    h: student.student.email,
-                                                    r: student.student.email,
-                                                    t: "s",
-                                                    v: student.student.email,
-                                                    w: student.student.email,
-                                                    s: {
-                                                        alignment: {
-                                                            wrapText: true,
-                                                            vertical: "center"
-                                                        }
-                                                    }
-                                                };
-                                            }
-                                            if (student.student.phoneNumber != null) {
-                                                ws['F' + i] = {
-                                                    h: student.student.phoneNumber,
-                                                    r: student.student.phoneNumber,
-                                                    t: "s",
-                                                    v: student.student.phoneNumber,
-                                                    w: student.student.phoneNumber,
-                                                    s: {
-                                                        alignment: {
-                                                            wrapText: true,
-                                                            vertical: "center"
-                                                        }
-                                                    }
-                                                };
-                                            }
-                                            if (student.partnerName != null) {
-                                                ws['I' + i] = {
-                                                    h: student.partnerName,
-                                                    r: student.partnerName,
-                                                    t: "s",
-                                                    v: student.partnerName,
-                                                    w: student.partnerName,
-                                                    s: {
-                                                        alignment: {
-                                                            wrapText: true,
-                                                            vertical: "center"
-                                                        }
-                                                    }
-                                                };
-                                            }
-                                            if (student.follows != null && student.follows != undefined) {
-                                                var pName = " ";
-                                                angular.forEach(student.follows, function(follow) {
-                                                    if (follow.status == "PASS") {
-                                                        pName += follow.partnerName + ", ";
-                                                    }
-                                                });
-                                                pName = pName.slice(0, -1);
-                                                ws['J' + i] = {
-                                                    h: pName,
-                                                    r: pName,
-                                                    t: "s",
-                                                    v: pName,
-                                                    w: pName,
-                                                    s: {
-                                                        alignment: {
-                                                            wrapText: true,
-                                                            vertical: "center"
-                                                        }
-                                                    }
-                                                };
-                                            }
-                                            i++;
-                                            count++;
-                                            stt++;
-                                        }
-                                    }
-                                } else if ($scope.downloadTypeLecturers == "hasLecturers") {
-                                    if ( indexStudentClass != -1|| chosenStudentClass == "" ) {
-                                        if (student.lecturers != null) {
-                                            ws['A' + i] = {
-                                                h: stt,
-                                                r: stt,
-                                                t: "s",
-                                                v: stt,
-                                                w: stt,
-                                                s: {
-                                                    alignment: {
-                                                        wrapText: true,
-                                                        vertical: "center"
-                                                    }
-                                                }
-                                            };
-                                            ws['B' + i] = {
-                                                h: student.student.fullName,
-                                                r: student.student.fullName,
-                                                t: "s",
-                                                v: student.student.fullName,
-                                                w: student.student.fullName,
-                                                s: {
-                                                    alignment: {
-                                                        wrapText: true,
-                                                        vertical: "center"
-                                                    }
-                                                }
-                                            };
-                                            if (studentClass == null) {
-                                                studentClass = "";
-                                            }
-                                            if (student.student.infoBySchool.grade == null) {
-                                                student.student.infoBySchool.grade = "";
-                                            }
-                                            ws['C' + i] = {
-                                                h: student.student.infoBySchool.grade + studentClass,
-                                                r: student.student.infoBySchool.grade + studentClass,
-                                                t: "s",
-                                                v: student.student.infoBySchool.grade + studentClass,
-                                                w: student.student.infoBySchool.grade + studentClass,
-                                                s: {
-                                                    alignment: {
-                                                        wrapText: true,
-                                                        vertical: "center"
-                                                    }
-                                                }
-                                            };
-    
-                                            ws['D' + i] = {
-                                                h: student.student.infoBySchool.emailvnu,
-                                                r: student.student.infoBySchool.emailvnu,
-                                                t: "s",
-                                                v: student.student.infoBySchool.emailvnu,
-                                                w: student.student.infoBySchool.emailvnu,
-                                                s: {
-                                                    alignment: {
-                                                        wrapText: true,
-                                                        vertical: "center"
-                                                    }
-                                                }
-                                            };
-    
-                                            if (student.student.email != null) {
-    
-                                                ws['E' + i] = {
-                                                    h: student.student.email,
-                                                    r: student.student.email,
-                                                    t: "s",
-                                                    v: student.student.email,
-                                                    w: student.student.email,
-                                                    s: {
-                                                        alignment: {
-                                                            wrapText: true,
-                                                            vertical: "center"
-                                                        }
-                                                    }
-                                                };
-                                            }
-                                            if (student.student.phoneNumber != null) {
-                                                ws['F' + i] = {
-                                                    h: student.student.phoneNumber,
-                                                    r: student.student.phoneNumber,
-                                                    t: "s",
-                                                    v: student.student.phoneNumber,
-                                                    w: student.student.phoneNumber,
-                                                    s: {
-                                                        alignment: {
-                                                            wrapText: true,
-                                                            vertical: "center"
-                                                        }
-                                                    }
-                                                };
-                                            }
-                                            ws['G' + i] = {
-                                                h: student.student.lecturers.fullName,
-                                                r: student.student.lecturers.fullName,
-                                                t: "s",
-                                                v: student.student.lecturers.fullName,
-                                                w: student.student.lecturers.fullName,
-                                                s: {
-                                                    alignment: {
-                                                        wrapText: true,
-                                                        vertical: "center"
-                                                    }
-                                                }
-                                            };
-                                            ws['H' + i] = {
-                                                h: student.student.lecturers.emailVNU,
-                                                r: student.student.lecturers.emailVNU,
-                                                t: "s",
-                                                v: student.student.lecturers.emailVNU,
-                                                w: student.student.lecturers.emailVNU,
-                                                s: {
-                                                    alignment: {
-                                                        wrapText: true,
-                                                        vertical: "center"
-                                                    }
-                                                }
-                                            };
-                                            if (student.partnerName != null) {
-                                                ws['I' + i] = {
-                                                    h: student.partnerName,
-                                                    r: student.partnerName,
-                                                    t: "s",
-                                                    v: student.partnerName,
-                                                    w: student.partnerName,
-                                                    s: {
-                                                        alignment: {
-                                                            wrapText: true,
-                                                            vertical: "center"
-                                                        }
-                                                    }
-                                                };
-                                            }
-                                            if (student.follows != null && student.follows != undefined) {
-                                                var pName = " ";
-                                                angular.forEach(student.follows, function(follow) {
-                                                    if (follow.status == "PASS") {
-                                                        pName += follow.partnerName + ", ";
-                                                    }
-                                                });
-                                                pName = pName.slice(0, -1);
-                                                ws['J' + i] = {
-                                                    h: pName,
-                                                    r: pName,
-                                                    t: "s",
-                                                    v: pName,
-                                                    w: pName,
-                                                    s: {
-                                                        alignment: {
-                                                            wrapText: true,
-                                                            vertical: "center"
-                                                        }
-                                                    }
-                                                };
-                                            }
-                                            i++;
-                                            count++;
-                                            stt++;
-                                        }
-                                    }
-                                }
-                            }
-                            return ;
-                        } else {
-                            let studentClass = student.student.infoBySchool.studentClass;
-                                if (studentClass == null) {
-                                    studentClass = "";
-                                }
-                                let indexStudentClass = studentClass.toLowerCase().indexOf(chosenStudentClass.toLowerCase());
-                                if ($scope.downloadTypeLecturers == "") {
-                                    if ( indexStudentClass != -1 || chosenStudentClass == "") {
-                                        ws['A' + i] = {
-                                            h: stt,
-                                            r: stt,
-                                            t: "s",
-                                            v: stt,
-                                            w: stt,
-                                            s: {
-                                                alignment: {
-                                                    wrapText: true,
-                                                    vertical: "center"
-                                                }
-                                            }
-                                        };
-                                        ws['B' + i] = {
-                                            h: student.student.fullName,
-                                            r: student.student.fullName,
-                                            t: "s",
-                                            v: student.student.fullName,
-                                            w: student.student.fullName,
-                                            s: {
-                                                alignment: {
-                                                    wrapText: true,
-                                                    vertical: "center"
-                                                }
-                                            }
-                                        };
-                                        if (studentClass == null) {
-                                            studentClass = "";
-                                        }
-                                        if (student.student.infoBySchool.grade == null) {
-                                            student.student.infoBySchool.grade = "";
-                                        }
-                                        ws['C' + i] = {
-                                            h: student.student.infoBySchool.grade + studentClass,
-                                            r: student.student.infoBySchool.grade + studentClass,
-                                            t: "s",
-                                            v: student.student.infoBySchool.grade + studentClass,
-                                            w: student.student.infoBySchool.grade + studentClass,
-                                            s: {
-                                                alignment: {
-                                                    wrapText: true,
-                                                    vertical: "center"
-                                                }
-                                            }
-                                        };
-    
-                                        ws['D' + i] = {
-                                            h: student.student.infoBySchool.emailvnu,
-                                            r: student.student.infoBySchool.emailvnu,
-                                            t: "s",
-                                            v: student.student.infoBySchool.emailvnu,
-                                            w: student.student.infoBySchool.emailvnu,
-                                            s: {
-                                                alignment: {
-                                                    wrapText: true,
-                                                    vertical: "center"
-                                                }
-                                            }
-                                        };
-                                        if (student.student.email != null) {
-    
-                                            ws['E' + i] = {
-                                                h: student.student.email,
-                                                r: student.student.email,
-                                                t: "s",
-                                                v: student.student.email,
-                                                w: student.student.email,
-                                                s: {
-                                                    alignment: {
-                                                        wrapText: true,
-                                                        vertical: "center"
-                                                    }
-                                                }
-                                            };
-                                        }
-                                        if (student.student.phoneNumber != null) {
-                                            ws['F' + i] = {
-                                                h: student.student.phoneNumber,
-                                                r: student.student.phoneNumber,
-                                                t: "s",
-                                                v: student.student.phoneNumber,
-                                                w: student.student.phoneNumber,
-                                                s: {
-                                                    alignment: {
-                                                        wrapText: true,
-                                                        vertical: "center"
-                                                    }
-                                                }
-                                            };
-                                        }
-                                        if (student.lecturers != null) {
-                                            ws['G' + i] = {
-                                                h: student.lecturers.fullName,
-                                                r: student.lecturers.fullName,
-                                                t: "s",
-                                                v: student.lecturers.fullName,
-                                                w: student.lecturers.fullName,
-                                                s: {
-                                                    alignment: {
-                                                        wrapText: true,
-                                                        vertical: "center"
-                                                    }
-                                                }
-                                            };
-                                            ws['H' + i] = {
-                                                h: student.lecturers.emailVNU,
-                                                r: student.lecturers.emailVNU,
-                                                t: "s",
-                                                v: student.lecturers.emailVNU,
-                                                w: student.lecturers.emailVNU,
-                                                s: {
-                                                    alignment: {
-                                                        wrapText: true,
-                                                        vertical: "center"
-                                                    }
-                                                }
-                                            };
-                                        }
-                                        if (student.partnerName != null) {
-                                            ws['I' + i] = {
-                                                h: student.partnerName,
-                                                r: student.partnerName,
-                                                t: "s",
-                                                v: student.partnerName,
-                                                w: student.partnerName,
-                                                s: {
-                                                    alignment: {
-                                                        wrapText: true,
-                                                        vertical: "center"
-                                                    }
-                                                }
-                                            };
-                                        }
-                                        if (student.follows != null && student.follows != undefined) {
-                                            var pName = " ";
-                                            angular.forEach(student.follows, function(follow) {
-                                                if (follow.status == "PASS") {
-                                                    pName += follow.partnerName + ", ";
-                                                }
-                                            });
-                                            pName = pName.slice(0, -1);
-                                            ws['J' + i] = {
-                                                h: pName,
-                                                r: pName,
-                                                t: "s",
-                                                v: pName,
-                                                w: pName,
-                                                s: {
-                                                    alignment: {
-                                                        wrapText: true,
-                                                        vertical: "center"
-                                                    }
-                                                }
-                                            };
-                                        }
-                                        i++;
-                                        count++;
-                                        stt++;
-                                    }
-                                } else if ($scope.downloadTypeLecturers == "noLecturers") {
-                                    if ( indexStudentClass != -1 || chosenStudentClass == "") {
-                                        if (student.lecturers == null) {
-                                            ws['A' + i] = {
-                                                h: stt,
-                                                r: stt,
-                                                t: "s",
-                                                v: stt,
-                                                w: stt,
-                                                s: {
-                                                    alignment: {
-                                                        wrapText: true,
-                                                        vertical: "center"
-                                                    }
-                                                }
-                                            };
-                                            ws['B' + i] = {
-                                                h: student.student.fullName,
-                                                r: student.student.fullName,
-                                                t: "s",
-                                                v: student.student.fullName,
-                                                w: student.student.fullName,
-                                                s: {
-                                                    alignment: {
-                                                        wrapText: true,
-                                                        vertical: "center"
-                                                    }
-                                                }
-                                            };
-                                            if (studentClass == null) {
-                                                studentClass = "";
-                                            }
-                                            if (student.student.infoBySchool.grade == null) {
-                                                student.student.infoBySchool.grade = "";
-                                            }
-                                            ws['C' + i] = {
-                                                h: student.student.infoBySchool.grade + studentClass,
-                                                r: student.student.infoBySchool.grade + studentClass,
-                                                t: "s",
-                                                v: student.student.infoBySchool.grade + studentClass,
-                                                w: student.student.infoBySchool.grade + studentClass,
-                                                s: {
-                                                    alignment: {
-                                                        wrapText: true,
-                                                        vertical: "center"
-                                                    }
-                                                }
-                                            };
-                                            ws['D' + i] = {
-                                                h: student.student.infoBySchool.emailvnu,
-                                                r: student.student.infoBySchool.emailvnu,
-                                                t: "s",
-                                                v: student.student.infoBySchool.emailvnu,
-                                                w: student.student.infoBySchool.emailvnu,
-                                                s: {
-                                                    alignment: {
-                                                        wrapText: true,
-                                                        vertical: "center"
-                                                    }
-                                                }
-                                            };
-                                            if (student.email != null) {
-    
-                                                ws['E' + i] = {
-                                                    h: student.student.email,
-                                                    r: student.student.email,
-                                                    t: "s",
-                                                    v: student.student.email,
-                                                    w: student.student.email,
-                                                    s: {
-                                                        alignment: {
-                                                            wrapText: true,
-                                                            vertical: "center"
-                                                        }
-                                                    }
-                                                };
-                                            }
-                                            if (student.student.phoneNumber != null) {
-                                                ws['F' + i] = {
-                                                    h: student.student.phoneNumber,
-                                                    r: student.student.phoneNumber,
-                                                    t: "s",
-                                                    v: student.student.phoneNumber,
-                                                    w: student.student.phoneNumber,
-                                                    s: {
-                                                        alignment: {
-                                                            wrapText: true,
-                                                            vertical: "center"
-                                                        }
-                                                    }
-                                                };
-                                            }
-                                            if (student.partnerName != null) {
-                                                ws['I' + i] = {
-                                                    h: student.partnerName,
-                                                    r: student.partnerName,
-                                                    t: "s",
-                                                    v: student.partnerName,
-                                                    w: student.partnerName,
-                                                    s: {
-                                                        alignment: {
-                                                            wrapText: true,
-                                                            vertical: "center"
-                                                        }
-                                                    }
-                                                };
-                                            }
-                                            if (student.follows != null && student.follows != undefined) {
-                                                var pName = " ";
-                                                angular.forEach(student.follows, function(follow) {
-                                                    if (follow.status == "PASS") {
-                                                        pName += follow.partnerName + ", ";
-                                                    }
-                                                });
-                                                pName = pName.slice(0, -1);
-                                                ws['J' + i] = {
-                                                    h: pName,
-                                                    r: pName,
-                                                    t: "s",
-                                                    v: pName,
-                                                    w: pName,
-                                                    s: {
-                                                        alignment: {
-                                                            wrapText: true,
-                                                            vertical: "center"
-                                                        }
-                                                    }
-                                                };
-                                            }
-                                            i++;
-                                            count++;
-                                            stt++;
-                                        }
-                                    }
-                                } else if ($scope.downloadTypeLecturers == "hasLecturers") {
-                                    if ( indexStudentClass != -1|| chosenStudentClass == "" ) {
-                                        if (student.lecturers != null) {
-                                            ws['A' + i] = {
-                                                h: stt,
-                                                r: stt,
-                                                t: "s",
-                                                v: stt,
-                                                w: stt,
-                                                s: {
-                                                    alignment: {
-                                                        wrapText: true,
-                                                        vertical: "center"
-                                                    }
-                                                }
-                                            };
-                                            ws['B' + i] = {
-                                                h: student.student.fullName,
-                                                r: student.student.fullName,
-                                                t: "s",
-                                                v: student.student.fullName,
-                                                w: student.student.fullName,
-                                                s: {
-                                                    alignment: {
-                                                        wrapText: true,
-                                                        vertical: "center"
-                                                    }
-                                                }
-                                            };
-                                            if (studentClass == null) {
-                                                studentClass = "";
-                                            }
-                                            if (student.student.infoBySchool.grade == null) {
-                                                student.student.infoBySchool.grade = "";
-                                            }
-                                            ws['C' + i] = {
-                                                h: student.student.infoBySchool.grade + studentClass,
-                                                r: student.student.infoBySchool.grade + studentClass,
-                                                t: "s",
-                                                v: student.student.infoBySchool.grade + studentClass,
-                                                w: student.student.infoBySchool.grade + studentClass,
-                                                s: {
-                                                    alignment: {
-                                                        wrapText: true,
-                                                        vertical: "center"
-                                                    }
-                                                }
-                                            };
-    
-                                            ws['D' + i] = {
-                                                h: student.student.infoBySchool.emailvnu,
-                                                r: student.student.infoBySchool.emailvnu,
-                                                t: "s",
-                                                v: student.student.infoBySchool.emailvnu,
-                                                w: student.student.infoBySchool.emailvnu,
-                                                s: {
-                                                    alignment: {
-                                                        wrapText: true,
-                                                        vertical: "center"
-                                                    }
-                                                }
-                                            };
-    
-                                            if (student.student.email != null) {
-    
-                                                ws['E' + i] = {
-                                                    h: student.student.email,
-                                                    r: student.student.email,
-                                                    t: "s",
-                                                    v: student.student.email,
-                                                    w: student.student.email,
-                                                    s: {
-                                                        alignment: {
-                                                            wrapText: true,
-                                                            vertical: "center"
-                                                        }
-                                                    }
-                                                };
-                                            }
-                                            if (student.student.phoneNumber != null) {
-                                                ws['F' + i] = {
-                                                    h: student.student.phoneNumber,
-                                                    r: student.student.phoneNumber,
-                                                    t: "s",
-                                                    v: student.student.phoneNumber,
-                                                    w: student.student.phoneNumber,
-                                                    s: {
-                                                        alignment: {
-                                                            wrapText: true,
-                                                            vertical: "center"
-                                                        }
-                                                    }
-                                                };
-                                            }
-                                            ws['G' + i] = {
-                                                h: student.student.lecturers.fullName,
-                                                r: student.student.lecturers.fullName,
-                                                t: "s",
-                                                v: student.student.lecturers.fullName,
-                                                w: student.student.lecturers.fullName,
-                                                s: {
-                                                    alignment: {
-                                                        wrapText: true,
-                                                        vertical: "center"
-                                                    }
-                                                }
-                                            };
-                                            ws['H' + i] = {
-                                                h: student.student.lecturers.emailVNU,
-                                                r: student.student.lecturers.emailVNU,
-                                                t: "s",
-                                                v: student.student.lecturers.emailVNU,
-                                                w: student.student.lecturers.emailVNU,
-                                                s: {
-                                                    alignment: {
-                                                        wrapText: true,
-                                                        vertical: "center"
-                                                    }
-                                                }
-                                            };
-                                            if (student.partnerName != null) {
-                                                ws['I' + i] = {
-                                                    h: student.partnerName,
-                                                    r: student.partnerName,
-                                                    t: "s",
-                                                    v: student.partnerName,
-                                                    w: student.partnerName,
-                                                    s: {
-                                                        alignment: {
-                                                            wrapText: true,
-                                                            vertical: "center"
-                                                        }
-                                                    }
-                                                };
-                                            }
-                                            if (student.follows != null && student.follows != undefined) {
-                                                var pName = " ";
-                                                angular.forEach(student.follows, function(follow) {
-                                                    if (follow.status == "PASS") {
-                                                        pName += follow.partnerName + ", ";
-                                                    }
-                                                });
-                                                pName = pName.slice(0, -1);
-                                                ws['J' + i] = {
-                                                    h: pName,
-                                                    r: pName,
-                                                    t: "s",
-                                                    v: pName,
-                                                    w: pName,
-                                                    s: {
-                                                        alignment: {
-                                                            wrapText: true,
-                                                            vertical: "center"
-                                                        }
-                                                    }
-                                                };
-                                            }
-                                            i++;
-                                            count++;
-                                            stt++;
-                                        }
-                                    }
-                                }
-                        }
-
+                    let i = 2;
+                    ws['A1'] = {h: "STT", r: "STT", t: "s", v: "STT", w: "STT"};
+                    ws['B1'] = {h: "Họ và tên", r: "Họ và tên", t: "s", v: "Họ và tên", w: "Họ và tên"};
+                    ws['C1'] = {h: "Lớp", r: "Lớp", t: "s", v: "Lớp", w: "Lớp"};
+                    ws['D1'] = {h: "VNU email", r: "VNU email", t: "s", v: "VNU email", w: "VNU email"};
+                    ws['E1'] = {h: "Email", r: "Email", t: "s", v: "Email", w: "Email"};
+                    ws['F1'] = {h: "Phone", r: "Phone", t: "s", v: "Phone", w: "Phone"};
+                    ws['G1'] = {h: "Nơi thực tập", r: "Nơi thực tập", t: "s", v: "Nơi thực tập", w: "Nơi thực tập"};
+                    ws['H1'] = {h: "Công ty đã trúng", r: "Công ty đã trúng", t: "s", v: "Công ty đã trúng", w: "Công ty đã trúng"};
+                    let count = 2;
+                    angular.forEach(studentsInfo, function (studentInfo) {
+                        ws[`A${count}`] = {h: studentInfo.stt, r: studentInfo.stt, t: "s", v: studentInfo.stt, w: studentInfo.stt, s: {alignment:{wrapText: true, vertical: "center"}}};
+                        ws[`B${count}`] = {h: studentInfo.studentName, r: studentInfo.studentName, t: "s", v: studentInfo.studentName, w: studentInfo.studentName, s: {alignment:{wrapText: true, vertical: "center"}}};
+                        ws[`C${count}`] = {h: studentInfo.studentClass, r: studentInfo.studentClass, t: "s", v: studentInfo.studentClass, w: studentInfo.studentClass, s: {alignment:{wrapText: true, vertical: "center"}}};
+                        ws[`D${count}`] = {h: studentInfo.emailVNU, r: studentInfo.emailVNU, t: "s", v: studentInfo.emailVNU, w: studentInfo.emailVNU, s: {alignment:{wrapText: true, vertical: "center"}}};
+                        ws[`E${count}`] = {h: studentInfo.email, r: studentInfo.email, t: "s", v: studentInfo.email, w: studentInfo.email, s: {alignment:{wrapText: true, vertical: "center"}}};
+                        ws[`F${count}`] = {h: studentInfo.phoneNumber, r: studentInfo.phoneNumber, t: "s", v: studentInfo.phoneNumber, w: studentInfo.phoneNumber, s: {alignment:{wrapText: true, vertical: "center"}}};
+                        ws[`G${count}`] = {h: studentInfo.selectedPartner, r: studentInfo.selectedPartner, t: "s", v: studentInfo.selectedPartner, w: studentInfo.selectedPartner, s: {alignment:{wrapText: true, vertical: "center"}}};
+                        ws[`H${count}`] = {h: studentInfo.passPartner, r: studentInfo.passPartner, t: "s", v: studentInfo.passPartner, w: studentInfo.passPartner, s: {alignment:{wrapText: true, vertical: "center"}}};
+                        count++;
                     });
-                    wb.SheetNames.push('Student List');
-                    wb.Sheets['Student List'] = ws;
-
-                    var wbout = XLSX.write(wb, wopts);
-
-                    function s2ab(s) {
-                        var buf = new ArrayBuffer(s.length);
-                        var view = new Uint8Array(buf);
-                        for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
-                        return buf;
-                    }
-                    if (count == 0) {
-                        $scope.alertWarning("Tên lớp không trùng!", 5000);
-                    } else {
-                        if (chosenStudentClass == "") {
-                            saveAs(new Blob([s2ab(wbout)], { type: "" }), "Student List - All.xlsx")
-                        } else {
-                            saveAs(new Blob([s2ab(wbout)], { type: "" }), "Registration List - " + chosenStudentClass + ".xlsx");
-                        }
-                        $scope.alertSuccess("Xuất danh sách thành công!", "");
-                        chosenStudentClass = "";
-                    }
-                };
-
+                    return ws;
+                }
+                function exportAllStudentList(studentsInfo, col=10) {
+                    let wscols = [];
+                    wscols[1] = { wpx: 150 };
+                    wscols[2] = { wpx: 100 };
+                    wscols[3] = { wpx: 200 };
+                    wscols[4] = { wpx: 200 };
+                    wscols[5] = { wpx: 100 };
+                    wscols[6] = { wpx: 200 };
+                    wscols[7] = { wpx: 200 };
+                    wscols[8] = { wpx: 300 };
+                    wscols[9] = { wpx: 200 };
+                    wscols[10] = { wpx: 300 };
+                    let ws = { '!ref': "A1:J" + (studentsInfo.length + 1) };
+                    ws['!cols'] = wscols;
+                    let i = 2;
+                    ws['A1'] = {h: "STT", r: "STT", t: "s", v: "STT", w: "STT"};
+                    ws['B1'] = {h: "Họ và tên", r: "Họ và tên", t: "s", v: "Họ và tên", w: "Họ và tên"};
+                    ws['C1'] = {h: "Lớp", r: "Lớp", t: "s", v: "Lớp", w: "Lớp"};
+                    ws['D1'] = {h: "VNU email", r: "VNU email", t: "s", v: "VNU email", w: "VNU email"};
+                    ws['E1'] = {h: "Email", r: "Email", t: "s", v: "Email", w: "Email"};
+                    ws['F1'] = {h: "Phone", r: "Phone", t: "s", v: "Phone", w: "Phone"};
+                    ws['G1'] = {h: "Giảng viên", r: "Giảng viên", t: "s", v: "Giảng viên", w: "Giảng viên"};
+                    ws['H1'] = {h: "Email vnu của giảng viên", r: "Email vnu của giảng viên", t: "s", v: "Email vnu của giảng viên", w: "Email vnu của giảng viên"};
+                    ws['I1'] = {h: "Nơi thực tập", r: "Nơi thực tập", t: "s", v: "Nơi thực tập", w: "Nơi thực tập"};
+                    ws['J1'] = {h: "Công ty đã trúng", r: "Công ty đã trúng", t: "s", v: "Công ty đã trúng", w: "Công ty đã trúng"};
+                    var count = 2;
+                    angular.forEach(studentsInfo, function (studentInfo) {
+                        ws[`A${count}`] = {h: studentInfo.stt, r: studentInfo.stt, t: "s", v: studentInfo.stt, w: studentInfo.stt, s: {alignment:{wrapText: true, vertical: "center"}}};
+                        ws[`B${count}`] = {h: studentInfo.studentName, r: studentInfo.studentName, t: "s", v: studentInfo.studentName, w: studentInfo.studentName, s: {alignment:{wrapText: true, vertical: "center"}}};
+                        ws[`C${count}`] = {h: studentInfo.studentClass, r: studentInfo.studentClass, t: "s", v: studentInfo.studentClass, w: studentInfo.studentClass, s: {alignment:{wrapText: true, vertical: "center"}}};
+                        ws[`D${count}`] = {h: studentInfo.emailVNU, r: studentInfo.emailVNU, t: "s", v: studentInfo.emailVNU, w: studentInfo.emailVNU, s: {alignment:{wrapText: true, vertical: "center"}}};
+                        ws[`E${count}`] = {h: studentInfo.email, r: studentInfo.email, t: "s", v: studentInfo.email, w: studentInfo.email, s: {alignment:{wrapText: true, vertical: "center"}}};
+                        ws[`F${count}`] = {h: studentInfo.phoneNumber, r: studentInfo.phoneNumber, t: "s", v: studentInfo.phoneNumber, w: studentInfo.phoneNumber, s: {alignment:{wrapText: true, vertical: "center"}}};
+                        ws[`G${count}`] = {h: studentInfo.lecturerName, r: studentInfo.lecturerName, t: "s", v: studentInfo.lecturerName, w: studentInfo.lecturerName, s: {alignment:{wrapText: true, vertical: "center"}}};
+                        ws[`H${count}`] = {h: studentInfo.lecturerEmailVNU, r: studentInfo.lecturerEmailVNU, t: "s", v: studentInfo.lecturerEmailVNU, w: studentInfo.lecturerEmailVNU, s: {alignment:{wrapText: true, vertical: "center"}}};
+                        ws[`I${count}`] = {h: studentInfo.selectedPartner, r: studentInfo.selectedPartner, t: "s", v: studentInfo.selectedPartner, w: studentInfo.selectedPartner, s: {alignment:{wrapText: true, vertical: "center"}}};
+                        ws[`J${count}`] = {h: studentInfo.passPartner, r: studentInfo.passPartner, t: "s", v: studentInfo.passPartner, w: studentInfo.passPartner, s: {alignment:{wrapText: true, vertical: "center"}}};
+                        count++;
+                    });
+                    return ws;
+                }
+                function s2ab(s) {
+                    var buf = new ArrayBuffer(s.length);
+                    var view = new Uint8Array(buf);
+                    for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+                    return buf;
+                }
                 $scope.exportDataRegistrationResearch = function() {
                     var count = 0;
                     var wb = {};
@@ -2268,71 +1514,23 @@
                     var ws = { '!ref': "A1:G" + ($scope.allFollows.length + 1) };
                     ws['!cols'] = wscols;
                     var i = 2;
-                    ws['A1'] = {
-                        h: "Student Name",
-                        r: "Student Name",
-                        t: "s",
-                        v: "Student Name",
-                        w: "Student Name"
-                    };
-                    ws['B1'] = {
-                        h: "Student Code",
-                        r: "Student Code",
-                        t: "s",
-                        v: "Student Code",
-                        w: "Student Code"
-                    };
-                    ws['C1'] = {
-                        h: "Class",
-                        r: "Class",
-                        t: "s",
-                        v: "Class",
-                        w: "Class"
-                    };
-                    ws['D1'] = {
-                        h: "VNU email",
-                        r: "VNU email",
-                        t: "s",
-                        v: "VNU email",
-                        w: "VNU email"
-                    };
-                    ws['E1'] = {
-                        h: "Email",
-                        r: "Email",
-                        t: "s",
-                        v: "Email",
-                        w: "Email"
-                    };
-                    ws['F1'] = {
-                        h: "Phone",
-                        r: "Phone",
-                        t: "s",
-                        v: "Phone",
-                        w: "Phone"
-                    };
-                    ws['G1'] = {
-                        h: "Lecturers",
-                        r: "Lecturers",
-                        t: "s",
-                        v: "Lecturers",
-                        w: "Lecturers"
-                    };
-                    var name = "";
+                    ws['A1'] = {h: "Student Name", r: "Student Name", t: "s", v: "Student Name", w: "Student Name"};
+                    ws['B1'] = {h: "Student Code", r: "Student Code", t: "s", v: "Student Code", w: "Student Code"};
+                    ws['C1'] = {h: "Class", r: "Class", t: "s", v: "Class", w: "Class"};
+                    ws['D1'] = {h: "VNU email", r: "VNU email", t: "s", v: "VNU email", w: "VNU email"};
+                    ws['E1'] = {h: "Email", r: "Email", t: "s", v: "Email", w: "Email"};
+                    ws['F1'] = {h: "Phone", r: "Phone", t: "s", v: "Phone", w: "Phone"};
+                    ws['G1'] = {h: "Lecturers", r: "Lecturers", t: "s", v: "Lecturers", w: "Lecturers"};
                     angular.forEach($scope.allFollows, function(follow) {
+                        let studentClass = $scope.getStudentGradeClass(follow.student.infoBySchool.grade, follow.student.infoBySchool.studentClass);
                         if (follow.postTitle.toLowerCase().indexOf("research") != -1) {
-                            name = follow.partnerName;
                             ws['A' + i] = {
                                 h: follow.student.fullName,
                                 r: follow.student.fullName,
                                 t: "s",
                                 v: follow.student.fullName,
                                 w: follow.student.fullName,
-                                s: {
-                                    alignment: {
-                                        wrapText: true,
-                                        vertical: "center"
-                                    }
-                                }
+                                s: {alignment:{wrapText: true, vertical: "center"} }
                             };
                             if (follow.student.infoBySchool.studentCode != null) {
                                 ws['B' + i] = {
@@ -2341,31 +1539,17 @@
                                     t: "s",
                                     v: follow.student.infoBySchool.studentCode,
                                     w: follow.student.infoBySchool.studentCode,
-                                    s: {
-                                        alignment: {
-                                            wrapText: true,
-                                            vertical: "center"
-                                        }
-                                    }
+                                    s: {alignment:{wrapText: true, vertical: "center"} }
                                 };
-                            }
-
-                            if (follow.student.infoBySchool.grade == null) {
-                                follow.student.infoBySchool.grade = " ";
                             }
                             if (follow.student.infoBySchool.studentClass != null) {
                                 ws['C' + i] = {
-                                    h: "K" + follow.student.infoBySchool.grade + follow.student.infoBySchool.studentClass,
-                                    r: "K" + follow.student.infoBySchool.grade + follow.student.infoBySchool.studentClass,
+                                    h: studentClass,
+                                    r: studentClass,
                                     t: "s",
-                                    v: "K" + follow.student.infoBySchool.grade + follow.student.infoBySchool.studentClass,
-                                    w: "K" + follow.student.infoBySchool.grade + follow.student.infoBySchool.studentClass,
-                                    s: {
-                                        alignment: {
-                                            wrapText: true,
-                                            vertical: "center"
-                                        }
-                                    }
+                                    v: studentClass,
+                                    w: studentClass,
+                                    s: {alignment:{wrapText: true, vertical: "center"} }
                                 };
                             }
 
@@ -2375,12 +1559,7 @@
                                 t: "s",
                                 v: follow.student.infoBySchool.emailvnu,
                                 w: follow.student.infoBySchool.emailvnu,
-                                s: {
-                                    alignment: {
-                                        wrapText: true,
-                                        vertical: "center"
-                                    }
-                                }
+                                s: {alignment:{wrapText: true, vertical: "center"} }
                             };
                             if (follow.student.email != null) {
                                 ws['E' + i] = {
@@ -2389,12 +1568,7 @@
                                     t: "s",
                                     v: follow.student.email,
                                     w: follow.student.email,
-                                    s: {
-                                        alignment: {
-                                            wrapText: true,
-                                            vertical: "center"
-                                        }
-                                    }
+                                    s: {alignment:{wrapText: true, vertical: "center"} }
                                 };
                             }
                             if (follow.student.phoneNumber != null) {
@@ -2404,12 +1578,7 @@
                                     t: "s",
                                     v: follow.student.phoneNumber,
                                     w: follow.student.phoneNumber,
-                                    s: {
-                                        alignment: {
-                                            wrapText: true,
-                                            vertical: "center"
-                                        }
-                                    }
+                                    s: {alignment:{wrapText: true, vertical: "center"} }
                                 };
                             }
 
@@ -2420,12 +1589,7 @@
                                     t: "s",
                                     v: follow.lecturersName,
                                     w: follow.lecturersName,
-                                    s: {
-                                        alignment: {
-                                            wrapText: true,
-                                            vertical: "center"
-                                        }
-                                    }
+                                    s: {alignment:{wrapText: true, vertical: "center"} }
                                 };
                             i++;
                             count++;
@@ -2471,64 +1635,17 @@
                     var ws = { '!ref': "A1:H" + ($scope.allFollows.length + 1) };
                     ws['!cols'] = wscols;
                     var i = 2;
-                    ws['A1'] = {
-                        h: "Student Name",
-                        r: "Student Name",
-                        t: "s",
-                        v: "Student Name",
-                        w: "Student Name"
-                    };
-                    ws['B1'] = {
-                        h: "Student Code",
-                        r: "Student Code",
-                        t: "s",
-                        v: "Student Code",
-                        w: "Student Code"
-                    };
-                    ws['C1'] = {
-                        h: "Class",
-                        r: "Class",
-                        t: "s",
-                        v: "Class",
-                        w: "Class"
-                    };
-                    ws['D1'] = {
-                        h: "VNU email",
-                        r: "VNU email",
-                        t: "s",
-                        v: "VNU email",
-                        w: "VNU email"
-                    };
-                    ws['E1'] = {
-                        h: "Email",
-                        r: "Email",
-                        t: "s",
-                        v: "Email",
-                        w: "Email"
-                    };
-                    ws['F1'] = {
-                        h: "Phone",
-                        r: "Phone",
-                        t: "s",
-                        v: "Phone",
-                        w: "Phone"
-                    };
-                    ws['G1'] = {
-                        h: "Company",
-                        r: "Company",
-                        t: "s",
-                        v: "Company",
-                        w: "Company"
-                    };
-                    ws['H1'] = {
-                        h: "Type",
-                        r: "Type",
-                        t: "s",
-                        v: "Type",
-                        w: "Type"
-                    };
+                    ws['A1'] = {h: "Student Name", r: "Student Name", t: "s", v: "Student Name", w: "Student Name"};
+                    ws['B1'] = {h: "Student Code", r: "Student Code", t: "s", v: "Student Code", w: "Student Code"};
+                    ws['C1'] = {h: "Class", r: "Class", t: "s", v: "Class", w: "Class"};
+                    ws['D1'] = {h: "VNU email", r: "VNU email", t: "s", v: "VNU email", w: "VNU email"};
+                    ws['E1'] = {h: "Email", r: "Email", t: "s", v: "Email", w: "Email"};
+                    ws['F1'] = {h: "Phone", r: "Phone", t: "s", v: "Phone", w: "Phone"};
+                    ws['G1'] = {h: "Company", r: "Company", t: "s", v: "Company", w: "Company"};
+                    ws['H1'] = {h: "Type", r: "Type", t: "s", v: "Type", w: "Type"};
                     var name = "";
                     angular.forEach($scope.allFollows, function(follow) {
+                        let studentClass = $scope.getStudentGradeClass(follow.student.infoBySchool.grade, follow.student.infoBySchool.studentClass);
                         if ($scope.postTitle != "") {
                             if (follow.postTitle == $scope.postTitle) {
                                 if (follow.partnerName.toLowerCase().indexOf($scope.search.toLowerCase()) != -1 || $scope.search == "") {
@@ -2539,12 +1656,7 @@
                                         t: "s",
                                         v: follow.student.fullName,
                                         w: follow.student.fullName,
-                                        s: {
-                                            alignment: {
-                                                wrapText: true,
-                                                vertical: "center"
-                                            }
-                                        }
+                                        s: {alignment:{wrapText: true, vertical: "center"} }
                                     };
                                     if (follow.student.infoBySchool.studentCode != null) {
                                         ws['B' + i] = {
@@ -2553,30 +1665,17 @@
                                             t: "s",
                                             v: follow.student.infoBySchool.studentCode,
                                             w: follow.student.infoBySchool.studentCode,
-                                            s: {
-                                                alignment: {
-                                                    wrapText: true,
-                                                    vertical: "center"
-                                                }
-                                            }
+                                            s: {alignment:{wrapText: true, vertical: "center"} }
                                         };
                                     }
-
-                                    if (follow.student.infoBySchool.studentClass != null) {
-                                        ws['C' + i] = {
-                                            h: "K" + follow.student.infoBySchool.grade + follow.student.infoBySchool.studentClass,
-                                            r: "K" + follow.student.infoBySchool.grade + follow.student.infoBySchool.studentClass,
-                                            t: "s",
-                                            v: "K" + follow.student.infoBySchool.grade + follow.student.infoBySchool.studentClass,
-                                            w: "K" + follow.student.infoBySchool.grade + follow.student.infoBySchool.studentClass,
-                                            s: {
-                                                alignment: {
-                                                    wrapText: true,
-                                                    vertical: "center"
-                                                }
-                                            }
-                                        };
-                                    }
+                                    ws['C' + i] = {
+                                        h: studentClass,
+                                        r: studentClass,
+                                        t: "s",
+                                        v: studentClass,
+                                        w: studentClass,
+                                        s: {alignment:{wrapText: true, vertical: "center"} }
+                                    };
 
                                     ws['D' + i] = {
                                         h: follow.student.infoBySchool.emailvnu,
@@ -2584,12 +1683,7 @@
                                         t: "s",
                                         v: follow.student.infoBySchool.emailvnu,
                                         w: follow.student.infoBySchool.emailvnu,
-                                        s: {
-                                            alignment: {
-                                                wrapText: true,
-                                                vertical: "center"
-                                            }
-                                        }
+                                        s: {alignment:{wrapText: true, vertical: "center"} }
                                     };
                                     if (follow.student.email != null) {
                                         ws['E' + i] = {
@@ -2598,12 +1692,7 @@
                                             t: "s",
                                             v: follow.student.email,
                                             w: follow.student.email,
-                                            s: {
-                                                alignment: {
-                                                    wrapText: true,
-                                                    vertical: "center"
-                                                }
-                                            }
+                                            s: {alignment:{wrapText: true, vertical: "center"} }
                                         };
                                     }
                                     if (follow.student.phoneNumber != null) {
@@ -2613,12 +1702,7 @@
                                             t: "s",
                                             v: follow.student.phoneNumber,
                                             w: follow.student.phoneNumber,
-                                            s: {
-                                                alignment: {
-                                                    wrapText: true,
-                                                    vertical: "center"
-                                                }
-                                            }
+                                            s: {alignment:{wrapText: true, vertical: "center"} }
                                         };
                                     }
                                     ws['G' + i] = {
@@ -2627,12 +1711,7 @@
                                         t: "s",
                                         v: follow.partnerName,
                                         w: follow.partnerName,
-                                        s: {
-                                            alignment: {
-                                                wrapText: true,
-                                                vertical: "center"
-                                            }
-                                        }
+                                        s: {alignment:{wrapText: true, vertical: "center"} }
                                     };
                                     if ($scope.typeName == "" || $scope.typeName == undefined) {
                                         ws['H' + i] = {
@@ -2641,12 +1720,7 @@
                                             t: "s",
                                             v: follow.postTitle,
                                             w: follow.postTitle,
-                                            s: {
-                                                alignment: {
-                                                    wrapText: true,
-                                                    vertical: "center"
-                                                }
-                                            }
+                                            s: {alignment:{wrapText: true, vertical: "center"} }
                                         };
                                     } else {
                                         ws['H' + i] = {
@@ -2655,12 +1729,7 @@
                                             t: "s",
                                             v: $scope.typeName,
                                             w: $scope.typeName,
-                                            s: {
-                                                alignment: {
-                                                    wrapText: true,
-                                                    vertical: "center"
-                                                }
-                                            }
+                                            s: {alignment:{wrapText: true, vertical: "center"} }
                                         };
                                     }
                                     i++;
@@ -2675,12 +1744,7 @@
                                 t: "s",
                                 v: follow.student.fullName,
                                 w: follow.student.fullName,
-                                s: {
-                                    alignment: {
-                                        wrapText: true,
-                                        vertical: "center"
-                                    }
-                                }
+                                s: {alignment:{wrapText: true, vertical: "center"} }
                             };
                             if (follow.student.infoBySchool.studentCode != null) {
                                 ws['B' + i] = {
@@ -2689,28 +1753,18 @@
                                     t: "s",
                                     v: follow.student.infoBySchool.studentCode,
                                     w: follow.student.infoBySchool.studentCode,
-                                    s: {
-                                        alignment: {
-                                            wrapText: true,
-                                            vertical: "center"
-                                        }
-                                    }
+                                    s: {alignment:{wrapText: true, vertical: "center"} }
                                 };
                             }
 
                             if (follow.student.infoBySchool.studentClass != null) {
                                 ws['C' + i] = {
-                                    h: "K" + follow.student.infoBySchool.grade + follow.student.infoBySchool.studentClass,
-                                    r: "K" + follow.student.infoBySchool.grade + follow.student.infoBySchool.studentClass,
+                                    h: studentClass,
+                                    r: studentClass,
                                     t: "s",
-                                    v: "K" + follow.student.infoBySchool.grade + follow.student.infoBySchool.studentClass,
-                                    w: "K" + follow.student.infoBySchool.grade + follow.student.infoBySchool.studentClass,
-                                    s: {
-                                        alignment: {
-                                            wrapText: true,
-                                            vertical: "center"
-                                        }
-                                    }
+                                    v: studentClass,
+                                    w: studentClass,
+                                    s: {alignment:{wrapText: true, vertical: "center"} }
                                 };
                             }
 
@@ -2720,12 +1774,7 @@
                                 t: "s",
                                 v: follow.student.infoBySchool.emailvnu,
                                 w: follow.student.infoBySchool.emailvnu,
-                                s: {
-                                    alignment: {
-                                        wrapText: true,
-                                        vertical: "center"
-                                    }
-                                }
+                                s: {alignment:{wrapText: true, vertical: "center"} }
                             };
                             if (follow.student.email != null) {
                                 ws['E' + i] = {
@@ -2734,12 +1783,7 @@
                                     t: "s",
                                     v: follow.student.email,
                                     w: follow.student.email,
-                                    s: {
-                                        alignment: {
-                                            wrapText: true,
-                                            vertical: "center"
-                                        }
-                                    }
+                                    s: {alignment:{wrapText: true, vertical: "center"} }
                                 };
                             }
                             if (follow.student.phoneNumber != null) {
@@ -2749,12 +1793,7 @@
                                     t: "s",
                                     v: follow.student.phoneNumber,
                                     w: follow.student.phoneNumber,
-                                    s: {
-                                        alignment: {
-                                            wrapText: true,
-                                            vertical: "center"
-                                        }
-                                    }
+                                    s: {alignment:{wrapText: true, vertical: "center"} }
                                 };
                             }
 
@@ -2764,12 +1803,7 @@
                                 t: "s",
                                 v: follow.partnerName,
                                 w: follow.partnerName,
-                                s: {
-                                    alignment: {
-                                        wrapText: true,
-                                        vertical: "center"
-                                    }
-                                }
+                                s: {alignment:{wrapText: true, vertical: "center"} }
                             };
                             if ($scope.typeName == "" || $scope.typeName == undefined) {
                                 ws['H' + i] = {
@@ -2778,12 +1812,7 @@
                                     t: "s",
                                     v: follow.postTitle,
                                     w: follow.postTitle,
-                                    s: {
-                                        alignment: {
-                                            wrapText: true,
-                                            vertical: "center"
-                                        }
-                                    }
+                                    s: {alignment:{wrapText: true, vertical: "center"} }
                                 };
                             } else {
                                 ws['H' + i] = {
@@ -2792,12 +1821,7 @@
                                     t: "s",
                                     v: $scope.typeName,
                                     w: $scope.typeName,
-                                    s: {
-                                        alignment: {
-                                            wrapText: true,
-                                            vertical: "center"
-                                        }
-                                    }
+                                    s: {alignment:{wrapText: true, vertical: "center"} }
                                 };
                             }
                             i++;

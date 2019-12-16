@@ -60,18 +60,16 @@
                                 <thead>
                                     <tr>
                                         <th>Tên đơn vị</th>
-                                        <!-- <th>Post</th> -->
                                         <th>Trạng thái</th>
                                         <th>#</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="follow in internship.follows">
+                                    <tr ng-repeat="follow in internship.follows" data-id="{{follow.id}}">
                                         <th><a href="/#/post/{{follow.postId}}">{{follow.partnerName}}</a></th>
-                                        <!-- <td><a href="/#/post/{{follow.postId}}">{{follow.postTitle}}</a></td> -->
                                         <th>{{follow.status}}</th>
                                         <th ng-if="internship.internshipTerm.id == currentInternshipTerm">
-                                            <input type="radio" class="flat" name="table_records" ng-if="follow.status == 'PASS'" ng-click="select(follow.partnerId, follow.partnerName)">
+                                            <input type="radio" class="flat" name="table_records" ng-if="follow.status == 'PASS'" ng-click="select(follow.id, follow.partnerName)">
                                             <input type="radio" class="flat" name="table_records" disabled="disabled" ng-if="follow.status != 'PASS'">
                                         </th>
                                         <th ng-if="internship.internshipTerm.id != currentInternshipTerm">
@@ -90,8 +88,7 @@
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th>Tên đơn vị đã đăng ký   </th>
-                                        <!-- <th>Post</th> -->
+                                        <th>Tên đơn vị đã đăng ký</th>
                                         <th>Trạng thái</th>
                                         <th>#</th>
                                     </tr>
@@ -99,7 +96,6 @@
                                 <tbody>
                                     <tr ng-repeat="follow in allFollow">
                                         <th>{{follow.partnerName}}</th>
-                                        <!-- <td><a href="/#/post/{{follow.postId}}">{{follow.postTitle}}</a></td> -->
                                         <th>{{follow.status}}</th>
                                         <th>
                                             <input type="radio" class="flat" name="table_records" ng-if="follow.status == 'SELECTED'" checked="checked">
@@ -114,13 +110,7 @@
                                 </div>
                             </div>
                         </form>
-                    </div><!-- 
-                    <div class="single-post-title">
-                        <h3>Danh sách đăng ký thực tập</h3>
                     </div>
-                    <div class="single-post-info">
-                        
-                    </div> -->
                 </div>
             </div>
         </div>

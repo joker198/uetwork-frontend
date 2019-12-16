@@ -2,9 +2,9 @@
     "use strict";
     var app = angular.module("partner", []);
     angular.module('partner')
-        .controller('partnerCtrl', ['filterFilter', '$window', '$scope', 'partnerService', 'studentService', 'internService', '$location', '$rootScope',
+        .controller('partnerCtrl', ['filterFilter', '$window', '$scope', 'adminService', 'partnerService', 'studentService', 'internService', '$location', '$rootScope',
             '$timeout', '$stateParams', 'messageService', 'md5', '$state',
-            function(filterFilter, $window, $scope, partnerService, studentService, internService, $location, $rootScope, $timeout, $stateParams, messageService, md5, $state) {
+            function(filterFilter, $window, $scope, adminService,partnerService, studentService, internService, $location, $rootScope, $timeout, $stateParams, messageService, md5, $state) {
                 $rootScope.currentPageName = $state.current.name;
                 $scope.loadPartner = true;
                 $scope.partnersRole = [
@@ -74,12 +74,120 @@
                 }
 
                 $scope.getWaitRecruitPartner = function (termId) {
+                    if (termId == "") {
+                        return true;
+                    }
                     partnerService.getWaitRecruitPartner(termId)
                         .then(function (response){
                             $scope.partners = response.data;
                         },function (error) {
                             console.log(error);
                         });
+                }
+                // rercuit-list
+                $scope.recruitPartnerByTerm = function() {
+                    partnerService.getValidTerms()
+                        .then(function (response) {
+                            $scope.internshipTerms = response.data;
+                            $scope.selectedPartners($scope.internshipTerms[0].id);
+                        }, function (error) {
+                            console.log(error);
+                        });
+                    adminService.getGradeLevel()
+                        .then(function (response) {
+                            $scope.gradeLevels = response.data;
+                        }, function (error) {
+                            console.log(error);
+                        });
+                }
+                $scope.selectedPartners = function(termId) {
+                    partnerService.getPartnerSelected(termId)
+                        .then(function (response) {
+                            $scope.followsByPartner = response.data;
+                        }, function (error) {
+                            console.log(error);
+                        });
+                }
+                $scope.getStudentGradeClass = function(gradeCode, studentClass) {
+                    if (gradeCode == null || studentClass == null) {
+                        return "Chưa rõ";
+                    }
+                    for(let index = 0; index < $scope.gradeLevels.length; index++) {
+                        if ($scope.gradeLevels[index].code == gradeCode) {
+                            return `${$scope.gradeLevels[index].shortName}${studentClass}`;
+                        }
+                    }
+                }
+
+                $scope.getIntershipsByPartner = function(key) {
+                    let partnerName = key.split("_")[1];
+                    let follows = $scope.followsByPartner[`${key}`];
+                    let wb = {};
+                    wb.Sheets = {};
+                    wb.SheetNames = [];
+                    let wopts = { bookType: 'xlsx', bookSST: false, type: 'binary' };
+                    let wscols = [];
+                    wscols[0] = { wpx: 200 };
+                    wscols[1] = { wpx: 100 };
+                    wscols[2] = { wpx: 100 };
+                    wscols[3] = { wpx: 100 };
+                    wscols[4] = { wpx: 200 };
+                    wscols[5] = { wpx: 200 };
+                    wscols[6] = { wpx: 200 };
+                    wscols[6] = { wpx: 200 };
+                    var ws = { '!ref': "A1:G" + (follows.length + 1) };
+                    ws['!cols'] = wscols;
+                    ws['A1'] = {h: "Tên sinh viên", r: "Tên sinh viên", t: "s", v: "Tên sinh viên", w: "Tên sinh viên"};
+                    ws['B1'] = {h: "Mã sinh viên", r: "Mã sinh viên", t: "s", v: "Mã sinh viên", w: "Mã sinh viên"};
+                    ws['C1'] = {h: "Mã lớp", r: "Mã lớp", t: "s", v: "Mã lớp", w: "Mã lớp"};
+                    ws['D1'] = {h: "Lớp", r: "Lớp", t: "s", v: "Lớp", w: "Lớp"};
+                    ws['E1'] = {h: "VNU email", r: "VNU email", t: "s", v: "VNU email", w: "VNU email"};
+                    ws['F1'] = {h: "Email", r: "Email", t: "s", v: "Email", w: "Email"};
+                    ws['G1'] = {h: "Số điện thoại", r: "Số điện thoại", t: "s", v: "Số điện thoại", w: "Số điện thoại"};
+                    ws['H1'] = {h: "Giảng viên hướng dẫn", r: "Giảng viên hướng dẫn", t: "s", v: "Giảng viên hướng dẫn", w: "Giảng viên hướng dẫn"};
+                    let i = 2;
+                    angular.forEach(follows, function(follow) {
+                        if (follow.postTitle.toLowerCase().indexOf("research") != -1) {
+                            return false;
+                        }
+                        let studentName = follow.student.fullName;
+                        ws['A' + i] = {h: studentName, r: studentName, t: "s", v: studentName, w: studentName, s: { alignment: { wrapText: true,vertical: "center" } } };
+                        let studentCode = follow.student.infoBySchool.studentCode == null ? "Chưa rõ" : follow.student.infoBySchool.studentCode;
+                        ws['B' + i] = {h: studentCode, r: studentCode, t: "s", v: studentCode, w: studentCode, s: { alignment: { wrapText: true, vertical: "center" } } };
+                        let studentClassCode = follow.student.infoBySchool.studentClass == null ? "Chưa rõ" :`${follow.student.infoBySchool.grade}-${follow.student.infoBySchool.studentClass}`;
+                        ws['C' + i] = {h: studentClassCode, r: studentClassCode, t: "s", v: studentClassCode, w: studentClassCode, s: { alignment: { wrapText: true, vertical: "center" } } };
+                        let studentClass = $scope.getStudentGradeClass(follow.student.infoBySchool.grade, follow.student.infoBySchool.studentClass);
+                        ws['D' + i] = {h: studentClass, r: studentClass, t: "s", v: studentClass, w: studentClass, s: { alignment: { wrapText: true, vertical: "center" } } };
+                        let emailVNU = follow.student.infoBySchool.emailvnu;
+                        ws['E' + i] = {h: emailVNU, r: emailVNU, t: "s", v: emailVNU, w: emailVNU, s: { alignment: { wrapText: true, vertical: "center" } } };
+                        let email = follow.student.email == null ? "Chưa rõ" :follow.student.email;
+                        ws['F' + i] = {h: email, r: email, t: "s", v: email, w: email, s: { alignment: { wrapText: true, vertical: "center" } } };
+                        let phoneNumber = follow.student.phoneNumber == null ? "Chưa rõ" : follow.student.phoneNumber ;
+                        ws['G' + i] = {h: phoneNumber, r: phoneNumber, t: "s", v: phoneNumber, w: phoneNumber, s: { alignment: { wrapText: true, vertical: "center" } } };
+                        let lecturersName = follow.lecturersName == null ? "Chưa rõ" : follow.lecturersName;
+                        ws['H' + i] = {h: lecturersName, r: lecturersName, t: "s", v: lecturersName, w: lecturersName, s: { alignment: { wrapText: true, vertical: "center" } } };
+                        i++;
+                    });
+                    let sheetName = `intern list ${partnerName}`;
+                    wb.SheetNames.push(sheetName);
+                    wb.Sheets[sheetName] = ws;
+                    let wbout = XLSX.write(wb, wopts);
+
+                    function s2ab(s) {
+                        var buf = new ArrayBuffer(s.length);
+                        var view = new Uint8Array(buf);
+                        for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+                        return buf;
+                    }
+                    saveAs(new Blob([s2ab(wbout)], { type: "" }), `Intern_list_at_${partnerName}.xlsx`);
+                }
+                $scope.getAcceptedPartner = function () {
+                    partnerService.getAcceptedPartner()
+                        .then(function (response) {
+                            $scope.partners = response.data;
+                        }, function (error) {
+                            console.log(error);
+                        })
                 }
                 $scope.getAcceptedRecruitPartner = function () {
                     let termId = document.querySelector('#is-term').value;

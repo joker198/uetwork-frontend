@@ -13,22 +13,22 @@
         </div>
     </div>
 </div>
-<div class="section blog-posts-wrapper" ng-init="getNameAndIdOfLecturers(); getResearchPost()">
+<div class="section blog-posts-wrapper" ng-init="getResearchPost()">
     <div class="container" ng-if="researchPost.expiryTime > today" ng-cloak>
         <h2>
-            <a style="color: #53555c; text-decoration: none;" data-toggle="collapse" data-target="#research" class="cursor">Research in University</a>
+            <a class="base-link" data-toggle="collapse" data-target="#research" class="cursor">Research in University</a>
         </h2>
         <div class="row collapse in" id="research">
-            <div class="col-sm-6" style="max-height: 180px;padding-top: 15px;padding-bottom: 15px;background-color: #fff;border-radius: 8px;box-shadow: 2px 2px 2px grey">
-                <div style="display: flex;">
-                    <div style="padding: 15px">
-                        <h3 style="margin: unset">{{researchPost.title}}</h3>
+            <div class="col-sm-6 research-item">
+                <div class="d-flex">
+                    <div class="p-3">
+                        <h3 class="m-unset">{{researchPost.title}}</h3>
                     </div>
-                    <div style="display: flex;align-items: center;justify-content: flex-end">
-                        <button class="btn" style="max-height: 40px" ng-click="follow(researchPost.id, researchPost.title)">Register</button>
+                    <div class="d-flex align-items-center justify-content-end">
+                        <button class="btn" id="register-research" style="max-height: 40px" ng-click="follow(researchPost.id, researchPost.title)">Đăng ký</button>
                     </div>
                 </div>
-                <div style="display: flex;align-items: center;justify-content: flex-end">
+                <div class="d-flex align-items-center justify-content-end">
                     {{ researchPost.datePost | date: 'dd-MM-yyyy'}}
                 </div>
             </div>

@@ -35,6 +35,16 @@ angular.module("myAdminApp", [
                                 }
                             }
                         })
+                        .state("/grade-level", {
+                            url:"/grade-level",
+                            templateUrl: "modules/admin/views/vnu/grade-level.html",
+                            controller: "adminCtrl"
+                        })
+                        .state("/recruit-list", {
+                            url:"/recruit-list",
+                            templateUrl: "modules/admin/views/internship-term/recruit-list.html",
+                            controller: "partnerCtrl"
+                        })
                         .state("/recruit-list/create", {
                             url:"/recruit-list/create",
                             templateUrl: "modules/admin/views/internship-term/create-recruit-list.html",
