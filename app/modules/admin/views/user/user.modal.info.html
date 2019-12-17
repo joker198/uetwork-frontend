@@ -1,0 +1,6 @@
+<!-- show student info -->
+<div ng-if="userRole == 'STUDENT'" ui-view="modal_student_information"></div>
+<!-- show lecturer info -->
+<div ng-if="userRole == 'LECTURERS'" ui-view="modal_lecturer_information"></div>
+<!-- show vip partner info -->
+<div ng-if="userRole == 'VIP_PARTNER'" ui-view="modal_partner_information"></div>

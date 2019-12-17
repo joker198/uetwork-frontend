@@ -16,7 +16,8 @@
             getStudentInformationByUserId: getStudentInformationByUserId,
             getGradeLevel: getGradeLevel,
             createGradeLevel: createGradeLevel,
-            deleteGradeLevel: deleteGradeLevel
+            deleteGradeLevel: deleteGradeLevel,
+            getUserInfo: getUserInfo
         };
 
         function getGradeLevel() {
@@ -38,7 +39,12 @@
                 method: 'DELETE'
             })
         }
-
+        function getUserInfo(userId) {
+             return $http({
+                url: $rootScope.serverAdd + '/user/' +userId,
+                method: 'GET'
+            })
+        }
         function getStudentInformationByUserId(userId) {
             return $http({
                 url: $rootScope.serverAdd + '/student/user/' + userId,

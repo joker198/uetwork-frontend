@@ -128,6 +128,24 @@
                     }
                 }
 
+                $scope.getUserInfo = function(userId) {
+                    if (userId != undefined && userId != null) {
+                        adminService.getUserInfo(userId)
+                            .then(function(response) {
+                                $scope.userRole = response.data.role;
+                                if ($scope.userRole == 'STUDENT') {
+                                    $scope.studentInfo = response.data.studentInfo;
+                                    $scope.internshipInfos = response.data.internshipInfo;
+                                } else if ($scope.userRole == 'LECTURERS') {
+                                    $scope.lecturerInfo = response.data.lecturerInfo;
+                                } else if ($scope.userRole == 'VIP_PARTNER') {
+                                    $scope.partnerInfo = response.data.partnerInfo;
+                                }
+                            }, function(error) {
+                                console.log(error);
+                            });
+                    }
+                }
                 $scope.getAllUser = function() {
                     if (isNaN(parseInt($stateParams.page))) {
                         $stateParams.page = 1;

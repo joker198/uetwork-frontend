@@ -27,10 +27,7 @@
                         </button>
                         <ul class="dropdown-menu" style="top:34px" role="menu">
                             <li>
-                                <a class="cursor" ng-click="exportDataRegistration()"> Tải danh sách đăng kí </a>
-                            </li>
-                            <li>
-                                <a class="cursor" ng-click="exportDataRegistrationResearch()"> Tải danh sách đăng kí tại Khoa CNTT</a>
+                                <a class="cursor" data-target="#choose-download-type" data-toggle="modal"> Tải danh sách đăng kí </a>
                             </li>
                             <li>
                                 <a data-toggle="modal" data-target="#send_pass_interview_message" class="cursor" ng-click="createListStudentToSendMessage('pass')"> Gửi thông báo trúng tuyển </a>
@@ -64,7 +61,7 @@
                     <strong>{{errorMessage}}</strong>
                 </div>
                 <div class="table-responsive" ng-show="postTitle != 'noFollow'">
-                    <span class="pull-right"> 
+                    <span class="pull-right">
                         <ul class="list-inline">
                           <li class="list-inline-item">Hiển thị:</li>
                           <li class="list-inline-item cursor" ng-click=" entry = 25; paginate();" ng-class="{underline : entry == 25, bold : entry == 25}">25</li>
@@ -151,6 +148,37 @@
                         </tbody>
                     </table>
                     <ul uib-pagination total-items="totalItemsnoFollows" ng-model="currentPagenoFollows" max-size="noOfPagesnoFollows" items-per-page="entryLimitnoFollows"></ul>
+                </div>
+                <!-- download registration list-->
+                <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true" id="choose-download-type">
+                    <div class="modal-dialog modal-sm" style="width:40vw;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <div class="c-d-flex">
+                                    <div class="col-sm-10">
+                                        <h3 class="modal-title">Download Type</h3>
+                                    </div>
+                                    <div class="col-sm-2 c-d-flex justify-content-end">
+                                        <i class="c-toggle fa fa-times-circle" data-dismiss="modal"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group choose-row">
+                                    <input type="radio" name="registration-type" value="recruitment" ng-model="registerType">&nbsp;<strong>Thực tập đối tác</strong>
+                                </div>
+                                <div class="form-group choose-row">
+                                    <input type="radio" name="registration-type" value="research" ng-model="registerType">&nbsp;<strong>Nghiên cứu khoa học</strong>
+                                </div>
+                                <div class="form-group choose-row">
+                                    <input type="radio" name="registration-type" value="all" ng-model="registerType">&nbsp;<strong>Tất cả</strong>
+                                </div>
+                                <div class="c-d-flex justify-content-end">
+                                    <button class="btn btn-primary" ng-click="exportRegistrationList(registerType)">Xuất file</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <!-- pass interview -->
                 <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" id="send_pass_interview_message">

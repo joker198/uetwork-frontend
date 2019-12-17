@@ -56,8 +56,17 @@ angular.module("myAdminApp", [
                                 "": {
                                     templateUrl: "modules/admin/views/user/user.all.html",
                                 },
+                                "modal_user_information@/user/page=:page": {
+                                    templateUrl: "modules/admin/views/user/user.modal.info.html",
+                                },
                                 "modal_student_information@/user/page=:page": {
                                     templateUrl: "modules/admin/views/user/user.modal.student.information.html",
+                                },
+                                "modal_lecturer_information@/user/page=:page": {
+                                    templateUrl: "modules/admin/views/user/user.modal.lecturer.information.html",
+                                },
+                                "modal_partner_information@/user/page=:page": {
+                                    templateUrl: "modules/admin/views/user/user.modal.partner.information.html",
                                 },
                                 "modal_reset_password@/user/page=:page": {
                                     templateUrl: "modules/admin/views/user/user.password.reset.html",
@@ -71,8 +80,17 @@ angular.module("myAdminApp", [
                                     templateUrl: "modules/admin/views/user/user.search.html",
                                     controller: "NotiCtrl"
                                 },
+                                "modal_user_information@/user/search/username=:userName": {
+                                    templateUrl: "modules/admin/views/user/user.modal.info.html",
+                                },
                                 "modal_student_information@/user/search/username=:userName": {
                                     templateUrl: "modules/admin/views/user/user.modal.student.information.html",
+                                },
+                                "modal_lecturer_information@/user/search/username=:userName": {
+                                    templateUrl: "modules/admin/views/user/user.modal.lecturer.information.html",
+                                },
+                                "modal_partner_information@/user/search/username=:userName": {
+                                    templateUrl: "modules/admin/views/user/user.modal.partner.information.html",
                                 },
                                 "modal_reset_password@/user/search/username=:userName": {
                                     templateUrl: "modules/admin/views/user/user.password.reset.html",
