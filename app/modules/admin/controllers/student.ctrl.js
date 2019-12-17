@@ -1497,361 +1497,129 @@
                     for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
                     return buf;
                 }
-                $scope.exportDataRegistrationResearch = function() {
-                    var count = 0;
-                    var wb = {};
+
+                function exportExcel(sheet, filename) {
+                    let wb = {};
                     wb.Sheets = {};
                     wb.SheetNames = [];
-                    var wopts = { bookType: 'xlsx', bookSST: false, type: 'binary' };
-                    var wscols = [];
-                    wscols[0] = { wpx: 200 };
-                    wscols[1] = { wpx: 150 };
-                    wscols[2] = { wpx: 100 };
-                    wscols[3] = { wpx: 200 };
-                    wscols[4] = { wpx: 200 };
-                    wscols[5] = { wpx: 200 };
-                    wscols[6] = { wpx: 150 };
-                    var ws = { '!ref': "A1:G" + ($scope.allFollows.length + 1) };
-                    ws['!cols'] = wscols;
-                    var i = 2;
-                    ws['A1'] = {h: "Student Name", r: "Student Name", t: "s", v: "Student Name", w: "Student Name"};
-                    ws['B1'] = {h: "Student Code", r: "Student Code", t: "s", v: "Student Code", w: "Student Code"};
-                    ws['C1'] = {h: "Class", r: "Class", t: "s", v: "Class", w: "Class"};
-                    ws['D1'] = {h: "VNU email", r: "VNU email", t: "s", v: "VNU email", w: "VNU email"};
-                    ws['E1'] = {h: "Email", r: "Email", t: "s", v: "Email", w: "Email"};
-                    ws['F1'] = {h: "Phone", r: "Phone", t: "s", v: "Phone", w: "Phone"};
-                    ws['G1'] = {h: "Lecturers", r: "Lecturers", t: "s", v: "Lecturers", w: "Lecturers"};
-                    angular.forEach($scope.allFollows, function(follow) {
-                        let studentClass = $scope.getStudentGradeClass(follow.student.infoBySchool.grade, follow.student.infoBySchool.studentClass);
-                        if (follow.postTitle.toLowerCase().indexOf("research") != -1) {
-                            ws['A' + i] = {
-                                h: follow.student.fullName,
-                                r: follow.student.fullName,
-                                t: "s",
-                                v: follow.student.fullName,
-                                w: follow.student.fullName,
-                                s: {alignment:{wrapText: true, vertical: "center"} }
-                            };
-                            if (follow.student.infoBySchool.studentCode != null) {
-                                ws['B' + i] = {
-                                    h: follow.student.infoBySchool.studentCode,
-                                    r: follow.student.infoBySchool.studentCode,
-                                    t: "s",
-                                    v: follow.student.infoBySchool.studentCode,
-                                    w: follow.student.infoBySchool.studentCode,
-                                    s: {alignment:{wrapText: true, vertical: "center"} }
-                                };
-                            }
-                            if (follow.student.infoBySchool.studentClass != null) {
-                                ws['C' + i] = {
-                                    h: studentClass,
-                                    r: studentClass,
-                                    t: "s",
-                                    v: studentClass,
-                                    w: studentClass,
-                                    s: {alignment:{wrapText: true, vertical: "center"} }
-                                };
-                            }
+                    wb.Sheets['Student List'] = sheet;
+                    wb.SheetNames.push('Student List');
+                    let wopts = { bookType: 'xlsx', bookSST: false, type: 'binary' };
+                    let wbout = XLSX.write(wb, wopts);
+                    saveAs(new Blob([s2ab(wbout)], { type: "" }), filename);
+                    $scope.alertSuccess("Xuất danh sách thành công!", "");
+                }
 
-                            ws['D' + i] = {
-                                h: follow.student.infoBySchool.emailvnu,
-                                r: follow.student.infoBySchool.emailvnu,
-                                t: "s",
-                                v: follow.student.infoBySchool.emailvnu,
-                                w: follow.student.infoBySchool.emailvnu,
-                                s: {alignment:{wrapText: true, vertical: "center"} }
-                            };
-                            if (follow.student.email != null) {
-                                ws['E' + i] = {
-                                    h: follow.student.email,
-                                    r: follow.student.email,
-                                    t: "s",
-                                    v: follow.student.email,
-                                    w: follow.student.email,
-                                    s: {alignment:{wrapText: true, vertical: "center"} }
-                                };
-                            }
-                            if (follow.student.phoneNumber != null) {
-                                ws['F' + i] = {
-                                    h: follow.student.phoneNumber,
-                                    r: follow.student.phoneNumber,
-                                    t: "s",
-                                    v: follow.student.phoneNumber,
-                                    w: follow.student.phoneNumber,
-                                    s: {alignment:{wrapText: true, vertical: "center"} }
-                                };
-                            }
-
-                            if (follow.lecturersName != null)
-                                ws['G' + i] = {
-                                    h: follow.lecturersName,
-                                    r: follow.lecturersName,
-                                    t: "s",
-                                    v: follow.lecturersName,
-                                    w: follow.lecturersName,
-                                    s: {alignment:{wrapText: true, vertical: "center"} }
-                                };
-                            i++;
-                            count++;
-                        }
-
+                function putExportDatas(follows, labels, cols, colsSize) {
+                    // init columns size
+                    let excols = [];
+                    for (let index = 0; index < labels.length; index++) {
+                        excols[index] = { wpx: colsSize[index]};
+                    }
+                    // init columns label
+                    let lastCol = `${cols[cols.length-1]}${follows.length+1}`;
+                    let ws = { '!ref': `A1:${lastCol}`};
+                    ws['!cols'] = excols;
+                    angular.forEach(labels, function (label, key) {
+                        ws[`${cols[key]}1`] = {h: label, r: label, t: "s", v: label, w: label};
                     });
-                    wb.SheetNames.push('Research List');
-                    wb.Sheets['Research List'] = ws;
-
-                    var wbout = XLSX.write(wb, wopts);
-
-                    function s2ab(s) {
-                        var buf = new ArrayBuffer(s.length);
-                        var view = new Uint8Array(buf);
-                        for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
-                        return buf;
-                    }
-                    if (count == 0) {
-                        $scope.alertWarning("Tên cty chưa chính xác!", 5000);
-                    } else {
-                        if ($scope.search == "") {
-                            saveAs(new Blob([s2ab(wbout)], { type: "" }), "Research List - All.xlsx")
-                        } else {
-                            saveAs(new Blob([s2ab(wbout)], { type: "" }), "Research List - " + name + ".xlsx");
-                        }
-                    }
-                };
-
-                $scope.exportDataRegistration = function() {
-                    var count = 0;
-                    var wb = {};
-                    wb.Sheets = {};
-                    wb.SheetNames = [];
-                    var wopts = { bookType: 'xlsx', bookSST: false, type: 'binary' };
-                    var wscols = [];
-                    wscols[0] = { wpx: 200 };
-                    wscols[1] = { wpx: 150 };
-                    wscols[2] = { wpx: 100 };
-                    wscols[3] = { wpx: 200 };
-                    wscols[4] = { wpx: 200 };
-                    wscols[5] = { wpx: 200 };
-                    wscols[6] = { wpx: 150 };
-                    var ws = { '!ref': "A1:H" + ($scope.allFollows.length + 1) };
-                    ws['!cols'] = wscols;
-                    var i = 2;
-                    ws['A1'] = {h: "Student Name", r: "Student Name", t: "s", v: "Student Name", w: "Student Name"};
-                    ws['B1'] = {h: "Student Code", r: "Student Code", t: "s", v: "Student Code", w: "Student Code"};
-                    ws['C1'] = {h: "Class", r: "Class", t: "s", v: "Class", w: "Class"};
-                    ws['D1'] = {h: "VNU email", r: "VNU email", t: "s", v: "VNU email", w: "VNU email"};
-                    ws['E1'] = {h: "Email", r: "Email", t: "s", v: "Email", w: "Email"};
-                    ws['F1'] = {h: "Phone", r: "Phone", t: "s", v: "Phone", w: "Phone"};
-                    ws['G1'] = {h: "Company", r: "Company", t: "s", v: "Company", w: "Company"};
-                    ws['H1'] = {h: "Type", r: "Type", t: "s", v: "Type", w: "Type"};
-                    var name = "";
-                    angular.forEach($scope.allFollows, function(follow) {
-                        let studentClass = $scope.getStudentGradeClass(follow.student.infoBySchool.grade, follow.student.infoBySchool.studentClass);
-                        if ($scope.postTitle != "") {
-                            if (follow.postTitle == $scope.postTitle) {
-                                if (follow.partnerName.toLowerCase().indexOf($scope.search.toLowerCase()) != -1 || $scope.search == "") {
-                                    name = follow.partnerName;
-                                    ws['A' + i] = {
-                                        h: follow.student.fullName,
-                                        r: follow.student.fullName,
-                                        t: "s",
-                                        v: follow.student.fullName,
-                                        w: follow.student.fullName,
-                                        s: {alignment:{wrapText: true, vertical: "center"} }
-                                    };
-                                    if (follow.student.infoBySchool.studentCode != null) {
-                                        ws['B' + i] = {
-                                            h: follow.student.infoBySchool.studentCode,
-                                            r: follow.student.infoBySchool.studentCode,
-                                            t: "s",
-                                            v: follow.student.infoBySchool.studentCode,
-                                            w: follow.student.infoBySchool.studentCode,
-                                            s: {alignment:{wrapText: true, vertical: "center"} }
-                                        };
+                    // push content
+                    let count;
+                    angular.forEach(follows, function (follow, key) {
+                        ws[`A${key+2}`] = {h: key+1, r: key+1, t: "s", v: key+1, w: key+1};
+                        count = 1;
+                        for(let item in follow) {
+                            ws[`${cols[count]}${key+2}`] = {
+                                h: follow[item],
+                                r: follow[item],
+                                t: "s",
+                                v: follow[item],
+                                w: follow[item],
+                                s: {
+                                    alignment:{
+                                        wrapText: true,
+                                        vertical: "center"
                                     }
-                                    ws['C' + i] = {
-                                        h: studentClass,
-                                        r: studentClass,
-                                        t: "s",
-                                        v: studentClass,
-                                        w: studentClass,
-                                        s: {alignment:{wrapText: true, vertical: "center"} }
-                                    };
-
-                                    ws['D' + i] = {
-                                        h: follow.student.infoBySchool.emailvnu,
-                                        r: follow.student.infoBySchool.emailvnu,
-                                        t: "s",
-                                        v: follow.student.infoBySchool.emailvnu,
-                                        w: follow.student.infoBySchool.emailvnu,
-                                        s: {alignment:{wrapText: true, vertical: "center"} }
-                                    };
-                                    if (follow.student.email != null) {
-                                        ws['E' + i] = {
-                                            h: follow.student.email,
-                                            r: follow.student.email,
-                                            t: "s",
-                                            v: follow.student.email,
-                                            w: follow.student.email,
-                                            s: {alignment:{wrapText: true, vertical: "center"} }
-                                        };
-                                    }
-                                    if (follow.student.phoneNumber != null) {
-                                        ws['F' + i] = {
-                                            h: follow.student.phoneNumber,
-                                            r: follow.student.phoneNumber,
-                                            t: "s",
-                                            v: follow.student.phoneNumber,
-                                            w: follow.student.phoneNumber,
-                                            s: {alignment:{wrapText: true, vertical: "center"} }
-                                        };
-                                    }
-                                    ws['G' + i] = {
-                                        h: follow.partnerName,
-                                        r: follow.partnerName,
-                                        t: "s",
-                                        v: follow.partnerName,
-                                        w: follow.partnerName,
-                                        s: {alignment:{wrapText: true, vertical: "center"} }
-                                    };
-                                    if ($scope.typeName == "" || $scope.typeName == undefined) {
-                                        ws['H' + i] = {
-                                            h: follow.postTitle,
-                                            r: follow.postTitle,
-                                            t: "s",
-                                            v: follow.postTitle,
-                                            w: follow.postTitle,
-                                            s: {alignment:{wrapText: true, vertical: "center"} }
-                                        };
-                                    } else {
-                                        ws['H' + i] = {
-                                            h: $scope.typeName,
-                                            r: $scope.typeName,
-                                            t: "s",
-                                            v: $scope.typeName,
-                                            w: $scope.typeName,
-                                            s: {alignment:{wrapText: true, vertical: "center"} }
-                                        };
-                                    }
-                                    i++;
-                                    count++;
                                 }
-                            }
-                        } else if (follow.partnerName.toLowerCase().indexOf($scope.search.toLowerCase()) != -1 || $scope.search == "") {
-                            name = follow.partnerName;
-                            ws['A' + i] = {
-                                h: follow.student.fullName,
-                                r: follow.student.fullName,
-                                t: "s",
-                                v: follow.student.fullName,
-                                w: follow.student.fullName,
-                                s: {alignment:{wrapText: true, vertical: "center"} }
                             };
-                            if (follow.student.infoBySchool.studentCode != null) {
-                                ws['B' + i] = {
-                                    h: follow.student.infoBySchool.studentCode,
-                                    r: follow.student.infoBySchool.studentCode,
-                                    t: "s",
-                                    v: follow.student.infoBySchool.studentCode,
-                                    w: follow.student.infoBySchool.studentCode,
-                                    s: {alignment:{wrapText: true, vertical: "center"} }
-                                };
-                            }
-
-                            if (follow.student.infoBySchool.studentClass != null) {
-                                ws['C' + i] = {
-                                    h: studentClass,
-                                    r: studentClass,
-                                    t: "s",
-                                    v: studentClass,
-                                    w: studentClass,
-                                    s: {alignment:{wrapText: true, vertical: "center"} }
-                                };
-                            }
-
-                            ws['D' + i] = {
-                                h: follow.student.infoBySchool.emailvnu,
-                                r: follow.student.infoBySchool.emailvnu,
-                                t: "s",
-                                v: follow.student.infoBySchool.emailvnu,
-                                w: follow.student.infoBySchool.emailvnu,
-                                s: {alignment:{wrapText: true, vertical: "center"} }
-                            };
-                            if (follow.student.email != null) {
-                                ws['E' + i] = {
-                                    h: follow.student.email,
-                                    r: follow.student.email,
-                                    t: "s",
-                                    v: follow.student.email,
-                                    w: follow.student.email,
-                                    s: {alignment:{wrapText: true, vertical: "center"} }
-                                };
-                            }
-                            if (follow.student.phoneNumber != null) {
-                                ws['F' + i] = {
-                                    h: follow.student.phoneNumber,
-                                    r: follow.student.phoneNumber,
-                                    t: "s",
-                                    v: follow.student.phoneNumber,
-                                    w: follow.student.phoneNumber,
-                                    s: {alignment:{wrapText: true, vertical: "center"} }
-                                };
-                            }
-
-                            ws['G' + i] = {
-                                h: follow.partnerName,
-                                r: follow.partnerName,
-                                t: "s",
-                                v: follow.partnerName,
-                                w: follow.partnerName,
-                                s: {alignment:{wrapText: true, vertical: "center"} }
-                            };
-                            if ($scope.typeName == "" || $scope.typeName == undefined) {
-                                ws['H' + i] = {
-                                    h: follow.postTitle,
-                                    r: follow.postTitle,
-                                    t: "s",
-                                    v: follow.postTitle,
-                                    w: follow.postTitle,
-                                    s: {alignment:{wrapText: true, vertical: "center"} }
-                                };
-                            } else {
-                                ws['H' + i] = {
-                                    h: $scope.typeName,
-                                    r: $scope.typeName,
-                                    t: "s",
-                                    v: $scope.typeName,
-                                    w: $scope.typeName,
-                                    s: {alignment:{wrapText: true, vertical: "center"} }
-                                };
-                            }
-                            i++;
                             count++;
                         }
-
                     });
-                    wb.SheetNames.push('Registration List');
-                    wb.Sheets['Registration List'] = ws;
-
-                    var wbout = XLSX.write(wb, wopts);
-
-                    function s2ab(s) {
-                        var buf = new ArrayBuffer(s.length);
-                        var view = new Uint8Array(buf);
-                        for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
-                        return buf;
+                    return ws;
+                }
+                $scope.exportRegistrationList = function(registerType) {
+                    let legalFollows = new Array();
+                    let labels, cols, colsSize, sheet, isFinished = false;
+                    switch (registerType) {
+                        case 'recruitment':
+                            legalFollows = getRecruitmentRegistrations($scope.allFollows);
+                            labels = ["stt", "Tên sinh viên", "Mã sinh viên", "Lớp", "Email VNU", "Email", "Số điện thoại", "Công ty", "Loại thực tập"];
+                            colsSize = [100, 200, 150, 150, 200, 200, 200, 250, 150];
+                            cols = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
+                            sheet = putExportDatas(legalFollows, labels, cols, colsSize);
+                            exportExcel(sheet, "Danh sách sinh viên đăng ký thực tập doanh nghiệp.xlsx");
+                            isFinished = true;
+                            break;
+                        case 'research':
+                            legalFollows = getResearchRegistrations($scope.allFollows);
+                            labels = ["stt", "Tên sinh viên", "Mã sinh viên", "Lớp", "Email VNU", "Email", "Số điện thoại", "Loại thực tập"];
+                            colsSize = [100, 200, 150, 150, 200, 200, 200, 150];
+                            cols = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+                            sheet = putExportDatas(legalFollows, labels, cols, colsSize);
+                            exportExcel(sheet, "Danh sách sinh viên đăng ký nghiên cứu khoa học.xlsx");
+                            isFinished = true;
+                            break;
+                        case 'all':
+                            legalFollows = getRecruitmentRegistrations($scope.allFollows, true);
+                            labels = ["stt", "Tên sinh viên", "Mã sinh viên", "Lớp", "Email VNU", "Email", "Số điện thoại", "Công ty", "Loại thực tập"];
+                            colsSize = [100, 200, 150, 150, 200, 200, 200, 250, 150];
+                            cols = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
+                            sheet = putExportDatas(legalFollows, labels, cols, colsSize);
+                            exportExcel(sheet, "Danh sách sinh viên đăng ký thực tập doanh nghiệp.xlsx");
+                            isFinished = true;
+                            break;
                     }
-                    if (count == 0) {
-                        $scope.alertWarning("Tên cty chưa chính xác!", 5000);
-                    } else {
-                        if ($scope.search == "") {
-                            saveAs(new Blob([s2ab(wbout)], { type: "" }), "Registration List - All.xlsx")
-                        } else {
-                            saveAs(new Blob([s2ab(wbout)], { type: "" }), "Registration List - " + name + ".xlsx");
-                        }
+                    if (isFinished) {
                         $scope.alertSuccess("Xuất danh sách thành công!", "");
                     }
-                };
-
+                }
+                function getRecruitmentRegistrations(follows, all=false) {
+                    let legalFollows = new Array();
+                    angular.forEach(follows, function (follow) {
+                        let legalFollow = [];
+                        if ((!all && follow.postTitle == 'Recruitment') || all) {
+                            legalFollow['studentName'] = follow.student.fullName==null ? '' : follow.student.fullName;
+                            legalFollow['studentCode'] = follow.student.infoBySchool.studentCode==null ? '' : follow.student.infoBySchool.studentCode;
+                            let studentClass = $scope.getStudentGradeClass(follow.student.infoBySchool.grade, follow.student.infoBySchool.studentClass);
+                            legalFollow['studentClass'] = studentClass;
+                            legalFollow['emailVNU'] = follow.student.infoBySchool.emailvnu==null ? '' : follow.student.infoBySchool.emailvnu;
+                            legalFollow['email'] = follow.student.email==null ? '' : follow.student.email;
+                            legalFollow['phoneNumber'] = follow.student.phoneNumber==null ? '' : follow.student.phoneNumber;
+                            legalFollow['partnerName'] = follow.partnerName==null ? '' : follow.partnerName;
+                            legalFollow['postTitle'] = follow.postTitle==null ? '' : follow.postTitle;
+                            legalFollows.push(legalFollow);
+                        }
+                    });
+                    return legalFollows;
+                }
+                function getResearchRegistrations(follows) {
+                    let legalFollows = new Array();
+                    angular.forEach(follows, function (follow) {
+                        let legalFollow = [];
+                        if (follow.postTitle == 'Research') {
+                            legalFollow['studentName'] = follow.student.fullName==null ? '' : follow.student.fullName;
+                            legalFollow['studentCode'] = follow.student.infoBySchool.studentCode==null ? '' : follow.student.infoBySchool.studentCode;
+                            let studentClass = $scope.getStudentGradeClass(follow.student.infoBySchool.grade, follow.student.infoBySchool.studentClass);
+                            legalFollow['studentClass'] = studentClass;
+                            legalFollow['emailVNU'] = follow.student.infoBySchool.emailvnu==null ? '' : follow.student.infoBySchool.emailvnu;
+                            legalFollow['email'] = follow.student.email==null ? '' : follow.student.email;
+                            legalFollow['phoneNumber'] = follow.student.phoneNumber==null ? '' : follow.student.phoneNumber;
+                            legalFollow['postTitle'] = follow.postTitle==null ? '' : follow.postTitle;
+                            legalFollows.push(legalFollow);
+                        }
+                    });
+                    return legalFollows;
+                }
                 $scope.createListStudentToSendMessage = function(status) {
                     $scope.listStudent = [];
                     angular.forEach($scope.allFollows, function(follow) {

@@ -3,12 +3,14 @@
         <h3>Quản lý tài khoản</h3>
     </div>
     <div class="title_right">
-        <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+        <div class="col-md-8 col-sm-8 col-xs-12 form-group pull-right top_search">
             <form>
                 <div class="input-group">
                     <input type="text" class="form-control" ng-model="input.userName" placeholder="Tìm kiếm tên tài khoản" id="input-search-user">
                     <span class="input-group-btn">
-                      <input class="btn btn-default" id="btn-search-user" type="submit" ng-click="redirectToSearchUser()" value="Tìm" style="border-radius: 0 25px 25px 0;border:1px solid rgba(221,226,232,.49);border-left:0;box-shadow:inset 0 1px 1px rgba(0,0,0,.075);color:#93A2B2;margin-bottom:0!important;">
+                        <button class="btn btn-default c-search-btn" id="btn-search-user" type="submit" ng-click="redirectToSearchUser()">
+                            <strong><i class="fa fa-search "></i> Tìm</strong>
+                        </button>
                     </span>
                 </div>
             </form>
@@ -53,7 +55,7 @@
                         </thead>
                         <tbody>
                             <tr class="even pointer" ng-repeat="user in allUsers">
-                                <td class="">{{((nextPage.page - 1) * 50) - 50 + 1 + $index}}</td>
+                                <td class="">{{$index + 1}}</td>
                                 <td class="">
                                     {{user.userName}}
                                 </td>
@@ -67,7 +69,7 @@
                                     {{user.createdAt | date:'dd-MM-yyyy HH:mm'}}
                                 </td>
                                 <td class="">
-                                    <button class="cursor btn" style="margin:unset" ng-click="getStudentInformationByUserId(user.id)" data-target="#student_information" data-toggle="modal">
+                                    <button class="cursor btn" style="margin:unset" ng-click="getUserInfo(user.id)" data-target="#user_info" data-toggle="modal">
                                         <i class="fa fa-info-circle" aria-hidden="true"></i>&nbsp;Thông tin
                                     </button>
                                 </td>
@@ -94,9 +96,9 @@
                         <div ui-view="modal_reset_password"></div>
                     </div>
                 </div>
-                <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" id="student_information">
+                <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" id="user_info">
                     <div class="modal-dialog modal-lg">
-                        <div ui-view="modal_student_information"></div>
+                        <div ui-view="modal_user_information"></div>
                     </div>
                 </div>
             </div>

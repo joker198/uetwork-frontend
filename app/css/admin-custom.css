@@ -146,3 +146,16 @@
 .d-none {
 	display: none;
 }
+.c-search-btn {
+	border-radius: 0 25px 25px 0;
+	border:1px solid rgba(221,226,232,.49);
+	border-left:0;
+	box-shadow:inset 0 1px 1px rgba(0,0,0,.075);
+	color:#93A2B2;
+	margin-bottom:0!important;
+}
+.choose-row {
+	display: flex;
+    align-items: center;
+    padding: 5px 15px;
+}

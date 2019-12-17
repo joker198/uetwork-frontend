@@ -55,7 +55,6 @@
                     <input class="btn btn-left" type="file" name="xlfile" id="xlf" ng-init="convert()">
                     <button class="btn btn-left" ng-click="setExcelTable()">Show Student List </button>
                     <button class="btn btn-left" ng-click="send()">Upload </button>
-                    <!-- </p> -->
                     <table class="table table-striped jambo_table bulk_action" ng-if="excelTable != null">
                         <thead>
                             <tr class="headings">
@@ -109,8 +108,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- <tr class="even pointer" ng-repeat="contract in filtered = allContract | filter : search | -->
-                            <!-- startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit"> -->
                             <tr ng-repeat="post in allposts">
                                 <td class=" ">{{post.partnerName}}</td>
                                 <td class=" ">
@@ -119,14 +116,6 @@
                             </tr>
                         </tbody>
                     </table>
-                    <!-- <div class="form-group" ng-init="getNameAndIdOfLecturers()">
-                        <label class="control-label col-md-4 col-sm-3 col-xs-12">Tên giảng viên: </label>
-                        <div class="col-md-4 col-sm-6 col-xs-12">
-                            <select class="form-control" ng-model="intern.lecturersId">
-                                <option value="{{lecturers.lecturersId}}" ng-repeat="lecturers in nameAndIdOfLecturers"> {{lecturers.lecturersName}} </option>
-                            </select>
-                        </div>
-                    </div> -->
                     <div class="form-group">
                         <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-4">
                             <button ng-click="asd()">Theem</button>
@@ -219,14 +208,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- <div class="form-group" ng-init="getNameAndIdOfLecturers()">
-                        <label class="control-label col-md-4 col-sm-3 col-xs-12">Tên giảng viên: </label>
-                        <div class="col-md-4 col-sm-6 col-xs-12">
-                            <select class="form-control" ng-model="intern.lecturersId">
-                                <option value="{{lecturers.lecturersId}}" ng-repeat="lecturers in nameAndIdOfLecturers"> {{lecturers.lecturersName}} </option>
-                            </select>
-                        </div>
-                    </div> -->
                     <div class="form-group">
                         <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-4">
                             <button type="submit" class="btn btn-success" ng-click="createInternship()">Tạo</button>
@@ -235,14 +216,6 @@
                     <div class="divider-dashed"></div>
                 </form>
                 <div class="table-responsive">
-                    <!-- <div class="col-md-4 col-sm-5 col-xs-12 form-group pull-right top_search">
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="MSSV" ng-model="search">
-                            <span class="input-group-btn">
-                      <button class="btn btn-default" type="button" ng-click="getStudentByStudentCode()">Tìm Kiếm</button>
-                    </span>
-                        </div>
-                    </div> -->
                     <span class="pull-right"> 
                         <ul class="list-inline">
                           <li class="list-inline-item">Hiển thị:</li>
@@ -277,7 +250,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit"> -->
                             <tr ng-repeat="internship in filtered = allStudents | filter : search |
                                 startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit | orderBy:'-id'">
                                 <td class=" ">{{(currentPage * entryLimit) - entryLimit + 1 + $index}}</td>
@@ -299,9 +271,6 @@
                                 <td class="a-center ">
                                     <input type="checkbox" id="checkbox_{{internship.id}}" class="flat" name="table_records" ng-click="internship.checked = !internship.checked; addStudent(internship);" ng-checked="internship.checked">
                                 </td>
-                                <!-- <td>
-                                    <button data-toggle="modal" data-target="#delete_student"><i class="fa fa-paperclip"></i> hello</button>
-                                </td> -->
                             </tr>
                         </tbody>
                     </table>

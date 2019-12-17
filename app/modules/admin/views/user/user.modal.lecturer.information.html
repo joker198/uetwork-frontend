@@ -1,0 +1,38 @@
+<div class="modal-content">
+	<div class="modal-header">
+		<div class="c-d-flex">
+			<div class="col-sm-10">
+				<h3 class="modal-title">Thông tin giảng viên</h3>
+			</div>
+			<div class="col-sm-2 c-d-flex justify-content-end">
+				<i class="c-toggle fa fa-times-circle" data-dismiss="modal"></i>
+			</div>
+		</div>
+	</div>
+	<div class="modal-body">
+		<div class="form-group row">
+			<label class="control-label col-md-4 col-sm-4 col-xs-12">Họ và tên: </label>
+			<div class="col-md-8 col-sm-8 col-xs-12">{{lecturerInfo.fullName}}</div>
+		</div>
+		<div class="form-group row">
+			<label class="control-label col-md-4 col-sm-4 col-xs-12">Chuyên môn: </label>
+			<div class="col-md-8 col-sm-8 col-xs-12">{{lecturerInfo.subject}}</div>
+		</div>
+		<div class="form-group row">
+			<label class="control-label col-md-4 col-sm-4 col-xs-12">Khoa: </label>
+			<div class="col-md-8 col-sm-8 col-xs-12">{{lecturerInfo.faculty.facultyName}}</div>
+		</div>
+		<div class="form-group row">
+			<label class="control-label col-md-4 col-sm-4 col-xs-12">Số điện thoại: </label>
+			<div class="col-md-8 col-sm-8 col-xs-12">{{lecturerInfo.phoneNumber}}</div>
+		</div>
+		<div class="form-group row">
+			<label class="control-label col-md-4 col-sm-4 col-xs-12">Email: </label>
+			<div class="col-md-8 col-sm-8 col-xs-12">{{lecturerInfo.email}}</div>
+		</div>
+		<div class="form-group row">
+			<label class="control-label col-md-4 col-sm-4 col-xs-12">Email VNU: </label>
+			<div class="col-md-8 col-sm-8 col-xs-12">{{lecturerInfo.emailVNU}}</div>
+		</div>
+	</div>
+</div>
