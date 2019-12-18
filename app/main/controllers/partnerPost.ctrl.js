@@ -299,7 +299,6 @@
                     }
                 }
                 $scope.request = {
-                    // image: $scope.ima.replace(/^data:image\/(png|jpeg);base64,/, ""),
                     content: $scope.post.content,
                     datePost: Date.now(),
                     describePost: $scope.post.describePost,
@@ -322,30 +321,6 @@
             $scope.changeTime = function() {
                 $scope.post.startDate = new Date($scope.post.startDate).getTime() / 1000;
             }
-            // need to use
-            // $scope.editAPost = function(id) {
-            //     if ($scope.ima.indexOf("data:image") == -1) {
-            //         $scope.request = {
-            //             image: $scope.ima,
-            //             content: $scope.post.content,
-            //             describePost: $scope.post.describePost
-            //         };
-            //     } else {
-            //         $scope.request = {
-            //             image: $scope.ima.replace(/^data:image\/(png|jpeg);base64,/, ""),
-            //             content: $scope.post.content,
-            //             describePost: $scope.post.describePost
-            //         };
-            //     }
-            //     partnerPostService.editAPost(id, $scope.request)
-            //         .then(function() {
-            //                 alert("Sửa thông tin thành công");
-            //                 $location.path('/post/' + id);
-            //             },
-            //             function(error) {
-            //                 console.log(error);
-            //             })
-            // };
 
             $scope.editAPost = function(id) {
                 $scope.request = {
@@ -466,7 +441,6 @@
                         if (type == 'unregist_internship') {
                             if (index != undefined) {
                                 $rootScope.internship.follows.splice(index, 1);
-                                console.log($rootScope.internship.follows);
                             }
                         }
                     }, function(error) {
@@ -499,8 +473,6 @@
 
                 partnerPostService.checkFollow(postId, $scope.request)
                     .then(function(response, t = type) {
-                        console.log(response);
-                        console.log(t);
                         if (response.data.id == 0) {
                             $scope.subs = false;
                             if (t == 'registration') {
@@ -511,7 +483,7 @@
                             }
                         } else {
                             $scope.subs = true;
-                            if (response.data.postTitle != null && response.data.status != null) {
+                            if (response.data.postTitle == "Research" && response.data.status != null) {
                                 document.querySelector('#register-research').innerText = "Đã đăng ký"
                                 document.querySelector('#register-research').disabled = true;
                             }

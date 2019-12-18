@@ -6,8 +6,8 @@
         'internService', 'messageService', '$window',
         function($scope, $rootScope, $location, loginService, partnerInfoService, partnerPostService, $cookies, $state, internService, messageService, $window) {
 
-            $rootScope.serverAdd = "http://localhost:8180";
-            $rootScope.clientAdd = "http://localhost:8000";
+            $rootScope.serverAdd = "http://192.168.0.100:8180";
+            $rootScope.clientAdd = "http://192.168.0.210:8000";
             $scope.response = [];
             $scope.socket = [];
             $scope.getCurrentInternshipOfInternshipTerm = function() {

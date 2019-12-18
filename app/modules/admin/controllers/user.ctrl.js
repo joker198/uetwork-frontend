@@ -33,8 +33,8 @@ config(['$locationProvider', '$routeProvider', '$stateProvider', '$urlRouterProv
     var app = angular.module("user", []);
     app.controller('userCtrl', ['$scope', 'userService', '$location', '$rootScope', '$window', 'md5', '$timeout',
         function($scope, userService, $location, $rootScope, $window, md5, $timeout) {
-            $rootScope.serverAdd = "http://localhost:8180";
-            $rootScope.clientAdd = "http://localhost:8000";
+            $rootScope.serverAdd = "http://192.168.0.100:8180";
+            $rootScope.clientAdd = "http://192.168.0.210:8000";
             $scope.login = function() {
                 if ($scope.input.username != "" && $scope.input.username != undefined &&
                     $scope.input.password != "" && $scope.input.password != undefined) {

@@ -54,6 +54,8 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <tr class="even pointer partner-{{$index}}" ng-repeat="user in filtered = allUsers | filter : search |
+                startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit | orderBy:'-id'">
                             <tr class="even pointer" ng-repeat="user in allUsers">
                                 <td class="">{{$index + 1}}</td>
                                 <td class="">

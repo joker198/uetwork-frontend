@@ -22,24 +22,40 @@
                 $rootScope.currentPageName = $state.current.name;
 
                 $scope.createRecruitList = function() {
+                    let termId = document.querySelector('#internship-term').value;
+                    if (termId == '') {
+                        $scope.alertDanger("Bạn phải chọn kỳ thực tập", 3000);
+                        return false;
+                    }
                     let listPartners = [];
                     let checkBoxs = document.querySelectorAll('.checkbox-item');
                     angular.forEach(checkBoxs, function (checkBox) {
                         if (checkBox.checked) {
-                            listPartners.push(checkBox.getAttribute('data-id'));
+                            listPartners.push(checkBox.getAttribute('data-key'));
                         }
                     });
                     if (listPartners.length == 0) {
-                        return true;
+                        $scope.alertWarning("Bạn phải chọn ít nhất một đối tác", 3000);
+                        return false;
                     }
                     partnerService.createRecruitList({
-                        internshipTerm: document.querySelector('#internship-term').value,
+                        internshipTerm: termId,
                         partnerIds: listPartners
                     }).then(function (response) {
                         $scope.partners = response.data;
                     }, function (error) {
                         console.log(error);
                     });
+                }
+                $scope.check = function(id) {
+                    document.querySelector('#partner-'+id).checked = true;
+                    document.querySelector('#active-'+id).classList.add('d-none');
+                    document.querySelector('#remove-'+id).classList.remove('d-none');
+                }
+                $scope.uncheck = function(id) {
+                    document.querySelector('#partner-'+id).checked = false;
+                    document.querySelector('#active-'+id).classList.remove('d-none');
+                    document.querySelector('#remove-'+id).classList.add('d-none');
                 }
 
                 $scope.getValidTerms = function () {
@@ -199,16 +215,6 @@
                         });
                 }
 
-                $scope.check = function(id) {
-                    document.querySelector('.partner-'+id).checked = true;
-                    document.querySelector('#active-'+id).classList.add('d-none');
-                    document.querySelector('#remove-'+id).classList.remove('d-none');
-                }
-                $scope.uncheck = function(id) {
-                    document.querySelector('.partner-'+id).checked = false;
-                    document.querySelector('#active-'+id).classList.remove('d-none');
-                    document.querySelector('#remove-'+id).classList.add('d-none');
-                }
                 $scope.getIntershipTerm = function()
                 {
                     internService.getAllInternshipTerm()

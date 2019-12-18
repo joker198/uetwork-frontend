@@ -4,11 +4,11 @@
             'loginAdService', 'filterFilter', '$http', '$timeout', 'md5', '$state', '$stateParams',
             function($scope, $rootScope, $location, $window, adminService, loginAdService,
                 filterFilter, $http, $timeout, md5, $state, $stateParams) {
-                $rootScope.serverAdd = "http://localhost:8180";
-                $rootScope.clientAdd = "http://localhost:8000";
-                $rootScope.sourceAdd = "http://localhost:9000";
+                $rootScope.serverAdd = "http://192.168.0.100:8180";
+                $rootScope.clientAdd = "http://192.168.0.210:8000";
+                $rootScope.sourceAdd = "http://192.168.0.210:9000";
                 $rootScope.index = true; //sua thu la false xem nhu nao
-                $rootScope.admin = false;
+                $rootScope.admin = true;
                 $scope.response = [];
                 $scope.socket = [];
                 $scope.input = {};
@@ -150,7 +150,7 @@
                     if (isNaN(parseInt($stateParams.page))) {
                         $stateParams.page = 1;
                     }
-                    adminService.getAllUser($stateParams.page - 1, 50)
+                    adminService.getAllUser($stateParams.page - 1, 10)
                         .then(function(response) {
                             $scope.allUsers = response.data.content;
                             $scope.pages = [];
