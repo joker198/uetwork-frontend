@@ -14,13 +14,14 @@
 			</option>
 		</select>
 	</div>
-	<div class="row">
-		<div class="alert alert-success" ng-if="success">
-			<strong>{{successMessage}}</strong>
-		</div>
-		<div class="alert alert-danger" ng-if="danger">
-			<strong>{{errorMessage}}</strong>
-		</div>
+	<div class="col-sm-12 alert alert-warning" ng-if="warning">
+        <strong>{{warningMessage}}</strong>
+    </div>
+	<div class="col-sm-12 alert alert-success" ng-if="success">
+		<strong>{{successMessage}}</strong>
+	</div>
+	<div class="col-sm-12 alert alert-danger" ng-if="danger">
+		<strong>{{errorMessage}}</strong>
 	</div>
 	<table class="table table-striped jambo_table bulk_action">
 		<thead>
@@ -38,7 +39,7 @@
 				<td class=" ">{{partner.partnerName}}</td>
 				<td>{{partner.partnerType}}</td>
 				<td class="a-center">
-					<input type="checkbox" class="checkbox-item d-none partner-{{ partner.id }}" data-id="{{partner.id}}"data-key="{{$index}}">
+					<input type="checkbox" class="checkbox-item d-none" id="partner-{{partner.id}}" data-key="{{partner.id}}">
 					<button class="check-btn active" id="active-{{partner.id}}" ng-click="check(partner.id)">
 						<i class="fa fa-check-circle"></i> Chọn
 					</button>
